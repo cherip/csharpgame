@@ -1,2 +1,8 @@
 i love you cherip
+<<<<<<< HEAD
 malegebi~
+=======
+
+sb mian???
+>>>>>>> b79bf80b9454326173815f1fb90f9c97fd842373
+enenen
