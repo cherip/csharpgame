@@ -39,6 +39,10 @@ namespace CSharpGame
             initCreateControl();
 
             myInitial();
+
+            //int[] tester = new int[] { 2, 1 };
+            //byte[] ss = SerializationUnit.SerializeObject(tester);
+            //int[] ob = (int[])(SerializationUnit.DeserializeObject(ss));
         }
 
         private void initCreateControl()
@@ -253,10 +257,10 @@ namespace CSharpGame
             //username = "user" + r.Next(0, 1000);
 
             // 先绑定事件
-            myLogic.newtworkProcessor += updateForm;
-
-            myLogic.ConnectNet();
-            button2.Enabled = false;
+            //myLogic.newtworkProcessor += updateForm;
+            gameArea.connect();
+           // myLogic.ConnectNet();
+           // button2.Enabled = false;
             // 事件绑定
             //networkRun();
 
