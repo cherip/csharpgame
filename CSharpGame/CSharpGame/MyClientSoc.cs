@@ -65,6 +65,7 @@ namespace CSharpGame
                 string receiveStr = System.Text.Encoding.BigEndianUnicode.GetString(byteMessage);
                 receiveStr.Trim();
                 string[] contents = receiveStr.Split(new Char[] { '|' });
+
                 return contents;
             }
             catch (System.Exception ex)
@@ -72,9 +73,69 @@ namespace CSharpGame
                 Console.WriteLine(ex.ToString());
                 return null;
             }
-           
+
 
         }
+
+            //public GameMessage RecieveStr()
+            // {
+            //     try
+            //     {
+            //        byte[] byteMessage = new byte[1024];
+            //        //ns = client.GetStream();
+            //        ns.Read(byteMessage, 0, byteMessage.Length);
+            //        string receiveStr = System.Text.Encoding.BigEndianUnicode.GetString(byteMessage);
+            //        receiveStr.Trim();
+            //        string[] contents = receiveStr.Split(new Char[] { '|' });
+            //        GameMessage gm = new GameMessage();
+            //        if (contents != null)
+            //        {
+                   
+            //            switch (contents[0])
+            //            {
+            //                case "list":
+            //                    {
+            //                        string[] param = new string[contents.Length - 2];
+            //                        for (int i = 1; i < contents.Length - 1; i++)
+            //                        {
+            //                            param[i - 1] = contents[i];
+            //                        }
+            //                            gm.MessageType = 1;
+            //                            gm.Str_tpye = "list";
+            //                            gm.Para = param;
+            //                            break;
+            //                        }
+            //                case "xxxexit":
+            //                    {
+            //                        gm.MessageType = 1;
+            //                        gm.Str_tpye = "xxxexit";
+            //                        gm.User = contents[1];
+            //                        break;
+            //                    }
+            //                case "xxxjion":
+            //                    {
+            //                        gm.MessageType = 1;
+            //                        gm.Str_tpye = "xxxjion";
+            //                        gm.User = contents[1];
+            //                        break;
+            //                    }
+            //            }
+                       
+            //        }
+            //        if (gm.Str_tpye != null)
+            //            return gm;
+            //        else return null;
+            //    }
+            //    catch (System.Exception ex)
+            //    {
+            //        Console.WriteLine(ex.ToString());
+            //        return null;
+            //    }
+           
+
+            // }
+
+           
 
         public void CloseConn()
         {

@@ -53,6 +53,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="GameClient.cs" />
+    <Compile Include="GameMessage.cs" />
     <Compile Include="Logic.cs" />
     <Compile Include="MyClientSoc.cs" />
     <Compile Include="MyFormat.cs" />
