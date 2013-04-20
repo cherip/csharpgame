@@ -89,6 +89,8 @@ namespace CSharpGame
         Ready,
         Online,
         Offline,
+        Join,
+        List,
     }
 
     [Serializable]

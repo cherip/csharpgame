@@ -22,6 +22,8 @@ namespace MyGameServer
         private Thread tdListen;//定义一个线程，用于监听客户的连接请求 
         private ArrayList clients; //申名一个一维数组，用来存储连接到服务器的客户信息
         public delegate void GetlbClientCall(string id, GameClient ipn);//不能在线程启动后又启动Windows窗体线程，这样是不安全的
+        NetworkStream ns;
+        
         //因此要建立一个委托
         public Server()
         {
@@ -76,6 +78,51 @@ namespace MyGameServer
                    string clientcommand = System.Text.Encoding.BigEndianUnicode.GetString(LInfor);
                    string[] tokens = clientcommand.Split(new Char[] { '|' });
 
+                   if (clientMsg.msgType == CSharpGame.MsgType.Sys)
+                   {
+                       CSharpGame.MsgSys sysMsg = new CSharpGame.MsgSys();
+                       sysMsg = (CSharpGame.MsgSys)clientMsg.msgContent;
+                       if (sysMsg.sysType == CSharpGame.MsgSysType.Online)
+                       {
+                           if (clients.Count != 0)
+                           {
+                               for (int n = 0; n < clients.Count; n++)//将新用户的加入信息发送给其他用户
+                               {
+                                   GameClient cl = (GameClient)clients[n];
+                                  
+                                   CSharpGame.MsgSys sysSend1 = new CSharpGame.MsgSys();
+                                    
+                                   sysSend1.sysType = CSharpGame.MsgSysType.Join;
+                                   
+                                   sysSend1.sysContent = sysMsg.sysContent;
+
+                                    CSharpGame.Message conn1 = new CSharpGame.Message();
+                                    conn1.msgType = CSharpGame.MsgType.Sys;
+                                    conn1.msgContent = sysMsg;
+                                    SendToClient(cl, conn1);
+                               }
+                           }
+                           GameClient newGC = new GameClient((string)sysMsg.sysContent, null, clientservice, client);
+                           clients.Add(newGC);
+                          
+                           CSharpGame.MsgSys sysSend2 = new CSharpGame.MsgSys();
+                                    
+                               
+                           sysSend2.sysType = CSharpGame.MsgSysType.List;
+                                   
+                                 
+                           sysSend2.sysContent = GetUserNameList();
+
+                                
+                           CSharpGame.Message conn2 = new CSharpGame.Message();
+                              
+                           conn2.msgType = CSharpGame.MsgType.Sys;
+                                
+                           conn2.msgContent = sysMsg;
+
+                           SendToClient(newGC, conn2);
+                       }
+                   }
                    switch(tokens[0])
                    {
                        case "login":
@@ -200,6 +247,51 @@ namespace MyGameServer
                 return index;
             return -1;
         }
+        public bool SendToClient(GameClient cl, CSharpGame.Message mes)
+        {
+            try
+            {
+                Byte[] outbytes = CSharpGame.SerializationUnit.SerializeObject(mes);
+                Socket s = cl.Sock;
+
+                if (s.Connected)
+                {
+                    s.Send(outbytes, outbytes.Length, 0);
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return false;
+            }
+            //try
+            //{
+            //    Byte[] message = System.Text.Encoding.BigEndianUnicode.GetBytes(clientCommand);
+            //    Socket s = cl.Sock;
+            //    if (s.Connected)
+            //    {
+            //        s.Send(message, message.Length, 0);
+            //    }
+            //}
+
+            //catch (Exception)//如果有异常则退出
+            //{
+            //    //clients.Remove(cl);
+            //    //lbClients.Items.Remove(cl);
+            //    ////lbClients.Items.Remove(cl.Name + " : " + cl.Host.ToString());
+            //    //for (int n = 0; n < clients.Count; n++)
+            //    //{
+            //    //    Client cl1 = (Client)clients[n];
+            //    //    SendToClient(cl1, "GONE|" + cl.Name);
+            //    //}
+            //    //cl.Sock.Close();
+            //    //cl.CLThread.Abort();
+
+            //}
+
+        }
         public void SendToClient(GameClient cl, string clientCommand)
         {
             try
@@ -226,7 +318,6 @@ namespace MyGameServer
                 //cl.CLThread.Abort();
 
             }
-
-        }   
+        }
     }
 }

@@ -100,7 +100,7 @@ namespace CSharpGame
             {
                 Byte[] outbytes = SerializationUnit.SerializeObject(msg);
                 ns.Write(outbytes, 0, outbytes.Length);
-                Message reciTester = (Message)(SerializationUnit.DeserializeObject(outbytes));
+                
 
                 return true;
             }
