@@ -28,77 +28,46 @@ namespace CSharpGame
         public delegate void ButtonDeleg(int i);
 
         Logic myLogic = new Logic();
+        GameArea gameArea;
 
         public CSharpGame()
         {
-            int index = 0;
+            //int index = 0;
             //myLogic.InitLogic();
 
             InitializeComponent();
             initCreateControl();
-
-            foreach (Control c in panel1.Controls)
-            {               
-                string s = c.Name.ToString();
-                if(s.Contains("button"))
-                {
-                    butArry[index] = (Button)c;
-                    index++;
-                }                
-            }
-
-            this.pairBingoEvent += new PairBingoHandle(pairBingo);
 
             myInitial();
         }
 
         private void initCreateControl()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CSharpGame));
-            int start_x = 18;
-            int start_y = 11;
-            int w = 67;
-            int h = 67;
-            int space_w = 6;
-            int space_h = 6;
-            for (int i = 0; i < 64; i++)
-            {
-                System.Windows.Forms.Button buttonNew = new System.Windows.Forms.Button();
+            // 初始化 自己的游戏界面
+            gameArea = new GameArea(new System.Drawing.Point(2, 238),
+                                    new System.Drawing.Size(669, 600));
 
-                int local_x = start_x + (w + space_w) * (i % 8);
-                int local_y = start_y + (h + space_h) * (i / 8);
-                buttonNew.Location = new System.Drawing.Point(local_x, local_y);
+            gameArea.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            gameArea.Name = "myGameShower";
+            gameArea.TabIndex = 0;
+            gameArea.Enabled = false;
 
-                buttonNew.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button1.BackgroundImage")));
-                buttonNew.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.Controls.Add(gameArea);
 
-                buttonNew.Name = "button" + System.Convert.ToString(i);
-                buttonNew.Size = new System.Drawing.Size(w, h);
-                buttonNew.TabIndex = 0;
-                buttonNew.TabStop = false;
-                buttonNew.UseVisualStyleBackColor = true;
-                buttonNew.Click += new System.EventHandler(this.picBtn_Clicked);
+            // 初始化其他玩家的游戏界面， 这里应该由其他玩家控制。
+            // 测试情况下 初始化一个小的
 
-                this.panel1.Controls.Add(buttonNew);
-            }
+            GameArea playerTesterArea = new GameArea(new System.Drawing.Point(2, 10),
+                                                     new System.Drawing.Size(200, 200));
+            playerTesterArea.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            playerTesterArea.Name = "plTesterShower";
+            playerTesterArea.TabIndex = 0;
+            playerTesterArea.Enabled = false;
+            this.Controls.Add(playerTesterArea);
         }
 
         private void myInitial()
-        {            
-            btnVal = new Hashtable();
-            myLogic.InitLogic();
-            // 
-            // 利用logic返回每个button应该使用的图像类型
-            //
-            for (int i = 0; i < butArry.Length; i++)
-            {
-                int picType = myLogic.GetPicType(i);
-                butArry[i].BackgroundImage = picList.Images[picType];
-                butArry[i].Visible = true;
-
-                btnVal.Add(butArry[i], i);
-            }
-            
+        {           
             timeElapseBar.Maximum = 3;
 
             timeElapseBar.Value = timeElapseBar.Maximum;
@@ -429,6 +398,11 @@ namespace CSharpGame
         private void button3_Click(object sender, EventArgs e)
         {
             myLogic.gameStart();
+        }
+
+        private void CSharpGame_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
