@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Collections;
 
 namespace CSharpGame
 {
@@ -10,7 +11,7 @@ namespace CSharpGame
     {
         MyClientSoc myClientSoc;
         string myClientName;
-
+        GameClient other;
         public const int MAX_PIC = 64;
         static System.Timers.Timer timeElapsed;                 //计时器
         int curTime = 0;                                        //当前游戏剩余时间
@@ -45,6 +46,7 @@ namespace CSharpGame
 
             keepalive = false;
             myClientSoc = new MyClientSoc();
+            
         }
 
         public int GetPicType(int pos) {
@@ -59,6 +61,8 @@ namespace CSharpGame
                 return null;
             } else {
                 if (last_click != pos && butArry[last_click] == butArry[pos]) {
+                    butArry[last_click] = -1;
+                    butArry[pos] = -1; 
                     int ret = last_click;
                     last_click = -1;
                     int[] r = new int[2] {ret, pos};
@@ -189,6 +193,17 @@ namespace CSharpGame
                         newtworkProcessor(receiveStr[1], 4);
                         break;
                     }
+                case "xxxstartgame":
+                    {
+                        butArry = MyFormat.strToArray(receiveStr[1]);
+                        newtworkProcessor(butArry, 5);
+                        break;
+                    }
+                case "xxxgamedata":
+                    {
+                        string str = receiveStr[1];
+                        break;
+                    }
             }
             return false;
         }
@@ -196,9 +211,28 @@ namespace CSharpGame
         //public event PairBingoHandle pairBingoEvent;//消除事件
        // public delegate void ListviewDeleg(string userName);
 
+        public void sendGameData()
+        {
+            myClientSoc.SendStr("gamedata", myClientName + '|' + MyFormat.arrayToStr(butArry));
+        }
+
         public void inviteUser(string answer)
         {
             myClientSoc.SendStr("invite",myClientName + '|' + answer);
+            //other.Add(new GameClient(answer, null, null, null));
         }
+
+        public void gameStart()
+        {            
+           // myClientSoc.SendStr("gamestart", str);
+            myClientSoc.SendStr("startgame", myClientName);
+        }
+
+        public void acceptInvite()
+        {
+
+        }
+
+
     }
 }

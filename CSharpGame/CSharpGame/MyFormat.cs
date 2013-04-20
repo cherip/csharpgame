@@ -40,5 +40,25 @@ namespace CSharpGame
             }
             return count;
         }
+        public static string arrayToStr(int[] array)
+        {
+            string str = null;
+            foreach (int i in array)
+            {
+                str = str + i + ',';
+            }
+            str = str.Substring(0,str.Length -1);
+            return str;
+        }
+        public static int[] strToArray(string str)
+        {
+            string[] str_array = str.Split(',');
+            int[] array = new int[64];
+            for (int i = 0; i < str_array.Length; i++ )
+            {
+                array[i] = int.Parse(str_array[i]);
+            }
+            return array;
+        }
     }
 }

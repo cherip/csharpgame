@@ -25,6 +25,7 @@ namespace CSharpGame
         public event PairBingoHandle pairBingoEvent;//消除事件
         public delegate void ListviewDeleg(string userName);
         public delegate void LableDeleg(string s);
+        public delegate void ButtonDeleg(int i);
 
         Logic myLogic = new Logic();
 
@@ -142,7 +143,14 @@ namespace CSharpGame
             //
             // 利用logic 完成逻辑判断，form只完成显示
             //
+            //联机
+            if (myLogic.keepalive)
+            {
+                myLogic.sendGameData();
+            }
+            
             int state = myLogic.ClearAnPair();
+
             if (state == 2)
             {
                 MessageBox.Show("Win!");
@@ -279,7 +287,7 @@ namespace CSharpGame
             myLogic.newtworkProcessor += updateForm;
 
             myLogic.ConnectNet();
-
+            button2.Enabled = false;
             // 事件绑定
             //networkRun();
 
@@ -326,7 +334,29 @@ namespace CSharpGame
                         showInviteRequst((string)sender);
                         break;
                     }
+                case 5:
+                    {
+                        for (int i = 0; i < butArry.Length; i++)
+                        {
+                            refreshButton(i);
+                        }
+                        break;
+                    }
             }
+        }
+
+        private void refreshButton(int i)
+        {
+            if (butArry[i].InvokeRequired)
+            {
+                ButtonDeleg bd = new ButtonDeleg(refreshButton);
+                butArry[i].Invoke(bd, new object[]{i});
+            }
+            else
+            {
+                int type = myLogic.GetPicType(i);
+                butArry[i].BackgroundImage = picList.Images[type];         
+            }       
         }
 
         private void showInviteRequst(string param)
@@ -339,6 +369,7 @@ namespace CSharpGame
             else
             {
                 namlable.Text = param;
+                button2.Enabled = true;
             }
             
         }
@@ -388,6 +419,16 @@ namespace CSharpGame
         private void button1_Click(object sender, EventArgs e)
         {
             myLogic.inviteUser(textBox1.Text);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            myLogic.gameStart();
         }
     }
 }

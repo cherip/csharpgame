@@ -59,6 +59,7 @@ namespace MyGameServer
         {
             Socket client = clientsocket;
             bool keepalive = true; //各个客户Socket线程存活的标识   
+            Hashtable duizhan = new Hashtable();
             while (keepalive)
             {
                try
@@ -121,6 +122,28 @@ namespace MyGameServer
                                if (answer != -1)
                                {
                                    SendToClient((GameClient)clients[answer], "xxxinvite|" + tokens[1]);
+                               }
+                               break;
+                           }
+                       case "startgame":
+                           {
+                               int[] picArray = new int[64];
+                               MyFormat.genPic(ref picArray);
+                               string str = MyFormat.arrayToStr(picArray);
+                               foreach (GameClient cl in clients)
+                               {
+                                   SendToClient(cl, "xxxstartgame|" + str);
+                               }
+                               break;
+                           }
+                       case "gamedata":
+                           {
+                               foreach (GameClient cl in clients)
+                               {
+                                   if (true)//!cl.Name.Equals(tokens[1]))
+                                   {
+                                       SendToClient(cl, "xxxgamedata|" + tokens[2]);
+                                   }
                                }
                                break;
                            }
