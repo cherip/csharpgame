@@ -36,18 +36,12 @@ namespace CSharpGame
             this.Location = areaLocat;
             this.Size = areaSize;
             createButton(areaSize);
+
+            this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            //this.Name = "myGameShower";
+            this.TabIndex = 0;
+            this.Enabled = false;
         }
-
-        //private void calcBtnSize(Size areaSize) {
-        //    int margin_x = (int)(areaSize.Width * 0.05 / 2);
-        //    int margin_y = (int)(areaSize.Height * 0.05 / 2);
-
-        //    int w = (areaSize.Width - margin_x * 2) / 8;
-        //    int h = (areaSize.Height - margin_y * 2) / 8;
-
-        //    int real_x = (int)(w * 0.95);
-        //    int real_y = (int)(h * 0.95);
-        //}
 
         private void createButton(Size areaSize)
         {

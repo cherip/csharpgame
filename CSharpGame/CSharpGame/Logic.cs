@@ -93,8 +93,9 @@ namespace CSharpGame
             {
 	            //... someting to do
 	            // 初始化网络
-                keepalive = true;
 
+                keepalive = true;
+                myClientSoc = new MyClientSoc();
 	            myClientSoc.InitialSoc();
 
 
@@ -151,77 +152,31 @@ namespace CSharpGame
                 // 处理网络连接
                 if (myClientSoc.connected)
                 {
-                    receiveStr = myClientSoc.RecieveStr();
-                    if (receiveStr != null && receiveStr[0] != null)
-                    {
-                          if (processStr())
-                        {
-                            break;
-                        }
-                    }
+                    Message serverMsg = myClientSoc.RecieveMsg();
+                    processMsg(serverMsg);
                 }
             }
 
             keepalive = false;
             myClientSoc.CloseConn();
-            //receiveThread.Abort();
         }
 
         //
         // 判断接收的数据，如果是退出消息且是本客户端发送的退出消息，
         // 则返回true，表示应该结束这个接收线程
         //
-        public bool processStr()
+        public bool processMsg(Message msg)
         {
-            if (newtworkProcessor == null) return true;
+            // 这里客户端的接受服务器消息主要逻辑，
+            // 为从服务器端发生的消息作出各种反应
 
-            switch (receiveStr[0])
-            {
-                case "list":
-                    {
-                        string[] param = new string[receiveStr.Length - 2];
-                        for (int i = 1; i < receiveStr.Length - 1; i++)
-                        {
-                            param[i - 1] = receiveStr[i];
-                        }
-                        newtworkProcessor(param, 1);
-                        break;
-                    }
-                case "xxxexit":
-                    {
-                        newtworkProcessor(receiveStr[1], 2);
-                        if (receiveStr[1] == myClientName)
-                            return true;
-                        break;
-                    }
-                case "xxxjion":
-                    {
-                        newtworkProcessor(receiveStr[1], 3);
-                        break;
-                    }
-                case "xxxinvite":
-                    {
-                        newtworkProcessor(receiveStr[1], 4);
-                        break;
-                    }
-                case "xxxstartgame":
-                    {
-                        butArry = MyFormat.strToArray(receiveStr[1]);
-                        newtworkProcessor(butArry, 5);
-                        break;
-                    }
-                case "xxxgamedata":
-                    {
-                        string str = receiveStr[1];
-                        break;
-                    }
-            }
-            return false;
+            return true;
         }
-       // public delegate void PairBingoHandle(object sender, EventArgs e);//消除两张图代理
-        //public event PairBingoHandle pairBingoEvent;//消除事件
-       // public delegate void ListviewDeleg(string userName);
 
+        // 
+        // 下面都要改。。。
+        // 下面都要改。。。
+        //
         public void sendGameData()
         {
             myClientSoc.SendStr("gamedata", myClientName + '|' + MyFormat.arrayToStr(butArry));

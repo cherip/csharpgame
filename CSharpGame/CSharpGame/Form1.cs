@@ -50,11 +50,7 @@ namespace CSharpGame
             // 初始化 自己的游戏界面
             gameArea = new GameArea(new System.Drawing.Point(2, 238),
                                     new System.Drawing.Size(669, 600));
-
-            gameArea.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             gameArea.Name = "myGameShower";
-            gameArea.TabIndex = 0;
-            gameArea.Enabled = false;
 
             this.Controls.Add(gameArea);
 

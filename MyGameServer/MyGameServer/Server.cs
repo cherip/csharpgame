@@ -66,10 +66,11 @@ namespace MyGameServer
                {
                    Byte[] LInfor = new Byte[1024];
                    int msglen = client.Receive(LInfor, LInfor.Length, 0);
-                   Byte[] realData = new Byte[msglen];
+
+                   Byte[] realDate = new Byte[msglen];
                    //System.Buffer.BlockCopy(LInfor, 0, realDate, 0, msglen);
 
-                   CSharpGame.Message testMsg = (CSharpGame.Message)(CSharpGame.SerializationUnit.DeserializeObject(realData));
+                   CSharpGame.Message testMsg = (CSharpGame.Message)(CSharpGame.SerializationUnit.DeserializeObject(realDate));
                    
                    //string clientcommand = System.Text.Encoding.BigEndianUnicode.GetString(LInfor);
                    //string[] tokens = clientcommand.Split(new Char[] { '|' });
@@ -153,6 +154,12 @@ namespace MyGameServer
                                break;
                            }
                    }
+
+                   Byte[] realDate = new Byte[msglen];
+                   System.Buffer.BlockCopy(LInfor, 0, realDate, 0, msglen);
+
+                   CSharpGame.Message clientMsg = (CSharpGame.Message)(CSharpGame.SerializationUnit.DeserializeObject(realDate));
+
                }
                catch (System.Exception ex)
                {
