@@ -89,28 +89,41 @@ namespace MyGameServer
                            }
                        case "exit":
                            {
-                               int remove = 0;
+                               //int remove = 0;
 
-                               bool found = false;
+                               //bool found = false;
 
-                               for (int i = 0; i < clients.Count; i++)
+                               //for (int i = 0; i < clients.Count; i++)
+                               //{
+                               //    GameClient cl = (GameClient)clients[i];
+                               //    Console.WriteLine(cl.Name + "xxxexit|" + tokens[1]);
+                               //    SendToClient(cl, "xxxexit|" + tokens[1] + '|');
+                               //    if (cl.Name.CompareTo(tokens[1]) == 0)
+                               //    {
+                               //        remove = i;
+                               //        found = true;
+                               //    }
+                               //}
+                               //if (found)
+                               //    clients.RemoveAt(remove);
+                               int remove = findGameClient(tokens[1]);
+                               if (remove != -1)
                                {
-                                   GameClient cl = (GameClient)clients[i];
-                                   Console.WriteLine(cl.Name + "xxxexit|" + tokens[1]);
-                                   SendToClient(cl, "xxxexit|" + tokens[1] + '|');
-                                   if (cl.Name.CompareTo(tokens[1]) == 0)
-                                   {
-                                       remove = i;
-                                       found = true;
-                                   }
-                               }
-                               if (found)
                                    clients.RemoveAt(remove);
+                               }
                                client.Close();
                                keepalive = false; 
                                break;
                            }
-
+                       case "invite":
+                           {
+                               int answer = findGameClient(tokens[2]);
+                               if (answer != -1)
+                               {
+                                   SendToClient((GameClient)clients[answer], "xxxinvite|" + tokens[1]);
+                               }
+                               break;
+                           }
                    }
                }
                catch (System.Exception ex)
@@ -133,6 +146,27 @@ namespace MyGameServer
             return chatters;
         }
 
+        private int findGameClient(string userName)
+        {
+            int index = 0;
+
+            bool found = false;
+
+            for (int i = 0; i < clients.Count; i++)
+            {
+                GameClient cl = (GameClient)clients[i];
+                Console.WriteLine(cl.Name);
+               
+                if (cl.Name.CompareTo(userName) == 0)
+                {
+                    index = i;
+                    found = true;
+                }
+            }
+            if (found)
+                return index;
+            return -1;
+        }
         public void SendToClient(GameClient cl, string clientCommand)
         {
             try

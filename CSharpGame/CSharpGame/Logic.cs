@@ -139,9 +139,7 @@ namespace CSharpGame
                     receiveStr = myClientSoc.RecieveStr();
                     if (receiveStr != null && receiveStr[0] != null)
                     {
-                        //pthread = new Thread(new ThreadStart(processStr));
-                        //pthread.Start();
-                        if (processStr())
+                          if (processStr())
                         {
                             break;
                         }
@@ -186,6 +184,11 @@ namespace CSharpGame
                         newtworkProcessor(receiveStr[1], 3);
                         break;
                     }
+                case "xxxinvite":
+                    {
+                        newtworkProcessor(receiveStr[1], 4);
+                        break;
+                    }
             }
             return false;
         }
@@ -193,6 +196,9 @@ namespace CSharpGame
         //public event PairBingoHandle pairBingoEvent;//消除事件
        // public delegate void ListviewDeleg(string userName);
 
-
+        public void inviteUser(string answer)
+        {
+            myClientSoc.SendStr("invite",myClientName + '|' + answer);
+        }
     }
 }

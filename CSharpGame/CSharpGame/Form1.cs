@@ -24,6 +24,7 @@ namespace CSharpGame
         public delegate void PairBingoHandle(object sender, EventArgs e);//消除两张图代理
         public event PairBingoHandle pairBingoEvent;//消除事件
         public delegate void ListviewDeleg(string userName);
+        public delegate void LableDeleg(string s);
 
         Logic myLogic = new Logic();
 
@@ -254,7 +255,7 @@ namespace CSharpGame
                     timeElapsed.Enabled = false;
                     timeElapseBar.Value = 0;
                     timeElapseBar.Refresh();
-                    MessageBox.Show("You Lose!!");
+                    //MessageBox.Show("You Lose!!");
                 }
                 else timeElapseBar.Value = curTime;                              
             }
@@ -320,7 +321,26 @@ namespace CSharpGame
                         adduserList((string)sender);
                         break;
                     }
+                case 4:
+                    {
+                        showInviteRequst((string)sender);
+                        break;
+                    }
             }
+        }
+
+        private void showInviteRequst(string param)
+        {
+            if (namlable.InvokeRequired)
+            {
+                LableDeleg ld = new LableDeleg(showInviteRequst);
+                namlable.Invoke(ld, new object[] { param });
+            }
+            else
+            {
+                namlable.Text = param;
+            }
+            
         }
 
         private void removeExited(string userName)
@@ -363,6 +383,11 @@ namespace CSharpGame
 
             myLogic.newtworkProcessor -= updateForm;
             //pthread.Abort();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            myLogic.inviteUser(textBox1.Text);
         }
     }
 }
