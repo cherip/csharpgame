@@ -119,10 +119,7 @@ namespace CSharpGame
             sysMsg.sysType = MsgSysType.Online;
             sysMsg.sysContent = "user" + r.Next(0, 1000);
 
-            Message conn = new Message();
-            conn.msgType = MsgType.Sys;
-            conn.msgContent = sysMsg;
-
+            Message conn = new Message(sysMsg);
             myClientSoc.InitialSoc();
             myClientSoc.SendMsg(conn);
         }

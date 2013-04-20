@@ -18,6 +18,24 @@ namespace CSharpGame
         public MsgType msgType;
         public object msgContent;
         //public MsgSys msgContent;
+
+        public Message(MsgGame msg) 
+        {
+            msgType = MsgType.Game;
+            msgContent = msg;
+        }
+
+        public Message(MsgChat msg)
+        {
+            msgType = MsgType.Chat;
+            msgContent = msg;
+        }
+
+        public Message(MsgSys msg)
+        {
+            msgType = MsgType.Sys;
+            msgContent = msg;
+        }
     }
 
     class GameMessage

@@ -10,6 +10,7 @@ using System.Threading;
 using System.Collections;
 using System.Net;
 using System.Net.Sockets;
+using CSharpGame;
 
 namespace MyGameServer
 {
@@ -68,61 +69,39 @@ namespace MyGameServer
                {
                    Byte[] LInfor = new Byte[1024];
                    int msglen = client.Receive(LInfor, LInfor.Length, 0);
-
                    Byte[] realDate = new Byte[msglen];
-                                  
                    System.Buffer.BlockCopy(LInfor, 0, realDate, 0, msglen);
 
                    CSharpGame.Message clientMsg = (CSharpGame.Message)(CSharpGame.SerializationUnit.DeserializeObject(realDate));
                    
                    string clientcommand = System.Text.Encoding.BigEndianUnicode.GetString(LInfor);
                    string[] tokens = clientcommand.Split(new Char[] { '|' });
-
-                   if (clientMsg.msgType == CSharpGame.MsgType.Sys)
-                   {
-                       CSharpGame.MsgSys sysMsg = new CSharpGame.MsgSys();
-                       sysMsg = (CSharpGame.MsgSys)clientMsg.msgContent;
-                       if (sysMsg.sysType == CSharpGame.MsgSysType.Online)
-                       {
-                           if (clients.Count != 0)
-                           {
-                               for (int n = 0; n < clients.Count; n++)//将新用户的加入信息发送给其他用户
-                               {
-                                   GameClient cl = (GameClient)clients[n];
-                                  
-                                   CSharpGame.MsgSys sysSend1 = new CSharpGame.MsgSys();
-                                    
-                                   sysSend1.sysType = CSharpGame.MsgSysType.Join;
-                                   
-                                   sysSend1.sysContent = sysMsg.sysContent;
-
-                                    CSharpGame.Message conn1 = new CSharpGame.Message();
-                                    conn1.msgType = CSharpGame.MsgType.Sys;
-                                    conn1.msgContent = sysMsg;
-                                    SendToClient(cl, conn1);
-                               }
-                           }
-                           GameClient newGC = new GameClient((string)sysMsg.sysContent, null, clientservice, client);
-                           clients.Add(newGC);
-                          
-                           CSharpGame.MsgSys sysSend2 = new CSharpGame.MsgSys();
-                                    
-                               
-                           sysSend2.sysType = CSharpGame.MsgSysType.List;
-                                   
-                                 
-                           sysSend2.sysContent = GetUserNameList();
-
+                   
+                   //
+                   // 把msg的封装改了一下。这么用吧 简洁一些。
+                   // 可以把后面的逻辑用函数提出去。 每种msg用一个函数处理，否则这一坨的代码太多了。
+                   //
+                   //if (clientMsg.msgType == CSharpGame.MsgType.Sys)
+                   //{
+                    switch (clientMsg.msgType)
+                    {
+                        case MsgType.Sys:
+                            {
+                                MsgSys sysMsg = (MsgSys)clientMsg.msgContent;
+                                ProcessSysMsg(sysMsg, client);
+                            }
+                            break;
+                        case MsgType.Game:
+                            {
+                            
+                            }
+                            break;
+                        case MsgType.Chat:
+                            {
                                 
-                           CSharpGame.Message conn2 = new CSharpGame.Message();
-                              
-                           conn2.msgType = CSharpGame.MsgType.Sys;
-                                
-                           conn2.msgContent = sysMsg;
-
-                           SendToClient(newGC, conn2);
-                       }
-                   }
+                            }
+                            break;
+                    }
                    switch(tokens[0])
                    {
                        case "login":
@@ -213,16 +192,45 @@ namespace MyGameServer
             }
         }
 
-        private string GetUserNameList()
+        private void ProcessSysMsg(MsgSys sysMsg, Socket client)
         {
-            string chatters = "";
+            if (sysMsg.sysType == CSharpGame.MsgSysType.Online)
+            {
+                if (clients.Count != 0)
+                {
+                    // 写个 广播函数 
+                    // 因为会有很多 广播操作。。
+                    MsgSys sysBroadcast = new MsgSys();
+                    sysBroadcast.sysType = MsgSysType.Join;
+                    sysBroadcast.sysContent = sysMsg.sysContent;
+                    BroadcastClient(new CSharpGame.Message(sysBroadcast));
+                }
+
+                GameClient newGC = new GameClient((string)sysMsg.sysContent, null, clientservice, client);
+                clients.Add(newGC);
+
+                CSharpGame.MsgSys sysSend2 = new CSharpGame.MsgSys();
+                sysSend2.sysType = CSharpGame.MsgSysType.List;
+                // 这里改了一下 list消息的content是个用户名的list
+                sysSend2.sysContent = GetUserNameList();
+                SendToClient(newGC, new CSharpGame.Message(sysSend2));
+            }
+        }
+
+        //
+        //
+        // 这里改了， name要list
+        //
+        private List<string> GetUserNameList()
+        {
+            List<string> chatters = new List<string>();
             for (int n = 0; n < clients.Count; n++)
             {
                 GameClient gc = (GameClient)clients[n];
-                chatters += gc.Name;
-                chatters += "|";
+                chatters.Add(gc.Name);
+                //chatters += "|";
             }
-            chatters.Trim(new char[] { '|' });
+            //chatters.Trim(new char[] { '|' });
             return chatters;
         }
 
@@ -247,6 +255,15 @@ namespace MyGameServer
                 return index;
             return -1;
         }
+
+        private void BroadcastClient(CSharpGame.Message msg)
+        {
+            foreach (GameClient cl in clients)
+            {
+                SendToClient(cl, msg);
+            }
+        }
+
         public bool SendToClient(GameClient cl, CSharpGame.Message mes)
         {
             try
@@ -266,31 +283,6 @@ namespace MyGameServer
                 Console.WriteLine(e.ToString());
                 return false;
             }
-            //try
-            //{
-            //    Byte[] message = System.Text.Encoding.BigEndianUnicode.GetBytes(clientCommand);
-            //    Socket s = cl.Sock;
-            //    if (s.Connected)
-            //    {
-            //        s.Send(message, message.Length, 0);
-            //    }
-            //}
-
-            //catch (Exception)//如果有异常则退出
-            //{
-            //    //clients.Remove(cl);
-            //    //lbClients.Items.Remove(cl);
-            //    ////lbClients.Items.Remove(cl.Name + " : " + cl.Host.ToString());
-            //    //for (int n = 0; n < clients.Count; n++)
-            //    //{
-            //    //    Client cl1 = (Client)clients[n];
-            //    //    SendToClient(cl1, "GONE|" + cl.Name);
-            //    //}
-            //    //cl.Sock.Close();
-            //    //cl.CLThread.Abort();
-
-            //}
-
         }
         public void SendToClient(GameClient cl, string clientCommand)
         {
