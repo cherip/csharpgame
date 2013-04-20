@@ -57,7 +57,7 @@ namespace CSharpGame
             // 初始化其他玩家的游戏界面， 这里应该由其他玩家控制。
             // 测试情况下 初始化一个小的
 
-            GameArea playerTesterArea = new GameArea(new System.Drawing.Point(2, 10),
+            OtherGameArea playerTesterArea = new OtherGameArea(new System.Drawing.Point(2, 10),
                                                      new System.Drawing.Size(200, 200));
             playerTesterArea.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             playerTesterArea.Name = "plTesterShower";
