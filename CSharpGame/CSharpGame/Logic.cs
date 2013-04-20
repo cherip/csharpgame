@@ -111,8 +111,19 @@ namespace CSharpGame
         public void ConnectNet()
         {
             Random r = new Random();
-            myClientName = "user" + r.Next(0, 1000);
-            ConnectNet(myClientName);
+            //myClientName = "user" + r.Next(0, 1000);
+            //ConnectNet(myClientName);
+            
+            MsgSys sysMsg = new MsgSys();
+            sysMsg.sysType = MsgSysType.Online;
+            sysMsg.sysContent = "user" + r.Next(0, 1000);
+
+            Message conn = new Message();
+            conn.msgType = MsgType.Sys;
+            conn.msgContent = sysMsg;
+
+            myClientSoc.InitialSoc();
+            myClientSoc.SendMsg(conn);
         }
 
         public void CloseConn(string msg)

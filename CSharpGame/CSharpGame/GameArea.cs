@@ -29,7 +29,9 @@ namespace CSharpGame
         public GameArea(Point areaLocat, Size areaSize) {
             btnArry = new Button[64];
             btnVal = new Hashtable();
+            
             myLogic = new Logic();
+            myLogic.InitLogic();
 
             this.Location = areaLocat;
             this.Size = areaSize;
@@ -99,15 +101,22 @@ namespace CSharpGame
             int[] ret = myLogic.PushButton(pos);
             if (ret != null)
             {
-                CleanPair(btnArry[ret[0]], btnArry[ret[1]]);
+                CleanPair(ret[0], ret[1]);
                 pairBingo(sender, e);
             }
         }
 
-        public void CleanPair(Button a, Button b)
+        public void CleanPair(int a, int b)
         {
-            a.Visible = false;
-            b.Visible = false;
+            btnArry[a].Visible = false;
+            btnArry[b].Visible = false;
+            //a.Visible = false;
+            //b.Visible = false;
+        }
+
+        public void connect()
+        {
+            myLogic.ConnectNet();
         }
 
         private void pairBingo(object sender, EventArgs e)    //两张图一样时，触发事件

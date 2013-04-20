@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Net.Sockets;
 using System.Threading;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 using System.Windows.Forms;
 
 namespace CSharpGame
@@ -77,63 +79,37 @@ namespace CSharpGame
 
         }
 
-            //public GameMessage RecieveStr()
-            // {
-            //     try
-            //     {
-            //        byte[] byteMessage = new byte[1024];
-            //        //ns = client.GetStream();
-            //        ns.Read(byteMessage, 0, byteMessage.Length);
-            //        string receiveStr = System.Text.Encoding.BigEndianUnicode.GetString(byteMessage);
-            //        receiveStr.Trim();
-            //        string[] contents = receiveStr.Split(new Char[] { '|' });
-            //        GameMessage gm = new GameMessage();
-            //        if (contents != null)
-            //        {
-                   
-            //            switch (contents[0])
-            //            {
-            //                case "list":
-            //                    {
-            //                        string[] param = new string[contents.Length - 2];
-            //                        for (int i = 1; i < contents.Length - 1; i++)
-            //                        {
-            //                            param[i - 1] = contents[i];
-            //                        }
-            //                            gm.MessageType = 1;
-            //                            gm.Str_tpye = "list";
-            //                            gm.Para = param;
-            //                            break;
-            //                        }
-            //                case "xxxexit":
-            //                    {
-            //                        gm.MessageType = 1;
-            //                        gm.Str_tpye = "xxxexit";
-            //                        gm.User = contents[1];
-            //                        break;
-            //                    }
-            //                case "xxxjion":
-            //                    {
-            //                        gm.MessageType = 1;
-            //                        gm.Str_tpye = "xxxjion";
-            //                        gm.User = contents[1];
-            //                        break;
-            //                    }
-            //            }
-                       
-            //        }
-            //        if (gm.Str_tpye != null)
-            //            return gm;
-            //        else return null;
-            //    }
-            //    catch (System.Exception ex)
-            //    {
-            //        Console.WriteLine(ex.ToString());
-            //        return null;
-            //    }
-           
+        public Message RecieveMsg()
+        {
+            try
+            {
+                byte[] byteMessage = new byte[1024];
+                ns.Read(byteMessage, 0, byteMessage.Length);
+                Message msg = (Message)(SerializationUnit.DeserializeObject(byteMessage));
+                return msg;
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return null;
+            }
+        }
 
-            // }
+        public bool SendMsg(Message msg) {
+            try
+            {
+                Byte[] outbytes = SerializationUnit.SerializeObject(msg);
+                ns.Write(outbytes, 0, outbytes.Length);
+                Message reciTester = (Message)(SerializationUnit.DeserializeObject(outbytes));
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return false;
+            }
+        }
 
            
 
@@ -146,10 +122,53 @@ namespace CSharpGame
            }
            catch (Exception ex)
            {
-               MessageBox.Show("本来就没连接！");
+               //MessageBox.Show("本来就没连接！");
            }
             
         }
     }
-    
+
+    public class SerializationUnit
+    {
+        /// <summary>
+        /// 把对象序列化为字节数组
+        /// </summary>
+        public static byte[] SerializeObject(object obj)
+        {
+            try
+            {
+                if (obj == null)
+                    return null;
+                MemoryStream ms = new MemoryStream();
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(ms, obj);
+                ms.Position = 0;
+                byte[] bytes = new byte[ms.Length];
+                ms.Read(bytes, 0, bytes.Length);
+                ms.Close();
+                return bytes;
+            }
+            catch (System.Runtime.Serialization.SerializationException e)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 把字节数组反序列化成对象
+        /// </summary>
+        public static object DeserializeObject(byte[] bytes)
+        {
+            object obj = null;
+            if (bytes == null)
+                return obj;
+            MemoryStream ms = new MemoryStream(bytes);
+            ms.Position = 0;
+            BinaryFormatter formatter = new BinaryFormatter();
+            obj = formatter.Deserialize(ms);
+            ms.Close();
+            return obj;
+        }
+    }
+
 }

@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
-namespace CSharpGame
+namespace MyGameServer
 {
     public enum MsgType
     {
@@ -13,11 +15,10 @@ namespace CSharpGame
     }
 
     [Serializable]
-    public class Message
+    class Message
     {
         public MsgType msgType;
         public object msgContent;
-        //public MsgSys msgContent;
     }
 
     class GameMessage
@@ -70,14 +71,14 @@ namespace CSharpGame
     }
 
     [Serializable]
-    public class MsgGame 
+    class MsgGame 
     {
         public string userName;
         public int[] cleanPair;
     }
 
     [Serializable]
-    public class MsgChat
+    class MsgChat
     {
         public List<string> onlineUser;
     }
@@ -92,11 +93,10 @@ namespace CSharpGame
     }
 
     [Serializable]
-    public class MsgSys
+    class MsgSys
     {
         public MsgSysType sysType;
         //public int[] gameStart;
-        //public string user;
-        public string sysContent;
+        public string user;
     }
 }
