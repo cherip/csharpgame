@@ -97,6 +97,6 @@ namespace CSharpGame
         public MsgSysType sysType;
         //public int[] gameStart;
         //public string user;
-        public string sysContent;
+        public object sysContent;
     }
 }

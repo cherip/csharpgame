@@ -67,92 +67,9 @@ namespace MyGameServer
                    Byte[] LInfor = new Byte[1024];
                    int msglen = client.Receive(LInfor, LInfor.Length, 0);
                    Byte[] realDate = new Byte[msglen];
-                   //System.Buffer.BlockCopy(LInfor, 0, realDate, 0, msglen);
+                   System.Buffer.BlockCopy(LInfor, 0, realDate, 0, msglen);
 
-                   CSharpGame.Message testMsg = (CSharpGame.Message)(CSharpGame.SerializationUnit.DeserializeObject(realDate));
-
-                   string clientcommand = System.Text.Encoding.BigEndianUnicode.GetString(LInfor);
-                   string[] tokens = clientcommand.Split(new Char[] { '|' });
-
-                   switch(tokens[0])
-                   {
-                       case "login":
-                           {
-                               if (clients.Count != 0)
-                               {
-                                   for (int n = 0; n < clients.Count; n++)//将新用户的加入信息发送给其他用户
-                                   {
-                                       GameClient cl = (GameClient)clients[n];
-                                       Console.WriteLine(cl.Name + "xxxjion|" + tokens[1]);
-                                       SendToClient(cl, "xxxjion|" + tokens[1] + '|');
-                                   }
-                               }
-                               GameClient newGC = new GameClient(tokens[1], null, clientservice, client);
-                               clients.Add(newGC);
-                               Console.WriteLine(newGC.Name + "list|" + GetUserNameList());
-                               SendToClient(newGC, "list|" + GetUserNameList());
-                               break;
-                           }
-                       case "exit":
-                           {
-                               //int remove = 0;
-
-                               //bool found = false;
-
-                               //for (int i = 0; i < clients.Count; i++)
-                               //{
-                               //    GameClient cl = (GameClient)clients[i];
-                               //    Console.WriteLine(cl.Name + "xxxexit|" + tokens[1]);
-                               //    SendToClient(cl, "xxxexit|" + tokens[1] + '|');
-                               //    if (cl.Name.CompareTo(tokens[1]) == 0)
-                               //    {
-                               //        remove = i;
-                               //        found = true;
-                               //    }
-                               //}
-                               //if (found)
-                               //    clients.RemoveAt(remove);
-                               int remove = findGameClient(tokens[1]);
-                               if (remove != -1)
-                               {
-                                   clients.RemoveAt(remove);
-                               }
-                               client.Close();
-                               keepalive = false; 
-                               break;
-                           }
-                       case "invite":
-                           {
-                               int answer = findGameClient(tokens[2]);
-                               if (answer != -1)
-                               {
-                                   SendToClient((GameClient)clients[answer], "xxxinvite|" + tokens[1]);
-                               }
-                               break;
-                           }
-                       case "startgame":
-                           {
-                               int[] picArray = new int[64];
-                               MyFormat.genPic(ref picArray);
-                               string str = MyFormat.arrayToStr(picArray);
-                               foreach (GameClient cl in clients)
-                               {
-                                   SendToClient(cl, "xxxstartgame|" + str);
-                               }
-                               break;
-                           }
-                       case "gamedata":
-                           {
-                               foreach (GameClient cl in clients)
-                               {
-                                   if (true)//!cl.Name.Equals(tokens[1]))
-                                   {
-                                       SendToClient(cl, "xxxgamedata|" + tokens[2]);
-                                   }
-                               }
-                               break;
-                           }
-                   }
+                   CSharpGame.Message clientMsg = (CSharpGame.Message)(CSharpGame.SerializationUnit.DeserializeObject(realDate));
                }
                catch (System.Exception ex)
                {

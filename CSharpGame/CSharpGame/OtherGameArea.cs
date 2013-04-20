@@ -10,145 +10,46 @@ namespace CSharpGame
 {
     class OtherGameArea : Panel
     {
-         Hashtable btnVal;
-        Button[] btnArry;
-        Logic myLogic;
-
-        //public delegate void PairBingoHandle(object sender, EventArgs e);//消除两张图代理
-        //public event PairBingoHandle pairBingoEvent;
+        GameArea gameArea;
+        Label userName;
+        Label gameStatus;
 
         public OtherGameArea()
         {
-            btnArry = new Button[64];
-            btnVal = new Hashtable();
-            myLogic = new Logic();
-
-            //createButton();
         }
 
         public OtherGameArea(Point areaLocat, Size areaSize) {
-            btnArry = new Button[64];
-            btnVal = new Hashtable();
-            myLogic = new Logic();
-
             this.Location = areaLocat;
             this.Size = areaSize;
-            createLable(new System.Drawing.Size(20,20));
-            createButton(areaSize);
-        }
+        
+            userName = createLable(new Point(0, 0), new Size(80, 10), "userxxx");
+            gameStatus = createLable(new Point(85, 0), new Size(80, 10), "64/64");
 
-        //private void calcBtnSize(Size areaSize) {
-        //    int margin_x = (int)(areaSize.Width * 0.05 / 2);
-        //    int margin_y = (int)(areaSize.Height * 0.05 / 2);
+            gameArea = new GameArea(new Point(0, 12), new Size(areaSize.Width, areaSize.Height - 12));
 
-        //    int w = (areaSize.Width - margin_x * 2) / 8;
-        //    int h = (areaSize.Height - margin_y * 2) / 8;
-
-        //    int real_x = (int)(w * 0.95);
-        //    int real_y = (int)(h * 0.95);
-        //}
-        private void createLable(Size areaSize)
-        {
-            int margin_x = (int)(areaSize.Width * 0.05 / 2);
-            int margin_y = (int)(areaSize.Height * 0.05 / 2);
-
-            int w = (areaSize.Width - margin_x * 2) / 8;
-            int h = (areaSize.Height - margin_y * 2) / 8;
-
-            int btn_margin_x = (int)(w * 0.1) / 2;
-            int btn_margin_y = (int)(h * 0.1) / 2;
-
-            Label userName = new Label();
-            userName.Text = "xxxxx";
-            userName.Location = new System.Drawing.Point(margin_x,margin_y);
             this.Controls.Add(userName);
-        }
-        private void createButton(Size areaSize)
-        {
-            int margin_x = (int)(areaSize.Width * 0.05 / 2);
-            int margin_y = (int)(areaSize.Height * 0.05 / 2);
-
-            int w = (areaSize.Width - margin_x * 2) / 8;
-            int h = (areaSize.Height - margin_y * 2) / 8;
-
-            int btn_margin_x = (int)(w * 0.1) / 2;
-            int btn_margin_y = (int)(h * 0.1) / 2;
-
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CSharpGame));
-            for (int i = 0; i < 64; i++)
-            {
-                System.Windows.Forms.Button buttonNew = new System.Windows.Forms.Button();
-
-                int local_x = margin_x + (w) * (i % 8);
-                int local_y = margin_y + (h) * (i / 8);
-
-                local_x += btn_margin_x;
-                local_y += btn_margin_y;
-
-                buttonNew.Location = new System.Drawing.Point(local_x, local_y);
-
-                buttonNew.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button1.BackgroundImage")));
-                buttonNew.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-
-                buttonNew.Name = "button" + System.Convert.ToString(i);
-                buttonNew.Size = new System.Drawing.Size(w - btn_margin_x * 2, h - btn_margin_y * 2);
-                buttonNew.TabIndex = 0;
-                buttonNew.TabStop = false;
-                buttonNew.UseVisualStyleBackColor = true;
-                
-                buttonNew.Click += new System.EventHandler(this.picBtn_Clicked);
-
-                btnVal.Add(buttonNew, i);
-                btnArry[i] = buttonNew;
-                this.Controls.Add(buttonNew);
-            }
+            this.Controls.Add(gameStatus);
+            this.Controls.Add(gameArea);
         }
 
-        private void picBtn_Clicked(object sender, EventArgs e)
+        private Label createLable(Point p, Size s, string txt)
         {
-            //
-            // 利用logic中的PushButton变量来得到是否消除某2个button
-            // 但是我那边的logic没有写对，需要返回消除的点对。
+            Label lbl = new Label();
+            lbl.Location = p;
+            lbl.Size = s;
+            lbl.Text = txt;
 
-            Button curr_click = (Button)sender;
-            int pos = (int)btnVal[curr_click];
-            int[] ret = myLogic.PushButton(pos);
-            if (ret != null)
-            {
-                CleanPair(btnArry[ret[0]], btnArry[ret[1]]);
-                pairBingo(sender, e);
-            }
+            return lbl;
         }
 
-        public void CleanPair(Button a, Button b)
-        {
-            a.Visible = false;
-            b.Visible = false;
+        private void UpdateStatus() 
+        { 
         }
 
-        private void pairBingo(object sender, EventArgs e)    //两张图一样时，触发事件
+        public void CleanButton(int a, int b)
         {
-            //
-            // 利用logic 完成逻辑判断，form只完成显示
-            //
-            //联机
-            if (myLogic.keepalive)
-            {
-                myLogic.sendGameData();
-            }
-
-            int state = myLogic.ClearAnPair();
-
-            if (state == 2)
-            {
-                MessageBox.Show("Win!");
-                myLogic.started = false;
-                //startBtn.Enabled = true;
-            }
-            else if (state == 1)
-            {
-                //button_start(null, e);
-            }
+            gameArea.CleanPair(a, b);
+            UpdateStatus();
         }
     }
 }
