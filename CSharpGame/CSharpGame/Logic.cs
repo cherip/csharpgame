@@ -36,17 +36,18 @@ namespace CSharpGame
         public delegate void NetworkProcess(object param, int type);    //处理网络消息
         public event NetworkProcess newtworkProcessor;                  //form传递函数，直接操作form中的控件
 
-
+        public Logic()
+        {
+            keepalive = false;
+            myClientSoc = new MyClientSoc();
+            pairPicCounts = -1;
+        }
 
         public void InitLogic() {
             // 生成button对应的图像 和 统计总共消除的次数
             MyFormat.genPic(ref butArry);
             int[] tmp = (int[])butArry.Clone();
             pairPicCounts = MyFormat.countPairPic(tmp);
-
-            keepalive = false;
-            myClientSoc = new MyClientSoc();
-            
         }
 
         public int GetPicType(int pos) {
@@ -88,40 +89,37 @@ namespace CSharpGame
         //
         // 网络通信的功能
         //
-        public void ConnectNet(string msg) {
-            if (keepalive == false)
-            {
-	            //... someting to do
-	            // 初始化网络
+        public void ConnectNet(Message msg)
+        {
+            keepalive = true;
+            myClientSoc = new MyClientSoc();
+	        myClientSoc.InitialSoc();
 
-                keepalive = true;
-                myClientSoc = new MyClientSoc();
-	            myClientSoc.InitialSoc();
+            // 启动单独的线程用于接收服务器端发送来的消息
+            //receiveThread = new Thread(new ThreadStart(NetRuning));
+            if (receiveThread == null)
+                receiveThread = new Thread(new ThreadStart(NetRuning));
+            receiveThread.Start();
 
+            //myClientSoc.SendStr("login", msg);
+            myClientSoc.SendMsg(msg);
 
-                // 启动单独的线程用于接收服务器端发送来的消息
-                //receiveThread = new Thread(new ThreadStart(NetRuning));
-                if (receiveThread == null)
-                    receiveThread = new Thread(new ThreadStart(NetRuning));
-                receiveThread.Start();
-
-                myClientSoc.SendStr("login", msg);
-            }
         }
 
         public void ConnectNet()
         {
-            Random r = new Random();
-            //myClientName = "user" + r.Next(0, 1000);
-            //ConnectNet(myClientName);
-            
-            MsgSys sysMsg = new MsgSys();
-            sysMsg.sysType = MsgSysType.Online;
-            sysMsg.sysContent = "user" + r.Next(0, 1000);
+            if (keepalive == false)
+            {
+                keepalive = true;
+                Random r = new Random();
 
-            Message conn = new Message(sysMsg);
-            myClientSoc.InitialSoc();
-            myClientSoc.SendMsg(conn);
+                MsgSys sysMsg = new MsgSys();
+                sysMsg.sysType = MsgSysType.Online;
+                sysMsg.sysContent = "user" + r.Next(0, 1000);
+
+                Message conn = new Message(sysMsg);
+                ConnectNet(conn);
+            }
         }
 
         public void CloseConn(string msg)
