@@ -374,7 +374,7 @@ namespace CSharpGame
 
         private void logoutBtn_Click(object sender, EventArgs e)
         {
-            myLogic.CloseConn(username);
+            gameArea.logout();
             listView1.Clear();
             listView1.Items.Clear();
 

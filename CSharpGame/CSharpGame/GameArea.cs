@@ -153,6 +153,11 @@ namespace CSharpGame
 
         public delegate void EnableDeleg();
 
+        public void logout()
+        {
+            myLogic.CloseConn(null);
+        }
+
         public void EnableArea()
         {
             if (this.InvokeRequired)
