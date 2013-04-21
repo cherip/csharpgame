@@ -194,40 +194,47 @@ namespace MyGameServer
 
         private void ProcessSysMsg(MsgSys sysMsg, Socket client)
         {
-            if (sysMsg.sysType == CSharpGame.MsgSysType.Online)
+            switch (sysMsg.sysType)
             {
-                if (clients.Count != 0)
-                {
-                    // 写个 广播函数 
-                    // 因为会有很多 广播操作。。
-                    MsgSys sysBroadcast = new MsgSys();
-                    sysBroadcast.sysType = MsgSysType.Join;
-                    sysBroadcast.sysContent = sysMsg.sysContent;
-                    BroadcastClient(new CSharpGame.Message(sysBroadcast));
-                }
+                case MsgSysType.Online:
+                    {
+                        if (clients.Count != 0)
+                        {
+                            // 写个 广播函数 
+                            // 因为会有很多 广播操作。。
+                            MsgSys sysBroadcast = new MsgSys();
+                            sysBroadcast.sysType = MsgSysType.Join;
+                            sysBroadcast.sysContent = sysMsg.sysContent;
+                            BroadcastClient(new CSharpGame.Message(sysBroadcast));
+                        }
 
-                GameClient newGC = new GameClient((string)sysMsg.sysContent, null, clientservice, client);
-                clients.Add(newGC);
+                        GameClient newGC = new GameClient((string)sysMsg.sysContent, null, clientservice, client);
+                        clients.Add(newGC);
 
-                CSharpGame.MsgSys sysSend2 = new CSharpGame.MsgSys();
-                sysSend2.sysType = CSharpGame.MsgSysType.List;
-                // 这里改了一下 list消息的content是个用户名的list
-                sysSend2.sysContent = GetUserNameList();
-                SendToClient(newGC, new CSharpGame.Message(sysSend2));
+                        CSharpGame.MsgSys sysSend2 = new CSharpGame.MsgSys();
+                        sysSend2.sysType = CSharpGame.MsgSysType.List;
+                        // 这里改了一下 list消息的content是个用户名的list
+                        sysSend2.sysContent = GetUserNameList();
+                        SendToClient(newGC, new CSharpGame.Message(sysSend2));
+                    }
+                    break;
+                case MsgSysType.Offline:
+                    {
+                        MsgSys sysBroadcast = new MsgSys();
+                        sysBroadcast.sysType = MsgSysType.Exit;
+                        sysBroadcast.sysContent = sysMsg.sysContent;
+                        BroadcastClient(new CSharpGame.Message(sysBroadcast));
+                        int remove = findGameClient((string)sysMsg.sysContent);
+                        if (remove != -1)
+                        {
+                            clients.RemoveAt(remove);
+                        }
+                        client.Close();
+                    }
+                    break;
             }
-            if (sysMsg.sysType == MsgSysType.Offline)
-            {
-                MsgSys sysBroadcast = new MsgSys();
-                sysBroadcast.sysType = MsgSysType.Exit;
-                sysBroadcast.sysContent = sysMsg.sysContent;
-                BroadcastClient(new CSharpGame.Message(sysBroadcast));
-                int remove = findGameClient((string)sysMsg.sysContent);
-                if (remove != -1)
-                {
-                    clients.RemoveAt(remove);
-                }
-                client.Close();
-            }
+
+         
         }
 
         //
