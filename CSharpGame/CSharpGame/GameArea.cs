@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Collections;
-using System.Drawing;
+using System.Threading;
 
 namespace CSharpGame
 {
@@ -13,6 +16,8 @@ namespace CSharpGame
         Hashtable btnVal;
         Button[] btnArry;
         Logic myLogic;
+        bool gameStart;
+        public System.Windows.Forms.ImageList picList;
 
         //public delegate void PairBingoHandle(object sender, EventArgs e);//消除两张图代理
         //public event PairBingoHandle pairBingoEvent;
@@ -30,17 +35,49 @@ namespace CSharpGame
             btnArry = new Button[64];
             btnVal = new Hashtable();
             
-            myLogic = new Logic();
-            myLogic.InitLogic();
-
             this.Location = areaLocat;
             this.Size = areaSize;
             createButton(areaSize);
 
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            //this.Name = "myGameShower";
             this.TabIndex = 0;
             this.Enabled = false;
+
+            // 处理逻辑关系
+            myLogic = new Logic(this);
+            myLogic.btnImageSetFunc += SetBtnImage;
+            myLogic.startGame += EnableArea;
+            myLogic.cleanBtnPair += CleanBtnPair;
+
+            gameStart = false;
+            //myLogic.InitLogic();
+        }
+
+        // 废函数
+        public bool GameStart(int[] gameReset)
+        {
+//            myLogic.btnImageSetFunc += SetBtnImage;
+            myLogic.InitGame(gameReset);
+//            myLogic.btnImageSetFunc -= SetBtnImage;
+            return true;
+        }
+
+        private bool SetBtnImage(int idx, int type)
+        {
+            if (idx < 0 || idx >= btnArry.Length)
+            {
+                return false;
+            }
+
+            if (type < 0 || type >= picList.Images.Count)
+            {
+                return false;
+            }
+
+            Button btn = btnArry[idx];
+            btn.BackgroundImage = picList.Images[type];
+
+            return true;
         }
 
         private void createButton(Size areaSize)
@@ -88,24 +125,25 @@ namespace CSharpGame
         {
             //
             // 利用logic中的PushButton变量来得到是否消除某2个button
-            // 但是我那边的logic没有写对，需要返回消除的点对。
+            // logic会回调cleanBtnPair 完成界面的更新 
+            //
 
             Button curr_click = (Button)sender;
             int pos = (int)btnVal[curr_click];
-            int[] ret = myLogic.PushButton(pos);
-            if (ret != null)
-            {
-                CleanPair(ret[0], ret[1]);
-                pairBingo(sender, e);
-            }
+            myLogic.PushButton(pos);
+
+            //int[] ret = myLogic.PushButton(pos);
+            //if (ret != null)
+            //{
+            //    CleanBtnPair(ret[0], ret[1]);
+            //    pairBingo(sender, e);
+            //}
         }
 
-        public void CleanPair(int a, int b)
+        public void CleanBtnPair(int a, int b)
         {
             btnArry[a].Visible = false;
             btnArry[b].Visible = false;
-            //a.Visible = false;
-            //b.Visible = false;
         }
 
         public void connect()
@@ -113,29 +151,44 @@ namespace CSharpGame
             myLogic.ConnectNet();
         }
 
-        private void pairBingo(object sender, EventArgs e)    //两张图一样时，触发事件
+        public delegate void EnableDeleg();
+
+        public void EnableArea()
         {
-            //
-            // 利用logic 完成逻辑判断，form只完成显示
-            //
-            //联机
-            if (myLogic.keepalive)
+            if (this.InvokeRequired)
             {
-                myLogic.sendGameData();
+                EnableDeleg ld = new EnableDeleg(EnableArea);
+                this.Invoke(ld, null);
             }
-
-            int state = myLogic.ClearAnPair();
-
-            if (state == 2)
+            else
             {
-                MessageBox.Show("Win!");
-                myLogic.started = false;
-                //startBtn.Enabled = true;
-            }
-            else if (state == 1)
-            {
-                //button_start(null, e);
+                this.Enabled = true;
             }
         }
+
+        //private void pairBingo(object sender, EventArgs e)    //两张图一样时，触发事件
+        //{
+        //    //
+        //    // 利用logic 完成逻辑判断，form只完成显示
+        //    //
+        //    //联机
+        //    if (myLogic.keepalive)
+        //    {
+        //        myLogic.sendGameData();
+        //    }
+
+        //    int state = myLogic.ClearAnPair();
+
+        //    if (state == 2)
+        //    {
+        //        MessageBox.Show("Win!");
+        //        myLogic.started = false;
+        //        //startBtn.Enabled = true;
+        //    }
+        //    else if (state == 1)
+        //    {
+        //        //button_start(null, e);
+        //    }
+        //}
     }
 }

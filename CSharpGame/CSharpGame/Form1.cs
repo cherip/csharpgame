@@ -39,10 +39,6 @@ namespace CSharpGame
             initCreateControl();
 
             myInitial();
-
-            //int[] tester = new int[] { 2, 1 };
-            //byte[] ss = SerializationUnit.SerializeObject(tester);
-            //int[] ob = (int[])(SerializationUnit.DeserializeObject(ss));
         }
 
         private void initCreateControl()
@@ -51,6 +47,7 @@ namespace CSharpGame
             gameArea = new GameArea(new System.Drawing.Point(2, 238),
                                     new System.Drawing.Size(669, 600));
             gameArea.Name = "myGameShower";
+            gameArea.picList = this.picList;
 
             this.Controls.Add(gameArea);
 
@@ -89,48 +86,48 @@ namespace CSharpGame
             //MessageBox.Show("xxx" + pairPicCounts);
         }
 
-        private void picBtn_Clicked(object sender, EventArgs e)              //点击图片按钮事件
-        {
-            //
-            // 利用logic中的PushButton变量来得到是否消除某2个button
-            // 但是我那边的logic没有写对，需要返回消除的点对。
+        //private void picBtn_Clicked(object sender, EventArgs e)              //点击图片按钮事件
+        //{
+        //    //
+        //    // 利用logic中的PushButton变量来得到是否消除某2个button
+        //    // 但是我那边的logic没有写对，需要返回消除的点对。
 
-            Button curr_click = (Button)sender;
-            int pos = (int)btnVal[curr_click];
-            int[] ret = myLogic.PushButton(pos);
-            if (ret != null)
-            {
-                butArry[ret[0]].Visible = false;
-                butArry[ret[1]].Visible = false;
+        //    Button curr_click = (Button)sender;
+        //    int pos = (int)btnVal[curr_click];
+        //    int[] ret = myLogic.PushButton(pos);
+        //    if (ret != null)
+        //    {
+        //        butArry[ret[0]].Visible = false;
+        //        butArry[ret[1]].Visible = false;
 
-                pairBingoEvent(sender, e);
-            }
-        }
+        //        pairBingoEvent(sender, e);
+        //    }
+        //}
 
-        private void pairBingo(object sender, EventArgs e)    //两张图一样时，触发事件
-        {
-            //
-            // 利用logic 完成逻辑判断，form只完成显示
-            //
-            //联机
-            if (myLogic.keepalive)
-            {
-                myLogic.sendGameData();
-            }
+        //private void pairBingo(object sender, EventArgs e)    //两张图一样时，触发事件
+        //{
+        //    //
+        //    // 利用logic 完成逻辑判断，form只完成显示
+        //    //
+        //    //联机
+        //    if (myLogic.keepalive)
+        //    {
+        //        myLogic.sendGameData();
+        //    }
             
-            int state = myLogic.ClearAnPair();
+        //    int state = myLogic.ClearAnPair();
 
-            if (state == 2)
-            {
-                MessageBox.Show("Win!");
-                myLogic.started = false;
-                startBtn.Enabled = true;
-            }
-            else if (state == 1)
-            {
-                button_start(null, e);
-            }
-        }
+        //    if (state == 2)
+        //    {
+        //        MessageBox.Show("Win!");
+        //        myLogic.started = false;
+        //        startBtn.Enabled = true;
+        //    }
+        //    else if (state == 1)
+        //    {
+        //        button_start(null, e);
+        //    }
+        //}
 
         private void radioClicked(object sender, EventArgs e)
         {

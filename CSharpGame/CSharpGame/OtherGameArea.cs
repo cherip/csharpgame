@@ -48,7 +48,7 @@ namespace CSharpGame
 
         public void CleanButton(int a, int b)
         {
-            gameArea.CleanPair(a, b);
+            gameArea.CleanBtnPair(a, b);
             UpdateStatus();
         }
     }

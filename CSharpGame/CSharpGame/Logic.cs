@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading;
+using System.Windows.Forms;
 using System.Collections;
+using System.Threading;
 
 namespace CSharpGame
 {
@@ -36,6 +40,24 @@ namespace CSharpGame
         public delegate void NetworkProcess(object param, int type);    //处理网络消息
         public event NetworkProcess newtworkProcessor;                  //form传递函数，直接操作form中的控件
 
+        // 事件函数处理设置btn的图片
+        public delegate bool SetBtnImage(int idx, int type);
+        public event SetBtnImage btnImageSetFunc;
+
+        // 事件函数处理 消除btn
+        public delegate void CleanBtn(int a, int b);
+        public event CleanBtn cleanBtnPair;
+
+        // 非常2比的设计，因为logic要大量调用gamearea的界面显示函数，
+        // 所以logic这里放入一个所控制的gamearea的变量
+        // 其实应该把 gamearea放入logic之下， 然后回调logic的函数
+        // 还做不了 应该不是一个线程。。囧
+        public GameArea gameShower;
+
+        public delegate void EnableGameArea();
+        public event EnableGameArea startGame;
+        
+
         public Logic()
         {
             keepalive = false;
@@ -43,11 +65,40 @@ namespace CSharpGame
             pairPicCounts = -1;
         }
 
-        public void InitLogic() {
-            // 生成button对应的图像 和 统计总共消除的次数
-            MyFormat.genPic(ref butArry);
+        public Logic(GameArea gameShow)
+        {
+            keepalive = false;
+            //myClientSoc = new MyClientSoc();
+            pairPicCounts = -1;
+            this.gameShower = gameShow;
+        }
+
+        //public void InitLogic() {
+        //    // 生成button对应的图像 和 统计总共消除的次数
+        //    MyFormat.genPic(ref butArry);
+        //    int[] tmp = (int[])butArry.Clone();
+        //    pairPicCounts = MyFormat.countPairPic(tmp);
+        //}
+
+        // 通过传入的数组 初始化逻辑
+        public void InitGame(int[] gameReset)
+        {
+            butArry = (int[])gameReset.Clone();
             int[] tmp = (int[])butArry.Clone();
             pairPicCounts = MyFormat.countPairPic(tmp);
+
+            if (btnImageSetFunc != null) 
+            {
+                for (int i = 0; i < butArry.Length; i++)
+                {
+                    btnImageSetFunc(i, butArry[i]);
+                }
+            }
+
+            // 激活gamearea界面。让玩家开始玩游戏
+            // this.gameShower.Enabled = true;
+            startGame();
+            //System.Windows.Forms.pa
         }
 
         public int GetPicType(int pos) {
@@ -56,34 +107,44 @@ namespace CSharpGame
             return butArry[pos];
         }
 
-        public int[] PushButton(int pos) {
+        public void PushButton(int pos) {
             if (last_click == -1) {
                 last_click = pos;
-                return null;
             } else {
                 if (last_click != pos && butArry[last_click] == butArry[pos]) {
                     butArry[last_click] = -1;
                     butArry[pos] = -1; 
                     int ret = last_click;
                     last_click = -1;
-                    int[] r = new int[2] {ret, pos};
-                    return r;
+
+                    // 调用绑定的事件 消除btn
+                    cleanBtnPair(ret, pos);
+                    // 再调用后续的处理逻辑
+                    ClearAnPair();
+                    //int[] r = new int[2] {ret, pos};
                 } else {
                     last_click = pos;
-                    return null;
                 }
             }
         }
 
-        public int ClearAnPair() {
+        public void ClearAnPair() {
             pairPicCounts--;
+
+            // 如果此副牌接受
             if (pairPicCounts == 0) {
+
+                // 如果完成所有牌
                 if (--totalTurns == 0) {
-                    return 2;
+                    // sendWin()
+                    // showWin()...
                 }
-                return 1;
+                else
+                {
+                    // sendFinish();
+                    // resetGame();
+                }
             }
-            return 0;
         }
 
         //
@@ -91,12 +152,11 @@ namespace CSharpGame
         //
         public void ConnectNet(Message msg)
         {
-            keepalive = true;
+            //keepalive = true;
             myClientSoc = new MyClientSoc();
 	        myClientSoc.InitialSoc();
 
             // 启动单独的线程用于接收服务器端发送来的消息
-            //receiveThread = new Thread(new ThreadStart(NetRuning));
             if (receiveThread == null)
                 receiveThread = new Thread(new ThreadStart(NetRuning));
             receiveThread.Start();
@@ -130,20 +190,7 @@ namespace CSharpGame
                 MsgSys sysMsg = new MsgSys();
                 sysMsg.sysType = MsgSysType.Offline;
                 sysMsg.sysContent = myClientName;
-                Message conn = new Message(sysMsg);
-                myClientSoc.SendMsg(conn);
-	            //myClientSoc.SendStr("exit", myClientName);
-	            //... someting to do
-	            //myClientSoc.CloseConn();
-
-                //这里选择等待receive线程的结束，否则可能在断时间内，多次
-                //receiveThread.Join();
-                //myClientSoc.CloseConn();
-                //receiveThread.Abort();
-
-                //receiveThread.Join();
-                
-	            //keepalive = false;
+                myClientSoc.SendMsg(new Message(sysMsg));
                 receiveThread = null;
             }
             
@@ -199,6 +246,11 @@ namespace CSharpGame
             {
                 //某玩家退出
                 string userName = (string)sysMsg.sysContent;
+            }
+            if (sysMsg.sysType == MsgSysType.Begin)
+            {
+                int[] gameStartStatus = (int[])sysMsg.sysContent;
+                InitGame(gameStartStatus);
             }
         }
 

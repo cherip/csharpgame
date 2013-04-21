@@ -24,6 +24,7 @@ namespace MyGameServer
         private ArrayList clients; //申名一个一维数组，用来存储连接到服务器的客户信息
         public delegate void GetlbClientCall(string id, GameClient ipn);//不能在线程启动后又启动Windows窗体线程，这样是不安全的
         NetworkStream ns;
+        private List<int[]> gameResetStatus;
         
         //因此要建立一个委托
         public Server()
@@ -214,6 +215,14 @@ namespace MyGameServer
                 // 这里改了一下 list消息的content是个用户名的list
                 sysSend2.sysContent = GetUserNameList();
                 SendToClient(newGC, new CSharpGame.Message(sysSend2));
+
+                // 测试代码
+                // 这里用户发送logic请求后，就直接传递会game开始的信号
+                InitGameStatus();
+                CSharpGame.MsgSys sysBegin = new CSharpGame.MsgSys();
+                sysBegin.sysType = MsgSysType.Begin;
+                sysBegin.sysContent = gameResetStatus[0];
+                SendToClient(newGC, new CSharpGame.Message(sysBegin));
             }
             if (sysMsg.sysType == MsgSysType.Offline)
             {
@@ -322,6 +331,17 @@ namespace MyGameServer
                 //cl.Sock.Close();
                 //cl.CLThread.Abort();
 
+            }
+        }
+
+        public void InitGameStatus()
+        {
+            gameResetStatus = new List<int[]>();
+            for (int i = 0; i < 3; i++)
+            {
+                int[] game = new int[64];
+                MyFormat.genPic(ref game);
+                gameResetStatus.Add((int[])game.Clone());
             }
         }
     }
