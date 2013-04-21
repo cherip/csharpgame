@@ -109,6 +109,7 @@ namespace CSharpGame
         Offline,
         Join,
         List,
+        Exit,
     }
 
     [Serializable]

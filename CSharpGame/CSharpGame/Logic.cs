@@ -10,7 +10,7 @@ namespace CSharpGame
     class Logic
     {
         MyClientSoc myClientSoc;
-        string myClientName;
+        static string myClientName;
         GameClient other;
         public const int MAX_PIC = 64;
         static System.Timers.Timer timeElapsed;                 //计时器
@@ -114,13 +114,17 @@ namespace CSharpGame
             Random r = new Random();
             //myClientName = "user" + r.Next(0, 1000);
             //ConnectNet(myClientName);
-            
+            keepalive = true;
             MsgSys sysMsg = new MsgSys();
             sysMsg.sysType = MsgSysType.Online;
             sysMsg.sysContent = "user" + r.Next(0, 1000);
+            myClientName = (string)sysMsg.sysContent;
 
             Message conn = new Message(sysMsg);
             myClientSoc.InitialSoc();
+            if (receiveThread == null)
+                receiveThread = new Thread(new ThreadStart(NetRuning));
+            receiveThread.Start();
             myClientSoc.SendMsg(conn);
         }
 
@@ -128,7 +132,12 @@ namespace CSharpGame
         {
             if (keepalive)
             {
-	            myClientSoc.SendStr("exit", myClientName);
+                MsgSys sysMsg = new MsgSys();
+                sysMsg.sysType = MsgSysType.Offline;
+                sysMsg.sysContent = myClientName;
+                Message conn = new Message(sysMsg);
+                myClientSoc.SendMsg(conn);
+	            //myClientSoc.SendStr("exit", myClientName);
 	            //... someting to do
 	            //myClientSoc.CloseConn();
 
@@ -166,8 +175,36 @@ namespace CSharpGame
         {
             // 这里客户端的接受服务器消息主要逻辑，
             // 为从服务器端发生的消息作出各种反应
+            switch (msg.msgType)
+            {
+                case MsgType.Sys:
+                    {
+                        MsgSys sysMsg = (MsgSys)msg.msgContent;
 
+                        ProcessSysMsg(sysMsg);
+                    }
+                    break;
+            }
             return true;
+        }
+
+        private void ProcessSysMsg(MsgSys sysMsg)
+        {
+            if(sysMsg.sysType == MsgSysType.Join)
+            {
+                //有玩家加入
+                string userName = (string)sysMsg.sysContent;
+            }
+            if (sysMsg.sysType == MsgSysType.List)
+            {
+                //在线玩家列表
+                List<string> userList = (List<string>)sysMsg.sysContent;
+            }
+            if (sysMsg.sysType == MsgSysType.Exit)
+            {
+                //某玩家退出
+                string userName = (string)sysMsg.sysContent;
+            }
         }
 
         // 
