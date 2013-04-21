@@ -103,8 +103,13 @@ namespace CSharpGame
                 }
             }
 
-            startGame();
+            //startGame();
             //System.Windows.Forms.pa
+        }
+
+        public void Enable()
+        {
+            startGame();
         }
 
         public int GetPicType(int pos)
