@@ -10,7 +10,7 @@ namespace CSharpGame
 {
     class OtherGameArea : Panel
     {
-        GameArea gameArea;
+        public GameArea gameArea;
         Label userName;
         Label gameStatus;
 

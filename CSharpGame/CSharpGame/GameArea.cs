@@ -21,20 +21,25 @@ namespace CSharpGame
 
         //public delegate void PairBingoHandle(object sender, EventArgs e);//消除两张图代理
         //public event PairBingoHandle pairBingoEvent;
+        public delegate void btnClick(int idx);
+        public event btnClick btnClickEvent;
 
         public GameArea()
         {
             btnArry = new Button[64];
             btnVal = new Hashtable();
             myLogic = new Logic();
-
-            //createButton();
         }
 
         public GameArea(Point areaLocat, Size areaSize) {
+            Init(areaLocat, areaSize);
+        }
+
+        public void Init(Point areaLocat, Size areaSize)
+        {
             btnArry = new Button[64];
             btnVal = new Hashtable();
-            
+
             this.Location = areaLocat;
             this.Size = areaSize;
             createButton(areaSize);
@@ -42,27 +47,17 @@ namespace CSharpGame
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.TabIndex = 0;
             this.Enabled = false;
-
-            // 处理逻辑关系
-            myLogic = new Logic(this);
-            myLogic.btnImageSetFunc += SetBtnImage;
-            myLogic.startGame += EnableArea;
-            myLogic.cleanBtnPair += CleanBtnPair;
-
-            gameStart = false;
-            //myLogic.InitLogic();
         }
-
         // 废函数
-        public bool GameStart(int[] gameReset)
-        {
-//            myLogic.btnImageSetFunc += SetBtnImage;
-            myLogic.InitGame(gameReset);
-//            myLogic.btnImageSetFunc -= SetBtnImage;
-            return true;
-        }
+//        public bool GameStart(int[] gameReset)
+//        {
+////            myLogic.btnImageSetFunc += SetBtnImage;
+//            myLogic.InitGame(gameReset);
+////            myLogic.btnImageSetFunc -= SetBtnImage;
+//            return true;
+//        }
 
-        private bool SetBtnImage(int idx, int type)
+        public bool SetBtnImage(int idx, int type)
         {
             if (idx < 0 || idx >= btnArry.Length)
             {
@@ -130,7 +125,9 @@ namespace CSharpGame
 
             Button curr_click = (Button)sender;
             int pos = (int)btnVal[curr_click];
-            myLogic.PushButton(pos);
+
+            btnClickEvent(pos);
+            //myLogic.PushButton(pos);
 
             //int[] ret = myLogic.PushButton(pos);
             //if (ret != null)
@@ -146,24 +143,24 @@ namespace CSharpGame
             btnArry[b].Visible = false;
         }
 
-        public void connect()
-        {
-            myLogic.ConnectNet();
-        }
+        //public void connect()
+        //{
+        //    myLogic.ConnectNet();
+        //}
+
+        //
+
+        //public void logout()
+        //{
+        //    myLogic.CloseConn(null);
+        //}
 
         public delegate void EnableDeleg();
-
-        public void logout()
-        {
-            myLogic.CloseConn(null);
-        }
-
         public void EnableArea()
         {
             if (this.InvokeRequired)
             {
-                EnableDeleg ld = new EnableDeleg(EnableArea);
-                this.Invoke(ld, null);
+                this.Invoke(new EnableDeleg(EnableArea), null);
             }
             else
             {

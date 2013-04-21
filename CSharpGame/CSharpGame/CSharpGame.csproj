@@ -58,6 +58,7 @@
     <Compile Include="GameClient.cs" />
     <Compile Include="GameMessage.cs" />
     <Compile Include="Logic.cs" />
+    <Compile Include="MainLogic.cs" />
     <Compile Include="MyClientSoc.cs" />
     <Compile Include="MyFormat.cs" />
     <Compile Include="OtherGameArea.cs">

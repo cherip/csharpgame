@@ -217,6 +217,12 @@ namespace MyGameServer
                         // 这里改了一下 list消息的content是个用户名的list
                         sysSend2.sysContent = GetUserNameList();
                         SendToClient(newGC, new CSharpGame.Message(sysSend2));
+
+                        InitGameStatus();
+                        MsgSys sysBegin = new MsgSys();
+                        sysBegin.sysType = MsgSysType.Begin;
+                        sysBegin.sysContent = gameResetStatus[0];
+                        SendToClient(newGC, new CSharpGame.Message(sysBegin));
                     }
                     break;
                 case MsgSysType.Offline:

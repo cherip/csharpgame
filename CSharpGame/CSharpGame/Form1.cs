@@ -28,7 +28,8 @@ namespace CSharpGame
         public delegate void ButtonDeleg(int i);
 
         Logic myLogic = new Logic();
-        GameArea gameArea;
+        //GameArea gameArea;
+        MainLogic mainLogic;
 
         public CSharpGame()
         {
@@ -44,12 +45,9 @@ namespace CSharpGame
         private void initCreateControl()
         {
             // 初始化 自己的游戏界面
-            gameArea = new GameArea(new System.Drawing.Point(2, 238),
-                                    new System.Drawing.Size(669, 600));
-            gameArea.Name = "myGameShower";
-            gameArea.picList = this.picList;
-
-            this.Controls.Add(gameArea);
+            mainLogic = new MainLogic();
+            mainLogic.createMainArea += CreateMainArea;
+            mainLogic.createOppeArea += CreateOppeArea;
 
             // 初始化其他玩家的游戏界面， 这里应该由其他玩家控制。
             // 测试情况下 初始化一个小的
@@ -61,6 +59,35 @@ namespace CSharpGame
             playerTesterArea.TabIndex = 0;
             playerTesterArea.Enabled = false;
             this.Controls.Add(playerTesterArea);
+        }
+
+        private bool CreateMainArea(object panel)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new MainLogic.CreateArea(CreateMainArea), panel);
+            }
+            else 
+            {
+                GameArea ga = (GameArea)panel;
+                ga.Init(new Point(2, 238), new Size(669, 600));
+                ga.picList = this.picList;
+                this.Controls.Add(ga);
+            }
+            return true;
+        }
+
+        private bool CreateOppeArea(object panel)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new MainLogic.CreateArea(CreateOppeArea));
+            }
+            else
+            {
+                // do something
+            }
+            return true;
         }
 
         private void myInitial()
@@ -81,92 +108,18 @@ namespace CSharpGame
         private void button_start(object sender, EventArgs e)
         {
             myInitial();
-            myLogic.started = true;
-            startBtn.Enabled = false;
-            //MessageBox.Show("xxx" + pairPicCounts);
+            //myLogic.started = true;
+            //startBtn.Enabled = false;
         }
-
-        //private void picBtn_Clicked(object sender, EventArgs e)              //点击图片按钮事件
-        //{
-        //    //
-        //    // 利用logic中的PushButton变量来得到是否消除某2个button
-        //    // 但是我那边的logic没有写对，需要返回消除的点对。
-
-        //    Button curr_click = (Button)sender;
-        //    int pos = (int)btnVal[curr_click];
-        //    int[] ret = myLogic.PushButton(pos);
-        //    if (ret != null)
-        //    {
-        //        butArry[ret[0]].Visible = false;
-        //        butArry[ret[1]].Visible = false;
-
-        //        pairBingoEvent(sender, e);
-        //    }
-        //}
-
-        //private void pairBingo(object sender, EventArgs e)    //两张图一样时，触发事件
-        //{
-        //    //
-        //    // 利用logic 完成逻辑判断，form只完成显示
-        //    //
-        //    //联机
-        //    if (myLogic.keepalive)
-        //    {
-        //        myLogic.sendGameData();
-        //    }
-            
-        //    int state = myLogic.ClearAnPair();
-
-        //    if (state == 2)
-        //    {
-        //        MessageBox.Show("Win!");
-        //        myLogic.started = false;
-        //        startBtn.Enabled = true;
-        //    }
-        //    else if (state == 1)
-        //    {
-        //        button_start(null, e);
-        //    }
-        //}
 
         private void radioClicked(object sender, EventArgs e)
         {
-            if (!myLogic.started)
-                   myLogic.totalTurns = int.Parse(((RadioButton)sender).Text);
+            //if (!myLogic.started)
+            //       myLogic.totalTurns = int.Parse(((RadioButton)sender).Text);
         }
 
         private void hintclicked(object sender, EventArgs e)
         {
-            //bool hinted = false;
-            //for (int i = 0; i < MAX_PIC; i++)
-            //{
-            //    if (butArry[i].Visible)
-            //    {
-            //        for (int j = i + 1; j < MAX_PIC; j++)
-            //        {
-            //            if ((int)btnVal[butArry[i]] == (int)btnVal[butArry[j]] && butArry[j].Visible)
-            //            {
-            //                for (int k = 0; k < 3; k++)
-            //                {
-            //                    butArry[i].Visible = false;
-            //                    butArry[j].Visible = false;
-            //                    Thread.Sleep(200);
-            //                    butArry[i].Visible = true;
-            //                    butArry[j].Visible = true;
-            //                    this.Refresh();
-            //                    Thread.Sleep(200);
-            //                }
-            //                hinted = true;
-            //                break;
-            //            }
-            //        }
-            //    }
-            //    if (hinted)
-            //        break;
-            //    else if (MAX_PIC - 1 == i)
-            //        MessageBox.Show("no Hint!!!");
-            //}
-
             PairPics pairpics = gerPairPics();
             if (pairpics != null)
             {
@@ -186,6 +139,7 @@ namespace CSharpGame
             else MessageBox.Show("NO hint!!!");
            
         }
+
         private PairPics gerPairPics()//提示功能中，获得两个相同图像的按钮
         {
             bool hinted = false;
@@ -237,39 +191,7 @@ namespace CSharpGame
 
         private void conn_Click(object sender, EventArgs e)
         {
-            //myClientSoc = new MyClientSoc();
-            //myClientSoc.InitialSoc();
-            //myClientSoc.SendStr("login","xxxx" + r.Next());
-            //receiveStr = myClientSoc.RecieveStr();
-            //pthread = new Thread(new ThreadStart(processStr));
-            //pthread.Start();
-         
-            // 启动网络连接
-           // connBtn.Enabled = false;
-            //Random r = new Random();
-            //username = "user" + r.Next(0, 1000);
-
-            // 先绑定事件
-            //myLogic.newtworkProcessor += updateForm;
-            gameArea.connect();
-           // myLogic.ConnectNet();
-           // button2.Enabled = false;
-            // 事件绑定
-            //networkRun();
-
-            //pthread = new Thread(new ThreadStart(networkRun));
-            //pthread.Start();
-            
-
-            
-        }
-
-        private void networkRun()
-        {
-            // 添加事件
-            myLogic.newtworkProcessor += updateForm;
-            // 启动循环接受处理。
-            //myLogic.NetRuning();
+            mainLogic.ConnectNet();
         }
 
         private void updateForm(object sender, int type)
@@ -374,17 +296,17 @@ namespace CSharpGame
 
         private void logoutBtn_Click(object sender, EventArgs e)
         {
-            gameArea.logout();
+            //gameArea.logout();
             listView1.Clear();
             listView1.Items.Clear();
 
-            myLogic.newtworkProcessor -= updateForm;
+            //myLogic.newtworkProcessor -= updateForm;
             //pthread.Abort();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            myLogic.inviteUser(textBox1.Text);
+            //myLogic.inviteUser(textBox1.Text);
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -394,7 +316,7 @@ namespace CSharpGame
 
         private void button3_Click(object sender, EventArgs e)
         {
-            myLogic.gameStart();
+            //myLogic.gameStart();
         }
 
         private void CSharpGame_Load(object sender, EventArgs e)
