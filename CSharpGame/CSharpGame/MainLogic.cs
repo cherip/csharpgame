@@ -40,8 +40,8 @@ namespace CSharpGame
             otherPlayersLogic = new List<Logic>();
 
             // test codes
-            for (int i = 0; i < 3; i++)
-                otherPlayersLogic.Add(new Logic(2));
+          //  for (int i = 0; i < 3; i++)
+            //    otherPlayersLogic.Add(new Logic(2));
             
         }
 
@@ -73,7 +73,11 @@ namespace CSharpGame
             // 其他玩家的
             foreach (Logic lg in otherPlayersLogic)
             {
-                lg.InitGame(gameStart);
+                if (lg.myClientName != null)
+                {
+                    lg.InitGame(gameStart);
+                }
+                
             }
         }
 
@@ -190,22 +194,27 @@ namespace CSharpGame
                     {
                         //某玩家加入
                         string userName = (string)sysMsg.sysContent;
-                        
+                       // Logic lg = new Logic(2);
+                      //  lg.myClientName = userName;
+                       // otherPlayersLogic.Add(new Logic(2));
                     }
                     break;
                 case MsgSysType.List:
                     {
                         //在线玩家列表
                         List<string> userList = (List<string>)sysMsg.sysContent;
-                        int index = 0;
+                       
                         for (int i = 0; i < userList.Count; i++ )
                         {
                             if (userList[i] != myLogic.myClientName)
                             {
-                                otherPlayersLogic[index].myClientName = userList[i];
-                                index++;
+                                Logic lg = new Logic(2);
+                                lg.myClientName = userList[i];
+                                otherPlayersLogic.Add(new Logic(2));
                             }
+                           
                         }
+            
                     }
                     break;
                 case MsgSysType.Exit:
