@@ -113,6 +113,10 @@ namespace CSharpGame
             myLogic.ConnectNet();
         }
 
+        public void logout()
+        {
+            myLogic.CloseConn(null);
+        }
         private void pairBingo(object sender, EventArgs e)    //两张图一样时，触发事件
         {
             //

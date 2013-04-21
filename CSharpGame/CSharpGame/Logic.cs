@@ -10,7 +10,7 @@ namespace CSharpGame
     class Logic
     {
         MyClientSoc myClientSoc;
-        static string myClientName;
+        string myClientName;
         GameClient other;
         public const int MAX_PIC = 64;
         static System.Timers.Timer timeElapsed;                 //计时器
@@ -145,6 +145,7 @@ namespace CSharpGame
                 
 	            //keepalive = false;
                 receiveThread = null;
+                keepalive = false;
             }
             
         }
@@ -158,7 +159,7 @@ namespace CSharpGame
                 }
             }
 
-            keepalive = false;
+          //  keepalive = false;
             myClientSoc.CloseConn();
         }
 
@@ -185,21 +186,28 @@ namespace CSharpGame
 
         private void ProcessSysMsg(MsgSys sysMsg)
         {
-            if(sysMsg.sysType == MsgSysType.Join)
+            switch (sysMsg.sysType)
             {
-                //有玩家加入
-                string userName = (string)sysMsg.sysContent;
+                case MsgSysType.Join:
+                    {
+                        //某玩家加入
+                        string userName = (string)sysMsg.sysContent;
+                    }
+                    break;
+                case MsgSysType.List:
+                    {
+                        //在线玩家列表
+                        List<string> userList = (List<string>)sysMsg.sysContent;
+                    }
+                    break;
+                case MsgSysType.Exit:
+                    {
+                        //某玩家退出
+                        string userName = (string)sysMsg.sysContent;
+                    }
+                    break;
             }
-            if (sysMsg.sysType == MsgSysType.List)
-            {
-                //在线玩家列表
-                List<string> userList = (List<string>)sysMsg.sysContent;
-            }
-            if (sysMsg.sysType == MsgSysType.Exit)
-            {
-                //某玩家退出
-                string userName = (string)sysMsg.sysContent;
-            }
+                         
         }
 
         // 
