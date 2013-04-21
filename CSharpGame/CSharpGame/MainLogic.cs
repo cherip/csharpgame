@@ -173,7 +173,7 @@ namespace CSharpGame
             //获得其他玩家数据，根据username更新界面
             for (int i = 0; i < otherPlayersLogic.Count; i++)
             {
-                if (otherPlayersLogic[i].myClientName == gamMsg.userName)
+                if (otherPlayersLogic[i].myClientName == gamMsg.userName && otherPlayersLogic[i].myClientName != null)
                 {
                     //更新指定玩家的界面
                     otherPlayersLogic[i].CleanBtnPair(gamMsg.cleanPair[0],gamMsg.cleanPair[1]);
@@ -197,9 +197,14 @@ namespace CSharpGame
                     {
                         //在线玩家列表
                         List<string> userList = (List<string>)sysMsg.sysContent;
+                        int index = 0;
                         for (int i = 0; i < userList.Count; i++ )
                         {
-                            otherPlayersLogic[i].myClientName = userList[i];
+                            if (userList[i] != myLogic.myClientName)
+                            {
+                                otherPlayersLogic[index].myClientName = userList[i];
+                                index++;
+                            }
                         }
                     }
                     break;

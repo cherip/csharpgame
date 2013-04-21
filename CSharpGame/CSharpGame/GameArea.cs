@@ -121,10 +121,18 @@ namespace CSharpGame
             btnClickEvent(pos);
         }
 
+        public delegate void CleanBtnPairDele(int a, int b);
         public void CleanBtnPair(int a, int b)
         {
-            btnArry[a].Visible = false;
-            btnArry[b].Visible = false;
+            if (this.InvokeRequired)
+            {
+               this.Invoke(new CleanBtnPairDele(CleanBtnPair), new object[]{a, b});
+            }
+            else
+            {
+                btnArry[a].Visible = false;
+                btnArry[b].Visible = false;
+            }
         }
 
         public delegate void EnableDeleg();
