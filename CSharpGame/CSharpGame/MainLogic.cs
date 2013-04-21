@@ -197,7 +197,7 @@ namespace CSharpGame
                     {
                         //在线玩家列表
                         List<string> userList = (List<string>)sysMsg.sysContent;
-                        for (int i = 0; i < otherPlayersLogic.Count; i++ )
+                        for (int i = 0; i < userList.Count; i++ )
                         {
                             otherPlayersLogic[i].myClientName = userList[i];
                         }
