@@ -93,7 +93,7 @@ namespace MyGameServer
                             break;
                         case MsgType.Game:
                             {
-                            
+                                
                             }
                             break;
                         case MsgType.Chat:
@@ -214,6 +214,19 @@ namespace MyGameServer
                 // 这里改了一下 list消息的content是个用户名的list
                 sysSend2.sysContent = GetUserNameList();
                 SendToClient(newGC, new CSharpGame.Message(sysSend2));
+            }
+            if (sysMsg.sysType == MsgSysType.Offline)
+            {
+                MsgSys sysBroadcast = new MsgSys();
+                sysBroadcast.sysType = MsgSysType.Exit;
+                sysBroadcast.sysContent = sysMsg.sysContent;
+                BroadcastClient(new CSharpGame.Message(sysBroadcast));
+                int remove = findGameClient((string)sysMsg.sysContent);
+                if (remove != -1)
+                {
+                    clients.RemoveAt(remove);
+                }
+                client.Close();
             }
         }
 
