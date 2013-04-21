@@ -171,6 +171,7 @@ namespace CSharpGame
                     {
                         //某玩家加入
                         string userName = (string)sysMsg.sysContent;
+                        
                     }
                     break;
                 case MsgSysType.List:
