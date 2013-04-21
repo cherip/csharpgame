@@ -110,6 +110,9 @@ namespace CSharpGame
         Join,
         List,
         Exit,
+        CanStart,
+        GameStart,
+
     }
 
     [Serializable]

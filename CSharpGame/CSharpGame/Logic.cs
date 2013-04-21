@@ -95,7 +95,7 @@ namespace CSharpGame
             int[] tmp = (int[])butArry.Clone();
             pairPicCounts = MyFormat.countPairPic(tmp);
 
-            if (btnImageSetFunc != null) 
+            if (btnImageSetFunc != null)
             {
                 for (int i = 0; i < butArry.Length; i++)
                 {
@@ -107,19 +107,25 @@ namespace CSharpGame
             //System.Windows.Forms.pa
         }
 
-        public int GetPicType(int pos) {
+        public int GetPicType(int pos)
+        {
             if (pos < 0 || pos >= butArry.Length)
                 return -1;
             return butArry[pos];
         }
 
-        public void PushButton(int pos) {
-            if (last_click == -1) {
+        public void PushButton(int pos)
+        {
+            if (last_click == -1)
+            {
                 last_click = pos;
-            } else {
-                if (last_click != pos && butArry[last_click] == butArry[pos]) {
+            }
+            else
+            {
+                if (last_click != pos && butArry[last_click] == butArry[pos])
+                {
                     butArry[last_click] = -1;
-                    butArry[pos] = -1; 
+                    butArry[pos] = -1;
                     int ret = last_click;
                     last_click = -1;
 
@@ -128,20 +134,25 @@ namespace CSharpGame
                     // 再调用后续的处理逻辑
                     ClearAnPair();
                     //int[] r = new int[2] {ret, pos};
-                } else {
+                }
+                else
+                {
                     last_click = pos;
                 }
             }
         }
 
-        public void ClearAnPair() {
+        public void ClearAnPair()
+        {
             pairPicCounts--;
 
             // 如果此副牌接受
-            if (pairPicCounts == 0) {
+            if (pairPicCounts == 0)
+            {
 
                 // 如果完成所有牌
-                if (--totalTurns == 0) {
+                if (--totalTurns == 0)
+                {
                     // sendWin()
                     // showWin()...
                 }
@@ -152,158 +163,6 @@ namespace CSharpGame
                 }
             }
         }
-
-        ////
-        //// 网络通信的功能
-        ////
-        //public void ConnectNet(Message msg)
-        //{
-        //    //keepalive = true;
-        //    myClientSoc = new MyClientSoc();
-        //    myClientSoc.InitialSoc();
-
-        //    // 启动单独的线程用于接收服务器端发送来的消息
-        //    if (receiveThread == null)
-        //        receiveThread = new Thread(new ThreadStart(NetRuning));
-        //    receiveThread.Start();
-
-        //    //myClientSoc.SendStr("login", msg);
-        //    myClientSoc.SendMsg(msg);
-
-        //}
-
-        //public void ConnectNet()
-        //{
-        //    if (keepalive == false)
-        //    {
-        //        keepalive = true;
-        //        Random r = new Random();
-
-        //        MsgSys sysMsg = new MsgSys();
-        //        sysMsg.sysType = MsgSysType.Online;
-        //        sysMsg.sysContent = "user" + r.Next(0, 1000);
-        //        myClientName = (string)sysMsg.sysContent;
-
-        //        Message conn = new Message(sysMsg);
-        //        ConnectNet(conn);
-        //    }
-        //}
-
-        //public void CloseConn(string msg)
-        //{
-        //    if (keepalive)
-        //    {
-        //        MsgSys sysMsg = new MsgSys();
-        //        sysMsg.sysType = MsgSysType.Offline;
-        //        sysMsg.sysContent = myClientName;
-        //        myClientSoc.SendMsg(new Message(sysMsg));
-        //        receiveThread = null;
-        //        keepalive = false;
-        //    }
-            
-        //}
-        //public void NetRuning() {
-        //    while (keepalive) {
-        //        // 处理网络连接
-        //        if (myClientSoc.connected)
-        //        {
-        //            Message serverMsg = myClientSoc.RecieveMsg();
-        //            processMsg(serverMsg);
-        //        }
-        //    }
-
-        //  //  keepalive = false;
-        //    myClientSoc.CloseConn();
-        //}
-
-        ////
-        //// 判断接收的数据，如果是退出消息且是本客户端发送的退出消息，
-        //// 则返回true，表示应该结束这个接收线程
-        ////
-        //public bool processMsg(Message msg)
-        //{
-        //    // 这里客户端的接受服务器消息主要逻辑，
-        //    // 为从服务器端发生的消息作出各种反应
-        //    switch (msg.msgType)
-        //    {
-        //        case MsgType.Sys:
-        //            {
-        //                MsgSys sysMsg = (MsgSys)msg.msgContent;
-
-        //                ProcessSysMsg(sysMsg);
-        //            }
-        //            break;
-        //    }
-        //    return true;
-        //}
-
-        //private void ProcessSysMsg(MsgSys sysMsg)
-        //{
-        //    switch (sysMsg.sysType)
-        //    {
-        //        case MsgSysType.Join:
-        //            {
-        //                //某玩家加入
-        //                string userName = (string)sysMsg.sysContent;
-        //            }
-        //            break;
-        //        case MsgSysType.List:
-        //            {
-        //                //在线玩家列表
-        //                List<string> userList = (List<string>)sysMsg.sysContent;
-        //            }
-        //            break;
-        //        case MsgSysType.Exit:
-        //            {
-        //                //某玩家退出
-        //                string userName = (string)sysMsg.sysContent;
-        //            }
-        //            break;
-        //        case MsgSysType.Begin:
-        //            {
-        //                int[] gameStartStatus = (int[])sysMsg.sysContent;
-        //                InitGame(gameStartStatus);
-        //            }
-        //            break;
-        //    }
-        //}
-
-        //private void ProcessGameMsg(MsgGame gameMsg)
-        //{
-        //    int[] pair = gameMsg.cleanPair;
-        //    if (pair == null || pair.Length != 2)
-        //    {
-        //        return;
-        //    }
-            
-        //}
-
-        // 
-        // 下面都要改。。。
-        // 下面都要改。。。
-        //
-        //public void sendGameData()
-        //{
-        //    myClientSoc.SendStr("gamedata", myClientName + '|' + MyFormat.arrayToStr(butArry));
-        //}
-
-        //public void inviteUser(string answer)
-        //{
-        //    myClientSoc.SendStr("invite",myClientName + '|' + answer);
-        //    //other.Add(new GameClient(answer, null, null, null));
-        //}
-
-        //public void gameStart()
-        //{            
-        //   // myClientSoc.SendStr("gamestart", str);
-        //    myClientSoc.SendStr("startgame", myClientName);
-        //}
-
-        //public void acceptInvite()
-        //{
-
-        //}
-
 
     }
 }
