@@ -111,6 +111,8 @@ namespace CSharpGame
         List,
         Exit,
         CanStart,
+        GameStart,
+
     }
 
     [Serializable]

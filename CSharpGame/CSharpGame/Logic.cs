@@ -180,8 +180,19 @@ namespace CSharpGame
                         ProcessSysMsg(sysMsg);
                     }
                     break;
+                case MsgType.Game:
+                    {
+                        MsgGame gamMsg = (MsgGame)msg.msgContent;
+                        ProcessGamMsg(gamMsg);
+                    }
+                    break;
             }
             return true;
+        }
+
+        private void ProcessGamMsg(MsgGame gamMsg)
+        {
+            //获得其他玩家数据，根据username更新界面
         }
 
         private void ProcessSysMsg(MsgSys sysMsg)
@@ -209,9 +220,15 @@ namespace CSharpGame
                 case MsgSysType.CanStart:
                     {
                         //通知 全部准备好
-                        string userName = (string)sysMsg.sysContent;//房主名字
+                        List<string> readyList= (List<string>)sysMsg.sysContent;//房主名字
                     }
                     break;
+                case MsgSysType.Begin:
+                    {
+                        //获得服务器初始数据，更新游戏界面
+                    }
+                    break;
+            
             }
                          
         }
@@ -220,13 +237,25 @@ namespace CSharpGame
         // 下面都要改。。。
         // 下面都要改。。。
         //
-        public void userReady(string userName)
+        public void UserReady(string userName)
         {
             if (keepalive)
             {
                 MsgSys sysMsg = new MsgSys();
                 sysMsg.sysType = MsgSysType.Ready;
                 sysMsg.sysContent = userName;
+                Message conn = new Message(sysMsg);
+                myClientSoc.SendMsg(conn);
+            }
+        }
+
+        public void StartGame()
+        {
+            if (keepalive)
+            {
+                MsgSys sysMsg = new MsgSys();
+                sysMsg.sysType = MsgSysType.GameStart;
+                sysMsg.sysContent = null;
                 Message conn = new Message(sysMsg);
                 myClientSoc.SendMsg(conn);
             }
