@@ -22,6 +22,7 @@ namespace MyGameServer
         private Thread clientservice;//定义一个线程，用于对应一个客户的请求 
         private Thread tdListen;//定义一个线程，用于监听客户的连接请求 
         private ArrayList clients; //申名一个一维数组，用来存储连接到服务器的客户信息
+        private List<GameClient> readyUsers;
         public delegate void GetlbClientCall(string id, GameClient ipn);//不能在线程启动后又启动Windows窗体线程，这样是不安全的
         NetworkStream ns;
         
@@ -34,6 +35,7 @@ namespace MyGameServer
         private void button1_Click(object sender, EventArgs e)
         {
             clients = new ArrayList();
+            readyUsers = new List<GameClient>();
             tdListen = new Thread(new ThreadStart(StartListening));
             tdListen.Start();
         }
@@ -230,6 +232,23 @@ namespace MyGameServer
                             clients.RemoveAt(remove);
                         }
                         client.Close();
+                    }
+                    break;
+                case MsgSysType.Ready:
+                    {
+                        int find = findGameClient((string)sysMsg.sysContent);
+                        if (find != -1)
+                        {
+                            readyUsers.Add((GameClient)clients[find]);
+                        }
+                        if (readyUsers.Count == clients.Count)//全部准备
+                        {
+                            //等待房主确认开始
+                            MsgSys sysBroadcast = new MsgSys();
+                            sysBroadcast.sysType = MsgSysType.CanStart;
+                            sysBroadcast.sysContent = ((GameClient)clients[0]).Name;//第一个登陆的默认是房主,广播大家等待房主XXX开始
+                            BroadcastClient(new CSharpGame.Message(sysBroadcast));
+                        }
                     }
                     break;
             }

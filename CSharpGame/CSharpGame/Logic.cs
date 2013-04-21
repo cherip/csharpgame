@@ -206,6 +206,12 @@ namespace CSharpGame
                         string userName = (string)sysMsg.sysContent;
                     }
                     break;
+                case MsgSysType.CanStart:
+                    {
+                        //通知 全部准备好
+                        string userName = (string)sysMsg.sysContent;//房主名字
+                    }
+                    break;
             }
                          
         }
@@ -214,6 +220,18 @@ namespace CSharpGame
         // 下面都要改。。。
         // 下面都要改。。。
         //
+        public void userReady(string userName)
+        {
+            if (keepalive)
+            {
+                MsgSys sysMsg = new MsgSys();
+                sysMsg.sysType = MsgSysType.Ready;
+                sysMsg.sysContent = userName;
+                Message conn = new Message(sysMsg);
+                myClientSoc.SendMsg(conn);
+            }
+        }
+
         public void sendGameData()
         {
             myClientSoc.SendStr("gamedata", myClientName + '|' + MyFormat.arrayToStr(butArry));
