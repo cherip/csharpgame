@@ -30,16 +30,19 @@ namespace CSharpGame
         public event CreateArea createMainArea;
         public event CreateArea createOppeArea;
 
+
         public MainLogic()
         {
             myClientSoc = new MyClientSoc();
             keepalive = false;
             myLogic = new Logic(1);
+            myLogic.sendMsgEvent += SendCurrentData;
             otherPlayersLogic = new List<Logic>();
 
             // test codes
             for (int i = 0; i < 3; i++)
                 otherPlayersLogic.Add(new Logic(2));
+            
         }
 
         private void InitComponent()
@@ -168,6 +171,15 @@ namespace CSharpGame
         private void ProcessGamMsg(MsgGame gamMsg)
         {
             //获得其他玩家数据，根据username更新界面
+            for (int i = 0; i < otherPlayersLogic.Count; i++)
+            {
+                if (otherPlayersLogic[i].myClientName == gamMsg.userName)
+                {
+                    //更新指定玩家的界面
+                    otherPlayersLogic[i].CleanBtnPair(gamMsg.cleanPair[0],gamMsg.cleanPair[1]);
+                }
+                
+            }
         }
 
         private void ProcessSysMsg(MsgSys sysMsg)
@@ -185,6 +197,10 @@ namespace CSharpGame
                     {
                         //在线玩家列表
                         List<string> userList = (List<string>)sysMsg.sysContent;
+                        for (int i = 0; i < otherPlayersLogic.Count; i++ )
+                        {
+                            otherPlayersLogic[i].myClientName = userList[i];
+                        }
                     }
                     break;
                 case MsgSysType.Exit:
@@ -204,6 +220,13 @@ namespace CSharpGame
                         InitGame(sysMsg);
                     }
                     break;
+            }
+        }
+        public void SendCurrentData(Message msg)
+        {
+            if (keepalive)
+            {              
+                myClientSoc.SendMsg(msg);
             }
         }
 

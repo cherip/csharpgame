@@ -21,6 +21,7 @@ namespace CSharpGame
         int pairPicCounts = -1;//记录当前副图的总共消除次数
         public int totalTurns = 1;//总共需要完成的轮数，默认是1次
         public bool started = false;//游戏开始与否
+        string username;
 
         // 事件函数处理设置btn的图片
         public delegate bool SetBtnImage(int idx, int type);
@@ -29,6 +30,9 @@ namespace CSharpGame
         // 事件函数处理 消除btn
         public delegate void CleanBtn(int a, int b);
         public event CleanBtn cleanBtnPair;
+        //消除之后传给服务器
+        public delegate void SendmsgDeleg(Message msggame);
+        public event SendmsgDeleg sendMsgEvent;
 
         // 非常2比的设计，因为logic要大量调用gamearea的界面显示函数，
         // 所以logic这里放入一个所控制的gamearea的变量
@@ -119,6 +123,11 @@ namespace CSharpGame
             return butArry[pos];
         }
 
+        public void CleanBtnPair(int a, int b)
+        {
+            cleanBtnPair(a,b);
+        }
+
         public void PushButton(int pos)
         {
             if (last_click == -1)
@@ -129,6 +138,14 @@ namespace CSharpGame
             {
                 if (last_click != pos && butArry[last_click] == butArry[pos])
                 {
+                    //传给mainlogic
+                    MsgGame msggame = new MsgGame();
+                    msggame.userName = myClientName;
+                    msggame.cleanPair[0] = last_click;
+                    msggame.cleanPair[1] = pos;
+                    Message msgtosend = new Message(msggame);
+                    sendMsgEvent(msgtosend);
+
                     butArry[last_click] = -1;
                     butArry[pos] = -1;
                     int ret = last_click;
@@ -139,6 +156,7 @@ namespace CSharpGame
                     // 再调用后续的处理逻辑
                     ClearAnPair();
                     //int[] r = new int[2] {ret, pos};
+                   
                 }
                 else
                 {
