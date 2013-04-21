@@ -48,14 +48,6 @@ namespace CSharpGame
             this.TabIndex = 0;
             this.Enabled = false;
         }
-        // 废函数
-//        public bool GameStart(int[] gameReset)
-//        {
-////            myLogic.btnImageSetFunc += SetBtnImage;
-//            myLogic.InitGame(gameReset);
-////            myLogic.btnImageSetFunc -= SetBtnImage;
-//            return true;
-//        }
 
         public bool SetBtnImage(int idx, int type)
         {
@@ -127,14 +119,6 @@ namespace CSharpGame
             int pos = (int)btnVal[curr_click];
 
             btnClickEvent(pos);
-            //myLogic.PushButton(pos);
-
-            //int[] ret = myLogic.PushButton(pos);
-            //if (ret != null)
-            //{
-            //    CleanBtnPair(ret[0], ret[1]);
-            //    pairBingo(sender, e);
-            //}
         }
 
         public void CleanBtnPair(int a, int b)
@@ -142,18 +126,6 @@ namespace CSharpGame
             btnArry[a].Visible = false;
             btnArry[b].Visible = false;
         }
-
-        //public void connect()
-        //{
-        //    myLogic.ConnectNet();
-        //}
-
-        //
-
-        //public void logout()
-        //{
-        //    myLogic.CloseConn(null);
-        //}
 
         public delegate void EnableDeleg();
         public void EnableArea()
@@ -167,30 +139,5 @@ namespace CSharpGame
                 this.Enabled = true;
             }
         }
-
-        //private void pairBingo(object sender, EventArgs e)    //两张图一样时，触发事件
-        //{
-        //    //
-        //    // 利用logic 完成逻辑判断，form只完成显示
-        //    //
-        //    //联机
-        //    if (myLogic.keepalive)
-        //    {
-        //        myLogic.sendGameData();
-        //    }
-
-        //    int state = myLogic.ClearAnPair();
-
-        //    if (state == 2)
-        //    {
-        //        MessageBox.Show("Win!");
-        //        myLogic.started = false;
-        //        //startBtn.Enabled = true;
-        //    }
-        //    else if (state == 1)
-        //    {
-        //        //button_start(null, e);
-        //    }
-        //}
     }
 }

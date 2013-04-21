@@ -52,13 +52,13 @@ namespace CSharpGame
             // 初始化其他玩家的游戏界面， 这里应该由其他玩家控制。
             // 测试情况下 初始化一个小的
 
-            OtherGameArea playerTesterArea = new OtherGameArea(new System.Drawing.Point(2, 10),
-                                                     new System.Drawing.Size(200, 200));
-            playerTesterArea.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            playerTesterArea.Name = "plTesterShower";
-            playerTesterArea.TabIndex = 0;
-            playerTesterArea.Enabled = false;
-            this.Controls.Add(playerTesterArea);
+            //OtherGameArea playerTesterArea = new OtherGameArea(new System.Drawing.Point(2, 10),
+            //                                         new System.Drawing.Size(200, 200));
+            //playerTesterArea.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            //playerTesterArea.Name = "plTesterShower";
+            //playerTesterArea.TabIndex = 0;
+            //playerTesterArea.Enabled = false;
+            //this.Controls.Add(playerTesterArea);
         }
 
         private bool CreateMainArea(object panel)
@@ -81,11 +81,21 @@ namespace CSharpGame
         {
             if (this.InvokeRequired)
             {
-                this.Invoke(new MainLogic.CreateArea(CreateOppeArea));
+                this.Invoke(new MainLogic.CreateArea(CreateOppeArea), panel);
             }
             else
             {
                 // do something
+                List<OtherGameArea> ogas = (List<OtherGameArea>)panel;
+                int start_x = 2;
+                int start_y = 10;
+                foreach (OtherGameArea ga in ogas)
+                {
+                    ga.Init(new Point(start_x, start_y), new Size(200, 200));
+                    ga.gameArea.picList = this.picList;
+                    start_x += 220;
+                    this.Controls.Add(ga);
+                }
             }
             return true;
         }

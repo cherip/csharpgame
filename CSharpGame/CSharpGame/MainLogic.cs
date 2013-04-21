@@ -35,7 +35,11 @@ namespace CSharpGame
             myClientSoc = new MyClientSoc();
             keepalive = false;
             myLogic = new Logic(1);
-            List<Logic> otherPlayersLogic = new List<Logic>();
+            otherPlayersLogic = new List<Logic>();
+
+            // test codes
+            for (int i = 0; i < 3; i++)
+                otherPlayersLogic.Add(new Logic(2));
         }
 
         private void InitComponent()
@@ -43,11 +47,12 @@ namespace CSharpGame
             // 绘制界面
             GameArea ga = myLogic.shower;
             createMainArea(ga);
-            //foreach (Logic lg in otherPlayersLogic)
-            //{
-            //    OtherGameArea oga = lg.oshower;
-            //    createOppeArea(oga);
-            //}
+            List<OtherGameArea> ret = new List<OtherGameArea>();
+            foreach (Logic lg in otherPlayersLogic)
+            {
+                ret.Add(lg.oshower);
+            }
+            createOppeArea(ret);
         }
 
         private void InitGame(MsgSys msg)
@@ -60,11 +65,13 @@ namespace CSharpGame
             
             // 初始本地的
             myLogic.InitGame(gameStart);
+            myLogic.Enable();
+            //myLogic.startGame();
             // 其他玩家的
-            //foreach (Logic lg in otherPlayersLogic)
-            //{
-            //    lg.InitGame(gameStart);
-            //}
+            foreach (Logic lg in otherPlayersLogic)
+            {
+                lg.InitGame(gameStart);
+            }
         }
 
         //
