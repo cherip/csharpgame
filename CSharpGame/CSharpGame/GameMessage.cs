@@ -92,6 +92,11 @@ namespace CSharpGame
     {
         public string userName;
         public int[] cleanPair;
+        public MsgGame()
+        {
+            userName = null;
+            cleanPair = new int[2];
+        }
     }
 
     [Serializable]

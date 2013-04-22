@@ -40,8 +40,8 @@ namespace CSharpGame
             otherPlayersLogic = new List<Logic>();
 
             // test codes
-            for (int i = 0; i < 3; i++)
-                otherPlayersLogic.Add(new Logic(2));
+          //  for (int i = 0; i < 3; i++)
+            //    otherPlayersLogic.Add(new Logic(2));
             
         }
 
@@ -73,7 +73,11 @@ namespace CSharpGame
             // 其他玩家的
             foreach (Logic lg in otherPlayersLogic)
             {
-                lg.InitGame(gameStart);
+                if (lg.myClientName != null)
+                {
+                    lg.InitGame(gameStart);
+                }
+                
             }
         }
 
@@ -173,7 +177,7 @@ namespace CSharpGame
             //获得其他玩家数据，根据username更新界面
             for (int i = 0; i < otherPlayersLogic.Count; i++)
             {
-                if (otherPlayersLogic[i].myClientName == gamMsg.userName)
+                if (otherPlayersLogic[i].myClientName == gamMsg.userName && otherPlayersLogic[i].myClientName != null)
                 {
                     //更新指定玩家的界面
                     otherPlayersLogic[i].CleanBtnPair(gamMsg.cleanPair[0],gamMsg.cleanPair[1]);
@@ -190,17 +194,27 @@ namespace CSharpGame
                     {
                         //某玩家加入
                         string userName = (string)sysMsg.sysContent;
-                        
+                       // Logic lg = new Logic(2);
+                      //  lg.myClientName = userName;
+                       // otherPlayersLogic.Add(new Logic(2));
                     }
                     break;
                 case MsgSysType.List:
                     {
                         //在线玩家列表
                         List<string> userList = (List<string>)sysMsg.sysContent;
-                        for (int i = 0; i < otherPlayersLogic.Count; i++ )
+                       
+                        for (int i = 0; i < userList.Count; i++ )
                         {
-                            otherPlayersLogic[i].myClientName = userList[i];
+                            if (userList[i] != myLogic.myClientName)
+                            {
+                                Logic lg = new Logic(2);
+                                lg.myClientName = userList[i];
+                                otherPlayersLogic.Add(new Logic(2));
+                            }
+                           
                         }
+            
                     }
                     break;
                 case MsgSysType.Exit:
