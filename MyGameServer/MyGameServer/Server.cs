@@ -153,7 +153,7 @@ namespace MyGameServer
                         }
 
                         GameClient newGC = new GameClient((string)sysMsg.sysContent, null, clientservice, client);
-                        
+                        //GameClient newGC = clients[findGameClient((string)_sysMsg.userSender)];
                         //clients.Add(newGC);
 
                         CSharpGame.MsgSys sysSend2 = new CSharpGame.MsgSys();
@@ -162,16 +162,7 @@ namespace MyGameServer
                         sysSend2.sysContent = GetUserNameList();
                         SendToClient(newGC, new CSharpGame.Message(sysSend2));
 
-                        CSharpGame.MsgSys sysSend3 = new CSharpGame.MsgSys();
-                        sysSend2.sysType = CSharpGame.MsgSysType.Table;
-                        // 发送Table的信息，初始化桌子
-                        sysSend2.sysContent = tables;
-                        SendToClient(newGC, new CSharpGame.Message(sysSend2));
-                        //InitGameStatus();
-                        //MsgSys sysBegin = new MsgSys();
-                        //sysBegin.sysType = MsgSysType.Begin;
-                        //sysBegin.sysContent = gameResetStatus[0];
-                        //SendToClient(newGC, new CSharpGame.Message(sysBegin));
+                        sendCurrentTables(newGC);
                     }
                     break;
                 case MsgSysType.Offline:
@@ -190,18 +181,33 @@ namespace MyGameServer
                     break;
                 case MsgSysType.Ready:
                     {
-                        int find = findGameClient((string)sysMsg.sysContent);
-                        if (find != -1)
+                        
+                        //int find = findGameClient((string)sysMsg.sysContent);
+                        //if (find != -1)
+                        //{
+                        //    readyUsers.Add((GameClient)clients[find]);
+                        //}
+                        //if (readyUsers.Count == clients.Count)//全部准备 要改成房间的
+                        //{
+                        //    //等待房主确认开始
+                        //    MsgSys sysBroadcast = new MsgSys();
+                        //    sysBroadcast.sysType = MsgSysType.CanStart;
+                        //    sysBroadcast.sysContent = GetUserNameList();//把所有玩家名字发给用户
+                        //    BroadcastClient(new CSharpGame.Message(sysBroadcast));
+                        //}
+                        //客户端还要传桌子号过来
+                        int tableIndex = (int)sysMsg.sysContent;
+                        tables[tableIndex].readycount++;
+                        if (tables[tableIndex].readycount == tables[tableIndex].usercount)
                         {
-                            readyUsers.Add((GameClient)clients[find]);
-                        }
-                        if (readyUsers.Count == clients.Count)//全部准备 要改成房间的
-                        {
-                            //等待房主确认开始
+                            //发送开始
+                            InitGameStatus();
                             MsgSys sysBroadcast = new MsgSys();
-                            sysBroadcast.sysType = MsgSysType.CanStart;
-                            sysBroadcast.sysContent = GetUserNameList();//把所有玩家名字发给用户
-                            BroadcastClient(new CSharpGame.Message(sysBroadcast));
+                            sysBroadcast.sysType = MsgSysType.Begin;
+                            sysBroadcast.sysContent = gameResetStatus[0];
+                            BroadcastRoom(new CSharpGame.Message(sysBroadcast));
+
+
                         }
                     }
                     break;
@@ -225,19 +231,42 @@ namespace MyGameServer
                         // 判断一下是否能做在这个位置
                         // 如果可以更新一下table的信息
                         // 然后广播回去。
-                        int[] temp = (int[])sysMsg.sysContent;
-                        if (tables[temp[0]].seats[1])
-                        {
-                            //能坐
-                            tables[temp[0]].seats[1] = false;
-                        }
 
-                        MsgSys sysBroadcast = new MsgSys();
-                        sysBroadcast.sysType = MsgSysType.Table;
-                        sysBroadcast.sysContent = tables;
-                        BroadcastClient(new CSharpGame.Message(sysBroadcast));
+                        int[] temp = (int[])sysMsg.sysContent;
+                        //if (tables[temp[0]].seats[1])
+                        //{
+                        //    //能坐
+                        //    tables[temp[0]].seats[1] = false;
+                        //}
+                        tables[temp[0]].usercount++;
+                        string userSend = (string)_sysMsg.userSender;
+                        foreach (GameClient gc in clients)
+                        {
+                            if (gc.Name == userSend)
+                            {
+                                if (gc.TableIdx == -1)
+                                {
+                                    gc.TableIdx = temp[0];
+                                    gc.SeatIdx = temp[1];
+                                }
+                                else
+                                {
+                                    gc.TableIdx = -1;
+                                }
+                                break;
+                            }
+                        }
+                        //MsgSys sysBroadcast = new MsgSys();
+                        //sysBroadcast.sysType = MsgSysType.Table;
+                        //sysBroadcast.sysContent = tables;
+                        //BroadcastClient(new CSharpGame.Message(sysBroadcast));
 
                         BroadcastClient(_sysMsg);
+                    }
+                    break;
+                case MsgSysType.TableNoSeat:
+                    {
+                        ;
                     }
                     break;
             }
@@ -361,6 +390,24 @@ namespace MyGameServer
 
          
 
+        }
+
+        private void sendCurrentTables(GameClient gc)
+        {
+            foreach (GameClient gcc in clients)
+            {
+                if (gc == gcc) continue;
+                if (gcc.TableIdx != -1)
+                {
+                    MsgSys sysMsg = new MsgSys();
+                    sysMsg.sysType = MsgSysType.Seat;
+                    sysMsg.sysContent = new int[] { gcc.TableIdx, gcc.SeatIdx };
+                    CSharpGame.Message msg = new CSharpGame.Message(sysMsg);
+                    msg.userSender = gcc.Name;
+                    //SendToClient(gc, msg);
+                    BroadcastClient(msg);
+                }
+            }
         }
 
         public void InitGameStatus()

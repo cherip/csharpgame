@@ -219,11 +219,12 @@ namespace CSharpGame
 
                 // 这里有 bug
                 // 准备发送一个online的命令，服务器把当前所有的table的情况发回来。
-                //MsgSys s = new MsgSys();
-                //s.sysType = MsgSysType.Online;
-                //s.sysContent = myLogic.myClientName;
-                //Message conn = new Message(s);
-                //myClientSoc.SendMsg(conn);
+                MsgSys s = new MsgSys();
+                s.sysType = MsgSysType.Online;
+                s.sysContent = myLogic.myClientName;
+                Message conn = new Message(s);
+                conn.userSender = myLogic.myClientName;
+                myClientSoc.SendMsg(conn);
 
                 return true;
             }
@@ -379,50 +380,10 @@ namespace CSharpGame
                 case MsgSysType.Seat:
                     {
                         int[] seatInfo = (int[])sysMsg.sysContent;
-                        hall.PlayerSeatDown(seatInfo[0], seatInfo[1]);
-
                         string userSender = (string)_sysMsg.userSender;
-                        if (userSender == "Server" || userSender == myLogic.myClientName)
-                        {
-                            // 服务器发送的模拟请求，不做任何处理
-                            // 或者是自己发生的
-                            ;
-                        }
-                        // 对于其他player 做下来的行为，如果和 本玩家处于同一房间则引发后续操作
-                        else if (seatInfo[0] == this.tableIdx)
-                        {
-                            handle_seat_msg(userSender);
-                        }
+                        hall.PlayerSeatDown(seatInfo[0], seatInfo[1], userSender);
                     }
                     break;
-            }
-        }
-
-        public delegate void show_func();
-        public void handle_seat_msg(string userSender)
-        {
-            for (int i = 0; i < otherPlayersLogic.Count; i++)
-            {
-                if (otherPlayersLogic[i].myClientName == userSender)
-                {
-                    // 如果能在当前的otherplayer中找到同样的，则表示用户退出
-                    otherPlayersLogic[i].UserQuit(); 
-                    GameArea ga = otherPlayersLogic[i].gameArea;
-                    ga.Invoke(new show_func(ga.Hide));
-                    return;
-                }
-            }
-
-            for (int i = 0; i < otherPlayersLogic.Count; i++)
-            {
-                if (otherPlayersLogic[i].myClientName == "")
-                {
-                    otherPlayersLogic[i].AddUser(userSender);
-                    GameArea ga = otherPlayersLogic[i].gameArea;
-                    ga.Invoke(new show_func(ga.Show));
-                    //otherPlayersLogic[i].gameArea.Show()
-                    return;
-                }
             }
         }
 
@@ -471,12 +432,41 @@ namespace CSharpGame
 
         //}
 
-
+        
         //
         //
         // 处理房间中的逻辑
         //
         //
+        public delegate void showFun();
+        private void showGameRoom(int tableIdx, int seatIdx)
+        {
+            gameTable tablesInfo = hall.tables[tableIdx];
+            
+            int mypos = seatIdx;
+            //foreach (string item in tablesInfo.seatUser)
+            //{
+            //    if (item == myLogic.myClientName)
+            //        break;
+            //    mypos++;
+            //}
+
+            int t = 0;
+            for (int i = mypos + 1; i < mypos + 4; i++)
+            { 
+                int k = i % 4;
+                if (tablesInfo.seatUser[k] != "" &&
+                    tablesInfo.seatUser[k] != "Server")
+                {
+                    otherPlayersLogic[t].SetPlayer(tablesInfo.seatUser[k]);
+                    GameArea ga = otherPlayersLogic[t].gameArea;
+                    ga.Show();
+                    //ga.Invoke(new showFun(ga.Show));
+                }
+                t++;
+            }
+        }
+
         public void ClickSeat(int tableIdx, int seatIdx)
         {
             // do nothing now...
@@ -503,7 +493,9 @@ namespace CSharpGame
                 myClientSoc.SendMsg(msg);
 
                 // 这里为了简单起见，没有使用多线程，显示多界面了，每次只能有一个界面出现
+                showGameRoom(tableIdx, seatIdx);
                 gameRoom.ShowDialog();
+//                showGameRoom(tableIdx);
 
                 myStatus = PlayerStatus.OnLine;
                 hall.Show();

@@ -15,6 +15,7 @@ namespace CSharpGame
         public delegate void playerClickSeat(int table, int seat);
         public event playerClickSeat clickSeatCallback;
         Hashtable btnIdx;
+        public string[] seatUser = new string[4] { "", "", "", "" };
 
         private int tableIdx;
 

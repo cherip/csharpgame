@@ -11,7 +11,7 @@ namespace CSharpGame
 {
     public partial class Room : Form
     {
-        List<gameTable> tables;
+        public List<gameTable> tables;
         MainLogic mainLogic;
 
         public Room()
@@ -103,6 +103,21 @@ namespace CSharpGame
             {
                 return;
             }
+
+            tables[tableIdx].ClickSeat(SeatIdx);
+        }
+
+        public void PlayerSeatDown(int tableIdx, int SeatIdx, string user)
+        {
+            if (tableIdx < 0 || tableIdx >= tables.Count)
+            {
+                return;
+            }
+
+            if (tables[tableIdx].seatUser[SeatIdx] == "")
+                tables[tableIdx].seatUser[SeatIdx] = user;
+            else
+                tables[tableIdx].seatUser[SeatIdx] = "";
 
             tables[tableIdx].ClickSeat(SeatIdx);
         }

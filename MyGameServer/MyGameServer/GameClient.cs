@@ -19,6 +19,7 @@ namespace MyGameServer
         private Socket sock;
 
         private int tableIdx;
+        public int SeatIdx;
 
         public GameClient(string _name, EndPoint _endpoint, Thread _thread, Socket _sock)
         {
@@ -33,6 +34,7 @@ namespace MyGameServer
 
             sock = _sock;
 
+            tableIdx = -1;
         }
         public override string ToString()
         {
