@@ -84,7 +84,7 @@ namespace CSharpGame
                         vshower.btnClickEvent += PushButton;
 
                         // 不好的设计
-                        this.cleanBtnPair += vshower.CleanBtnPair;
+                        this.cleanBtnPair += oshower.CleanButton;
                         this.btnImageSetFunc += vshower.SetBtnImage;
                         this.startGame += vshower.EnableArea;
                     }

@@ -15,8 +15,6 @@ namespace CSharpGame
     {
         Hashtable btnVal;
         Button[] btnArry;
-        Logic myLogic;
-        bool gameStart;
         public System.Windows.Forms.ImageList picList;
 
         //public delegate void PairBingoHandle(object sender, EventArgs e);//消除两张图代理
@@ -28,7 +26,6 @@ namespace CSharpGame
         {
             btnArry = new Button[64];
             btnVal = new Hashtable();
-            myLogic = new Logic();
         }
 
         public GameArea(Point areaLocat, Size areaSize) {
