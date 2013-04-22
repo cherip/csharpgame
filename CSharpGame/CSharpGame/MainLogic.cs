@@ -38,61 +38,95 @@ namespace CSharpGame
 
         // 其他玩家的Logic, 用于显示缩略图
         List<Logic> otherPlayersLogic;
+
         public Room hall;
         public CSharpGame gameRoom;
-
-        public delegate bool CreateArea(object panel);
-        public event CreateArea createMainArea;
-        public event CreateArea createOppeArea;
-
 
         public MainLogic()
         {
             myClientSoc = new MyClientSoc();
             keepalive = false;
-            myLogic = new Logic(1);
-            myLogic.sendMsgEvent += SendCurrentData;
-            otherPlayersLogic = new List<Logic>();
 
             // 生成界面的form
             hall = new Room(this);
+            gameRoom = CreateGameForm();
+
             myStatus = PlayerStatus.OffLine;
         }
 
-        private void InitComponent()
+        private CSharpGame CreateGameForm()
         {
-            // 绘制界面
-            GameArea ga = myLogic.shower;
-            createMainArea(ga);
-            List<OtherGameArea> ret = new List<OtherGameArea>();
+            CSharpGame gameForm = new CSharpGame(this);
+
+            // 首先创建4个logic
+            myLogic = new Logic(1);
+            myLogic.sendMsgEvent += SendCurrentData;
+
+            otherPlayersLogic = new List<Logic>();
+            for (int i = 0; i < 3; i++)
+            {
+                otherPlayersLogic.Add(new Logic(2));
+            }
+
+            // 将Logic的界面显示到gameForm中
+            GameArea ga = myLogic.gameArea;
+            gameForm.CreateMainArea(ga);
+            List<GameArea> ret = new List<GameArea>();
             foreach (Logic lg in otherPlayersLogic)
             {
-                ret.Add(lg.oshower);
+                ret.Add(lg.gameArea);
             }
-            createOppeArea(ret);
+            gameForm.CreateOppeArea(ret);
+
+            return gameForm;
         }
 
         private void InitGame(MsgSys msg)
         {
-            // 绘制界面
-            InitComponent();
-
             // 初始化所有玩家的状态
             int[] gameStart = (int[])msg.sysContent;
-            
-            // 初始本地的
-            myLogic.InitGame(gameStart);
+            StartPlayerShow(gameStart);
             myLogic.Enable();
+        }
+
+        public void TestStart()
+        {
+            int[] tester = new int[64];
+            MyFormat.genPic(ref tester);
+            // 初始本地的
+            myLogic.InitGame(tester);
+            //myLogic.startGame();
+            // 其他玩家的
+            foreach (Logic lg in otherPlayersLogic)
+            {
+                lg.InitGame(tester);
+            }
+            myLogic.Enable();
+        }
+
+        public void StartPlayerShow(int[] gameStatus)
+        {
+            // 初始本地的
+            myLogic.InitGame(gameStatus);
             //myLogic.startGame();
             // 其他玩家的
             foreach (Logic lg in otherPlayersLogic)
             {
                 if (lg.myClientName != null)
                 {
-                    lg.InitGame(gameStart);
+                    lg.InitGame(gameStatus);
                 }
-                
             }
+        }
+
+        //
+        // 处理游戏的logic
+        //
+
+        // 提示功能
+        public void HintNext(object sender, EventArgs e)
+        {
+            myLogic.hintclicked();
         }
 
         //
@@ -101,12 +135,14 @@ namespace CSharpGame
         public void ConnectNet(Message msg)
         {
 
+
             if (keepalive == false)
             {
                 keepalive = true;
                 myClientSoc.InitialSoc();
 
             }
+
 
                 // 启动单独的线程用于接收服务器端发送来的消息
                 if (receiveThread == null)
@@ -148,8 +184,11 @@ namespace CSharpGame
             user_pwd[0] = user;
             user_pwd[1] = pwd;
             sysMsg.sysContent = user_pwd;
+
             Message conn = new Message(sysMsg);
             ConnectNet(conn);
+
+
             return true;
             //if (true)
             //{
@@ -369,12 +408,15 @@ namespace CSharpGame
                 //
                 // sendNetMsg(thisplayer on table)
 
-                gameRoom = new CSharpGame(this);
+                //gameRoom = CreateGameForm();
                 hall.Hide();
                 myStatus = PlayerStatus.OnTable;
 
                 // 这里为了简单起见，没有使用多线程，显示多界面了，每次只能有一个界面出现
                 gameRoom.ShowDialog();
+
+                myStatus = PlayerStatus.OnLine;
+                hall.Show();
             }
         }
     }

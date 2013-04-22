@@ -80,21 +80,21 @@ namespace CSharpGame
             // 如果要做用户名和密码的话，则传递user和pwd给connect函数
             // 通过返回结果 判断是否进去下一个界面还是让用户重新登录
 
-            this.mainLogic.PlayerLogin(this.txtUserName.Text,
-                                       this.txtPwd.Text);
+            if (this.mainLogic.PlayerLogin(this.txtUserName.Text,
+                                           this.txtPwd.Text))
+            {
+                this.panelLogin.Hide();
+                //this.InitControl();
 
-            this.panelLogin.Hide();
-            //this.InitControl();
+                //// 测试代码
+                //List<string> names = new List<string>();
+                //names.Add("limian");
+                //names.Add("xiaoyong");
+                //AddPlayers(names);
 
-            //// 测试代码
-            //List<string> names = new List<string>();
-            //names.Add("limian");
-            //names.Add("xiaoyong");
-            //AddPlayers(names);
-
-            this.panelTables.Show();
-            this.panelPlayers.Show();
-
+                this.panelTables.Show();
+                this.panelPlayers.Show();
+            }
         }
     }
 }

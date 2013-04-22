@@ -16,9 +16,9 @@ namespace CSharpGame
         public const int MAX_PIC = 64;
         static System.Timers.Timer timeElapsed;//计时器
         int curTime = 0;//当前游戏剩余时间
-        Button[] butArry = new Button[MAX_PIC];
+        //Button[] butArry = new Button[MAX_PIC];
         string username;
-        Hashtable btnVal;
+        //Hashtable btnVal;
         private static Thread pthread;
 
         public delegate void PairBingoHandle(object sender, EventArgs e);//消除两张图代理
@@ -27,18 +27,13 @@ namespace CSharpGame
         public delegate void LableDeleg(string s);
         public delegate void ButtonDeleg(int i);
 
-        Logic myLogic = new Logic();
+        Logic myLogic;
         //GameArea gameArea;
         MainLogic mainLogic;
 
         public CSharpGame()
         {
-            //int index = 0;
-            //myLogic.InitLogic();
-
             InitializeComponent();
-            //initCreateControl();
-
             myInitial();
         }
 
@@ -46,60 +41,45 @@ namespace CSharpGame
             : this()
         {
             mainLogic = logic;
-            mainLogic.createMainArea += CreateMainArea;
-            mainLogic.createOppeArea += CreateOppeArea;
+
+            // 将闪烁的btn的点击事件和logic中的逻辑绑定
+            this.hintbtn.Click += new System.EventHandler(logic.HintNext);
         }
 
-        private void initCreateControl()
-        {
-            // 初始化 自己的游戏界面
-            mainLogic = new MainLogic();
-
-            // 初始化其他玩家的游戏界面， 这里应该由其他玩家控制。
-            // 测试情况下 初始化一个小的
-
-            //OtherGameArea playerTesterArea = new OtherGameArea(new System.Drawing.Point(2, 10),
-            //                                         new System.Drawing.Size(200, 200));
-            //playerTesterArea.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            //playerTesterArea.Name = "plTesterShower";
-            //playerTesterArea.TabIndex = 0;
-            //playerTesterArea.Enabled = false;
-            //this.Controls.Add(playerTesterArea);
-        }
-
-        private bool CreateMainArea(object panel)
+        public delegate bool CreateArea(object panel);
+        public bool CreateMainArea(object panel)
         {
             if (this.InvokeRequired)
             {
-                this.Invoke(new MainLogic.CreateArea(CreateMainArea), panel);
+                this.Invoke(new CreateArea(CreateMainArea), panel);
             }
             else 
             {
                 GameArea ga = (GameArea)panel;
-                ga.Init(new Point(2, 238), new Size(669, 600));
+                ga.Draw(new Point(2, 2), new Size(666, 600));
                 ga.picList = this.picList;
                 this.Controls.Add(ga);
             }
             return true;
         }
 
-        private bool CreateOppeArea(object panel)
+        public bool CreateOppeArea(object panel)
         {
             if (this.InvokeRequired)
             {
-                this.Invoke(new MainLogic.CreateArea(CreateOppeArea), panel);
+                this.Invoke(new CreateArea(CreateOppeArea), panel);
             }
             else
             {
                 // do something
-                List<OtherGameArea> ogas = (List<OtherGameArea>)panel;
+                List<GameArea> ga_list = (List<GameArea>)panel;
                 int start_x = 2;
-                int start_y = 10;
-                foreach (OtherGameArea ga in ogas)
+                int start_y = 612;
+                foreach (GameArea ga in ga_list)
                 {
-                    ga.Init(new Point(start_x, start_y), new Size(200, 200));
-                    ga.gameArea.picList = this.picList;
-                    start_x += 220;
+                    ga.Draw(new Point(start_x, start_y), new Size(222, 200));
+                    ga.picList = this.picList;
+                    start_x += 222;
                     this.Controls.Add(ga);
                 }
             }
@@ -124,66 +104,27 @@ namespace CSharpGame
         private void button_start(object sender, EventArgs e)
         {
             myInitial();
-            //myLogic.started = true;
-            //startBtn.Enabled = false;
         }
 
         private void radioClicked(object sender, EventArgs e)
         {
-            //if (!myLogic.started)
-            //       myLogic.totalTurns = int.Parse(((RadioButton)sender).Text);
+
         }
 
-        private void hintclicked(object sender, EventArgs e)
-        {
-            PairPics pairpics = gerPairPics();
-            if (pairpics != null)
-            {
-                hintbtn.Enabled = false;
-                for (int k = 0; k < 3; k++)//相同图像的按钮闪烁
-                {
-                    butArry[pairpics.PicNO1].Visible = false;
-                    butArry[pairpics.PicNO2].Visible = false;
-                    Thread.Sleep(100);
-                    butArry[pairpics.PicNO1].Visible = true;
-                    butArry[pairpics.PicNO2].Visible = true;
-                    this.Refresh();
-                    Thread.Sleep(100);
-                }
-                hintbtn.Enabled = true;
-            }
-            else MessageBox.Show("NO hint!!!");
-           
-        }
 
-        private PairPics gerPairPics()//提示功能中，获得两个相同图像的按钮
-        {
-            bool hinted = false;
-            PairPics pairpics = new PairPics();
-            for (int i = 0; i < MAX_PIC; i++)
-            {
-                if (butArry[i].Visible)
-                {
-                    for (int j = i + 1; j < MAX_PIC; j++)
-                    {
-                        int picType1 = myLogic.GetPicType(i);
-                        int picType2 = myLogic.GetPicType(j);
-                        if (picType1 == picType2 && butArry[j].Visible)
-                        {
-                            pairpics.PicNO1 = i;
-                            pairpics.PicNO2 = j;
-                            hinted = true;
-                            break;
-                        }
-                    }
-                }
-                if (hinted)
-                    break;
-                else if (MAX_PIC - 1 == i)
-                    return null;
-            }
-            return pairpics;
-        }
+        //private void refreshButton(int i)
+        //{
+        //    if (butArry[i].InvokeRequired)
+        //    {
+        //        ButtonDeleg bd = new ButtonDeleg(refreshButton);
+        //        butArry[i].Invoke(bd, new object[] { i });
+        //    }
+        //    else
+        //    {
+        //        int type = myLogic.GetPicType(i);
+        //        butArry[i].BackgroundImage = picList.Images[type];
+        //    }
+        //}
     
         void  timeElapsed_Elapsed(object source, System.Timers.ElapsedEventArgs e)//计时事件响应，更新processbar
         {
@@ -210,111 +151,100 @@ namespace CSharpGame
             mainLogic.ConnectNet();
         }
 
-        private void updateForm(object sender, int type)
-        {    
-            switch (type)
-            {
-                case 1:
-                    {
-                        string[] nameList = (string[])sender;
-                        foreach (string s in nameList)
-                        {
-                            adduserList(s);
-                        }
-                        break;
-                    }
-                case 2:
-                    {
-                        removeExited((string)sender);
-                        break;
-                    }
-                case 3:
-                    {
-                        adduserList((string)sender);
-                        break;
-                    }
-                case 4:
-                    {
-                        showInviteRequst((string)sender);
-                        break;
-                    }
-                case 5:
-                    {
-                        for (int i = 0; i < butArry.Length; i++)
-                        {
-                            refreshButton(i);
-                        }
-                        break;
-                    }
-            }
-        }
+        //这个函数不需要了吧？
+        //private void updateForm(object sender, int type)
+        //{    
+        //    switch (type)
+        //    {
+        //        case 1:
+        //            {
+        //                string[] nameList = (string[])sender;
+        //                foreach (string s in nameList)
+        //                {
+        //                    adduserList(s);
+        //                }
+        //                break;
+        //            }
+        //        case 2:
+        //            {
+        //                removeExited((string)sender);
+        //                break;
+        //            }
+        //        case 3:
+        //            {
+        //                adduserList((string)sender);
+        //                break;
+        //            }
+        //        case 4:
+        //            {
+        //                showInviteRequst((string)sender);
+        //                break;
+        //            }
+        //        case 5:
+        //            {
+        //                for (int i = 0; i < butArry.Length; i++)
+        //                {
+        //                    refreshButton(i);
+        //                }
+        //                break;
+        //            }
+        //    }
+        //}
 
-        private void refreshButton(int i)
-        {
-            if (butArry[i].InvokeRequired)
-            {
-                ButtonDeleg bd = new ButtonDeleg(refreshButton);
-                butArry[i].Invoke(bd, new object[]{i});
-            }
-            else
-            {
-                int type = myLogic.GetPicType(i);
-                butArry[i].BackgroundImage = picList.Images[type];         
-            }       
-        }
+
 
         private void showInviteRequst(string param)
         {
-            if (namlable.InvokeRequired)
-            {
-                LableDeleg ld = new LableDeleg(showInviteRequst);
-                namlable.Invoke(ld, new object[] { param });
-            }
-            else
-            {
-                namlable.Text = param;
-                button2.Enabled = true;
-            }
-            
+            //if (namlable.InvokeRequired)
+            //{
+            //    LableDeleg ld = new LableDeleg(showInviteRequst);
+            //    namlable.Invoke(ld, new object[] { param });
+            //}
+            //else
+            //{
+            //    namlable.Text = param;
+            //    button2.Enabled = true;
+            //}
+
         }
 
         private void removeExited(string userName)
         {
-            if (listView1.InvokeRequired)
-            {
-                ListviewDeleg ld = new ListviewDeleg(removeExited);
-                listView1.Invoke(ld, new object[] { userName });
-            }
-            else
-            {
-                foreach (ListViewItem lv in listView1.Items)
-                {
-                    if (lv.Text == userName)
-                    {
-                        listView1.Items.Remove(lv);
-                    }
-                }
-            }
+            //if (listView1.InvokeRequired)
+            //{
+            //    ListviewDeleg ld = new ListviewDeleg(removeExited);
+            //    listView1.Invoke(ld, new object[] { userName });
+            //}
+            //else
+            //{
+            //    foreach (ListViewItem lv in listView1.Items)
+            //    {
+            //        if (lv.Text == userName)
+            //        {
+            //            listView1.Items.Remove(lv);
+            //        }
+            //    }
+            //}
         }
 
         private void adduserList(string userName)
         {
-            if (listView1.InvokeRequired)
-            {
-                ListviewDeleg ld = new ListviewDeleg(adduserList);
-                listView1.Invoke(ld, new object[] { userName });
-            }
-            else
-            {
-                listView1.Items.Add(userName);
-            }
+            //if (listView1.InvokeRequired)
+            //{
+            //    ListviewDeleg ld = new ListviewDeleg(adduserList);
+            //    listView1.Invoke(ld, new object[] { userName });
+            //}
+            //else
+            //{
+            //    listView1.Items.Add(userName);
+            //}
         }
 
         private void logoutBtn_Click(object sender, EventArgs e)
         {
             //gameArea.logout();
-            listView1.Clear();
-            listView1.Items.Clear();
+            //listView1.Clear();
+            //listView1.Items.Clear();
 
             //myLogic.newtworkProcessor -= updateForm;
             //pthread.Abort();
@@ -333,6 +263,7 @@ namespace CSharpGame
         private void button3_Click(object sender, EventArgs e)
         {
             //myLogic.gameStart();
+            mainLogic.TestStart();
         }
 
         private void CSharpGame_Load(object sender, EventArgs e)

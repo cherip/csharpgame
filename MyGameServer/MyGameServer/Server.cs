@@ -348,7 +348,16 @@ namespace MyGameServer
 
         private void BroadcastRoom(CSharpGame.Message msg)
         {
-
+            if (msg.reciType == ReciveType.Room)
+            {
+                foreach (GameClient cl in clients)
+                {
+                    if (cl.TableIdx == (int)msg.Num)
+                    {
+                        SendToClient(cl, msg);
+                    }
+                }
+            }
         }
 
         public bool SendToClient(GameClient cl, CSharpGame.Message mes)
