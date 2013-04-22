@@ -89,6 +89,7 @@ namespace CSharpGame
         GameStart,
         Login,
         Judge,
+        Seat,
     }
 
     [Serializable]

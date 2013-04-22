@@ -76,19 +76,16 @@ namespace MyGameServer
                     System.Buffer.BlockCopy(LInfor, 0, realDate, 0, msglen);
 
                     CSharpGame.Message clientMsg = (CSharpGame.Message)(CSharpGame.SerializationUnit.DeserializeObject(realDate));
-
                     switch (clientMsg.msgType)
                     {
                         case MsgType.Sys:
                             {
-                                MsgSys sysMsg = (MsgSys)clientMsg.msgContent;
-                                ProcessSysMsg(sysMsg, client);
+                                ProcessSysMsg(clientMsg, client);
                             }
                             break;
                         case MsgType.Game:
                             {
-                                MsgGame gamMsg = (MsgGame)clientMsg.msgContent;
-                                ProcessGamMsg(gamMsg);
+                                ProcessGamMsg(clientMsg);
                             }
                             break;
                         case MsgType.Chat:
@@ -105,15 +102,15 @@ namespace MyGameServer
             }
         }
 
-        private void ProcessGamMsg(MsgGame gamMsg)
+        private void ProcessGamMsg(CSharpGame.Message gamMsg)
         {
-            //广播玩家数据
-            
-            BroadcastClient(new CSharpGame.Message(gamMsg));
+            // 指向同一房间内的玩家广播
+            BroadcastRoom(gamMsg);
         }
 
-        private void ProcessSysMsg(MsgSys sysMsg, Socket client)
+        private void ProcessSysMsg(CSharpGame.Message _sysMsg, Socket client)
         {
+            MsgSys sysMsg = (MsgSys)_sysMsg.msgContent;
             switch (sysMsg.sysType)
             {
                 case MsgSysType.Login:
@@ -151,7 +148,8 @@ namespace MyGameServer
                         }
 
                         GameClient newGC = new GameClient((string)sysMsg.sysContent, null, clientservice, client);
-                        clients.Add(newGC);
+                        
+                        //clients.Add(newGC);
 
                         CSharpGame.MsgSys sysSend2 = new CSharpGame.MsgSys();
                         sysSend2.sysType = CSharpGame.MsgSysType.List;
@@ -212,7 +210,14 @@ namespace MyGameServer
                         BroadcastClient(new CSharpGame.Message(sysBroadcast));
                     }
                     break;
-
+                case MsgSysType.Seat:
+                    {
+                        // 判断一下是否能做在这个位置
+                        // 如果可以更新一下table的信息
+                        // 然后广播回去。
+                        BroadcastClient(_sysMsg);
+                    }
+                    break;
             }
 
          
@@ -266,14 +271,11 @@ namespace MyGameServer
 
         private void BroadcastRoom(CSharpGame.Message msg)
         {
-            if (msg.reciType == ReciveType.Room)
+            foreach (GameClient cl in clients)
             {
-                foreach (GameClient cl in clients)
+                if (cl.TableIdx == (int)msg.Num)
                 {
-                    if (cl.TableIdx == (int)msg.Num)
-                    {
-                        SendToClient(cl, msg);
-                    }
+                    SendToClient(cl, msg);
                 }
             }
         }
@@ -330,9 +332,13 @@ namespace MyGameServer
         // 判断用户登录
         private bool JudgeUserLogin(string login, string pwd)
         {
+
             Console.WriteLine("user: {0} login error!", login);
             //return MyFile.Judge(login, pwd);
             return true;//测试用
+
+         
+
         }
 
         public void InitGameStatus()

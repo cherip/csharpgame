@@ -152,26 +152,36 @@ namespace CSharpGame
                 MsgSys loginMsg = (MsgSys)serverMsg.msgContent;
                 if (loginMsg.sysType == MsgSysType.Judge)
                 {
+
                     bool ret = (bool)loginMsg.sysContent;
                     // 登录失败 直接返回
                     if (ret != true)
+                    {
+                        MessageBox.Show("没有这个用户");
                         return false;
+                    }
 
                     // 登录成功
                     keepalive = true;
                     myStatus = PlayerStatus.OnLine;
                     //启动后台线程接受服务器端发送的消息
-                    if (receiveThread == null)
-                    {
-                        receiveThread = new Thread(new ThreadStart(NetRuning));
-                        receiveThread.Start();
-                    }
+                    //if (receiveThread == null)
+                    //{
+                    //    receiveThread = new Thread(new ThreadStart(NetRuning));
+
+                    //}
+                    //receiveThread.Start();
+                   
+
+                    
                 }
                 else
                 {
                     return false;
                 }
             }
+
+            this.myStatus = PlayerStatus.OnLine;
             return true;
         }
 
@@ -191,7 +201,32 @@ namespace CSharpGame
             string[] user_pwd = new string[2] { user, EncodePwd(pwd) };
             sysMsg.sysContent = user_pwd;
 
-            return ConnectNet(new Message(sysMsg));
+            if (ConnectNet(new Message(sysMsg)))
+            {
+                myLogic.myClientName = user;
+
+  
+
+                // 登录成功
+                keepalive = true;
+                //启动后台线程接受服务器端发送的消息
+                if (receiveThread == null)
+                {
+                    receiveThread = new Thread(new ThreadStart(NetRuning));
+                    receiveThread.Start();
+                }
+
+                // 这里有 bug
+                // 准备发送一个online的命令，服务器把当前所有的table的情况发回来。
+                //MsgSys s = new MsgSys();
+                //s.sysType = MsgSysType.Online;
+                //s.sysContent = myLogic.myClientName;
+                //Message conn = new Message(s);
+                //myClientSoc.SendMsg(conn);
+
+                return true;
+            }
+            return false;
         }
 
         public void CloseConn(string msg)
@@ -255,12 +290,11 @@ namespace CSharpGame
             //获得其他玩家数据，根据username更新界面
             for (int i = 0; i < otherPlayersLogic.Count; i++)
             {
-                if (otherPlayersLogic[i].myClientName == gamMsg.userName && otherPlayersLogic[i].myClientName != null)
-                {
+                //if (otherPlayersLogic[i].myClientName == gamMsg.userName && otherPlayersLogic[i].myClientName != null)
+                //{
                     //更新指定玩家的界面
                     otherPlayersLogic[i].CleanBtnPair(gamMsg.cleanPair[0],gamMsg.cleanPair[1]);
-                }
-                
+                //}
             }
         }
 
@@ -270,6 +304,7 @@ namespace CSharpGame
             {
                 case MsgSysType.Judge:
                     {
+
                         bool judged = (bool)sysMsg.sysContent;
                         if (!judged)
                         {
@@ -287,6 +322,9 @@ namespace CSharpGame
                             Message conn = new Message(s);
                             myClientSoc.SendMsg(conn);
                         }
+
+                        
+
                     }
                     break;
                 case MsgSysType.Join:
@@ -302,9 +340,6 @@ namespace CSharpGame
                     {
                         //在线玩家列表
                         List<string> userList = (List<string>)sysMsg.sysContent;
-                       
-                        
-            
                     }
                     break;
                 case MsgSysType.Exit:
@@ -337,6 +372,12 @@ namespace CSharpGame
                 case MsgSysType.Begin:
                     {
                         InitGame(sysMsg);
+                    }
+                    break;
+                case MsgSysType.Seat:
+                    {
+                        int[] seatInfo = (int[])sysMsg.sysContent;
+                        hall.PlayerSeatDown(seatInfo[0], seatInfo[1]);
                     }
                     break;
             }
@@ -374,15 +415,16 @@ namespace CSharpGame
             }
         }
 
-        private void ProcessGameMsg(MsgGame gameMsg)
-        {
-            int[] pair = gameMsg.cleanPair;
-            if (pair == null || pair.Length != 2)
-            {
-                return;
-            }
+        //public void tellServer()
+        //private void ProcessGameMsg(MsgGame gameMsg)
+        //{
+        //    int[] pair = gameMsg.cleanPair;
+        //    if (pair == null || pair.Length != 2)
+        //    {
+        //        return;
+        //    }
 
-        }
+        //}
 
 
         //
@@ -404,6 +446,14 @@ namespace CSharpGame
                 //gameRoom = CreateGameForm();
                 hall.Hide();
                 myStatus = PlayerStatus.OnTable;
+
+                myLogic.tableIdx = tableIdx;
+                myLogic.seatIdx = seatIdx;
+
+                MsgSys seatMsg = new MsgSys();
+                seatMsg.sysType = MsgSysType.Seat;
+                seatMsg.sysContent = new int[] { tableIdx, seatIdx };
+                myClientSoc.SendMsg(seatMsg);
 
                 // 这里为了简单起见，没有使用多线程，显示多界面了，每次只能有一个界面出现
                 gameRoom.ShowDialog();
