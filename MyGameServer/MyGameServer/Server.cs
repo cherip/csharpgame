@@ -228,11 +228,11 @@ namespace MyGameServer
                         sysSend2.sysContent = GetUserNameList();
                         SendToClient(newGC, new CSharpGame.Message(sysSend2));
 
-                        InitGameStatus();
-                        MsgSys sysBegin = new MsgSys();
-                        sysBegin.sysType = MsgSysType.Begin;
-                        sysBegin.sysContent = gameResetStatus[0];
-                        SendToClient(newGC, new CSharpGame.Message(sysBegin));
+                        //InitGameStatus();
+                        //MsgSys sysBegin = new MsgSys();
+                        //sysBegin.sysType = MsgSysType.Begin;
+                        //sysBegin.sysContent = gameResetStatus[0];
+                        //SendToClient(newGC, new CSharpGame.Message(sysBegin));
                     }
                     break;
                 case MsgSysType.Offline:
@@ -269,9 +269,15 @@ namespace MyGameServer
                 case MsgSysType.GameStart:
                     {
                         //服务器生成初始数据，图片数组，副数广播
+
+                        InitGameStatus();
+                        //MsgSys sysBegin = new MsgSys();
+                        //sysBegin.sysType = MsgSysType.Begin;
+                        //sysBegin.sysContent = gameResetStatus[0];
+                        //SendToClient(newGC, new CSharpGame.Message(sysBegin));
                         MsgSys sysBroadcast = new MsgSys();
                         sysBroadcast.sysType = MsgSysType.Begin;
-                        sysBroadcast.sysContent = null;
+                        sysBroadcast.sysContent = gameResetStatus[0];
                         BroadcastClient(new CSharpGame.Message(sysBroadcast));
                     }
                     break;

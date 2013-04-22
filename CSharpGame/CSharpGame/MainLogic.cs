@@ -236,16 +236,7 @@ namespace CSharpGame
                         //在线玩家列表
                         List<string> userList = (List<string>)sysMsg.sysContent;
                        
-                        for (int i = 0; i < userList.Count; i++ )
-                        {
-                            if (userList[i] != myLogic.myClientName)
-                            {
-                                Logic lg = new Logic(2);
-                                lg.myClientName = userList[i];
-                                otherPlayersLogic.Add(new Logic(2));
-                            }
-                           
-                        }
+                        
             
                     }
                     break;
@@ -258,7 +249,22 @@ namespace CSharpGame
                 case MsgSysType.CanStart:
                     {
                         //通知 全部准备好
-                        List<string> readyList = (List<string>)sysMsg.sysContent;//房主名字
+                        List<string> userList = (List<string>)sysMsg.sysContent;//所有准备好的玩家的名字
+                        for (int i = 0; i < userList.Count; i++)
+                        {
+                            if (userList[i] != myLogic.myClientName)
+                            {
+                                Logic lg = new Logic(2);
+                                lg.myClientName = userList[i];
+                                otherPlayersLogic.Add(new Logic(2));
+                            }
+                        }
+                        if (userList[0] == myLogic.myClientName)
+                        {
+                            MsgSys msgStart = new MsgSys();
+                            msgStart.sysType = MsgSysType.GameStart;
+                            msgStart.sysContent = null;
+                         }
                     }
                     break;
                 case MsgSysType.Begin:
@@ -277,13 +283,13 @@ namespace CSharpGame
             }
         }
 
-        public void UserReady(string userName)
+        public void UserReady()
         {
             if (keepalive)
             {
                 MsgSys sysMsg = new MsgSys();
                 sysMsg.sysType = MsgSysType.Ready;
-                sysMsg.sysContent = userName;
+                sysMsg.sysContent = myLogic.myClientName;
                 Message conn = new Message(sysMsg);
                 myClientSoc.SendMsg(conn);
             }
