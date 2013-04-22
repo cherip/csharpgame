@@ -36,6 +36,7 @@ namespace CSharpGame
         public Logic()
         {
             pairPicCounts = -1;
+            myClientName = "";
         }
 
         public Logic(int type)
@@ -189,6 +190,12 @@ namespace CSharpGame
         {
             this.myClientName = name;
             gameArea.UpdateUser(name);
+        }
+
+        public void UserQuit()
+        {
+            this.myClientName = "";
+            gameArea.ResetGameStatus();
         }
     }
 }

@@ -39,6 +39,9 @@ namespace MyGameServer
             clients = new ArrayList();
             readyUsers = new List<GameClient>();
             tables = new List<TableInfo>(9);
+            for (int i = 0; i < tables.Capacity; i++)
+                tables.Add(new TableInfo());
+
             tdListen = new Thread(new ThreadStart(StartListening));
             tdListen.Start();
         }
@@ -222,17 +225,19 @@ namespace MyGameServer
                         // 判断一下是否能做在这个位置
                         // 如果可以更新一下table的信息
                         // 然后广播回去。
-                        int[] temp = (int[])_sysMsg.msgContent;
+                        int[] temp = (int[])sysMsg.sysContent;
                         if (tables[temp[0]].seats[1])
                         {
                             //能坐
                             tables[temp[0]].seats[1] = false;
                         }
+
                         MsgSys sysBroadcast = new MsgSys();
                         sysBroadcast.sysType = MsgSysType.Table;
                         sysBroadcast.sysContent = tables;
                         BroadcastClient(new CSharpGame.Message(sysBroadcast));
-                       
+
+                        BroadcastClient(_sysMsg);
                     }
                     break;
             }

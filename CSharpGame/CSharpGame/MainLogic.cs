@@ -77,6 +77,7 @@ namespace CSharpGame
             foreach (Logic lg in otherPlayersLogic)
             {
                 ret.Add(lg.gameArea);
+                lg.gameArea.Hide();
             }
             gameForm.CreateOppeArea(ret);
 
@@ -114,7 +115,7 @@ namespace CSharpGame
             // 其他玩家的
             foreach (Logic lg in otherPlayersLogic)
             {
-                if (lg.myClientName != null)
+                if (lg.myClientName != "")
                 {
                     lg.InitGame(gameStatus);
                 }
@@ -270,9 +271,9 @@ namespace CSharpGame
             {
                 case MsgType.Sys:
                     {
-                        MsgSys sysMsg = (MsgSys)msg.msgContent;
+                        //MsgSys sysMsg = (MsgSys)msg.msgContent;
 
-                        ProcessSysMsg(sysMsg);
+                        ProcessSysMsg(msg);
                     }
                     break;
                 case MsgType.Game:
@@ -298,8 +299,9 @@ namespace CSharpGame
             }
         }
 
-        private void ProcessSysMsg(MsgSys sysMsg)
+        private void ProcessSysMsg(Message _sysMsg)
         {
+            MsgSys sysMsg = (MsgSys)_sysMsg.msgContent;
             switch (sysMsg.sysType)
             {
                 case MsgSysType.Judge:
@@ -379,13 +381,48 @@ namespace CSharpGame
                         int[] seatInfo = (int[])sysMsg.sysContent;
                         hall.PlayerSeatDown(seatInfo[0], seatInfo[1]);
 
+                        string userSender = (string)_sysMsg.userSender;
+                        if (userSender == "Server" || userSender == myLogic.myClientName)
+                        {
+                            // 服务器发送的模拟请求，不做任何处理
+                            // 或者是自己发生的
+                            ;
+                        }
                         // 对于其他player 做下来的行为，如果和 本玩家处于同一房间则引发后续操作
-                        if (seatInfo[0] == this.tableIdx)
-                        { 
-                            
+                        else if (seatInfo[0] == this.tableIdx)
+                        {
+                            handle_seat_msg(userSender);
                         }
                     }
                     break;
+            }
+        }
+
+        public delegate void show_func();
+        public void handle_seat_msg(string userSender)
+        {
+            for (int i = 0; i < otherPlayersLogic.Count; i++)
+            {
+                if (otherPlayersLogic[i].myClientName == userSender)
+                {
+                    // 如果能在当前的otherplayer中找到同样的，则表示用户退出
+                    otherPlayersLogic[i].UserQuit(); 
+                    GameArea ga = otherPlayersLogic[i].gameArea;
+                    ga.Invoke(new show_func(ga.Hide));
+                    return;
+                }
+            }
+
+            for (int i = 0; i < otherPlayersLogic.Count; i++)
+            {
+                if (otherPlayersLogic[i].myClientName == "")
+                {
+                    otherPlayersLogic[i].AddUser(userSender);
+                    GameArea ga = otherPlayersLogic[i].gameArea;
+                    ga.Invoke(new show_func(ga.Show));
+                    //otherPlayersLogic[i].gameArea.Show()
+                    return;
+                }
             }
         }
 
@@ -463,7 +500,7 @@ namespace CSharpGame
                 seatMsg.sysContent = new int[] { tableIdx, seatIdx };
                 Message msg = new Message(seatMsg);
                 msg.userSender = myLogic.myClientName;
-                myClientSoc.SendMsg(seatMsg);
+                myClientSoc.SendMsg(msg);
 
                 // 这里为了简单起见，没有使用多线程，显示多界面了，每次只能有一个界面出现
                 gameRoom.ShowDialog();
