@@ -56,7 +56,7 @@ namespace CSharpGame
             else 
             {
                 GameArea ga = (GameArea)panel;
-                ga.Init(new Point(2, 2), new Size(666, 600));
+                ga.Draw(new Point(2, 2), new Size(666, 600));
                 ga.picList = this.picList;
                 this.Controls.Add(ga);
             }
@@ -72,13 +72,13 @@ namespace CSharpGame
             else
             {
                 // do something
-                List<OtherGameArea> ogas = (List<OtherGameArea>)panel;
+                List<GameArea> ga_list = (List<GameArea>)panel;
                 int start_x = 2;
                 int start_y = 612;
-                foreach (OtherGameArea ga in ogas)
+                foreach (GameArea ga in ga_list)
                 {
-                    ga.Init(new Point(start_x, start_y), new Size(222, 200));
-                    ga.gameArea.picList = this.picList;
+                    ga.Draw(new Point(start_x, start_y), new Size(222, 200));
+                    ga.picList = this.picList;
                     start_x += 222;
                     this.Controls.Add(ga);
                 }

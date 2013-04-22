@@ -69,12 +69,12 @@ namespace CSharpGame
             }
 
             // 将Logic的界面显示到gameForm中
-            GameArea ga = myLogic.shower;
+            GameArea ga = myLogic.gameArea;
             gameForm.CreateMainArea(ga);
-            List<OtherGameArea> ret = new List<OtherGameArea>();
+            List<GameArea> ret = new List<GameArea>();
             foreach (Logic lg in otherPlayersLogic)
             {
-                ret.Add(lg.oshower);
+                ret.Add(lg.gameArea);
             }
             gameForm.CreateOppeArea(ret);
 

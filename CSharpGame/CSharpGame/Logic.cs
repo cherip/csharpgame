@@ -23,28 +23,13 @@ namespace CSharpGame
         public bool started = false;//游戏开始与否
         string username;
 
-        // 事件函数处理设置btn的图片
-        public delegate bool SetBtnImage(int idx, int type);
-        public event SetBtnImage btnImageSetFunc;
 
-        // 事件函数处理 消除btn
-        public delegate void CleanBtn(int a, int b);
-        public event CleanBtn cleanBtnPair;
         //消除之后传给服务器
         public delegate void SendmsgDeleg(Message msggame);
         public event SendmsgDeleg sendMsgEvent;
 
-        // 非常2比的设计，因为logic要大量调用gamearea的界面显示函数，
-        // 所以logic这里放入一个所控制的gamearea的变量
-        // 其实应该把 gamearea放入logic之下， 然后回调logic的函数
-        // 还做不了 应该不是一个线程。。囧
-        public GameArea shower;
-        public OtherGameArea oshower;
-        //public OtherGameArea gameShower;
+        public GameArea gameArea;
 
-        public delegate void EnableGameArea();
-        public event EnableGameArea startGame;
-        
         // 其他玩家的Area;
 
         public Logic()
@@ -52,41 +37,21 @@ namespace CSharpGame
             pairPicCounts = -1;
         }
 
-        public Logic(GameArea gameShow)
-        {
-            //myClientSoc = new MyClientSoc();
-            pairPicCounts = -1;
-        }
-
         public Logic(int type)
             : this()
         {
-            shower = null;
-            oshower = null;
-
             switch (type)
             {
                 case 1:
                     {
-                        shower = new GameArea();
-                        shower.btnClickEvent += PushButton;
-
-                        // 不好的设计
-                        this.cleanBtnPair += shower.CleanBtnPair;
-                        this.btnImageSetFunc += shower.SetBtnImage;
-                        this.startGame += shower.EnableArea;
+                        MyGameArea area = new MyGameArea();
+                        area.btnClickEvent += PushButton;
+                        gameArea = area;
                     }
                     break;
                 case 2:
                     {
-                        oshower = new OtherGameArea();
-                        GameArea vshower = oshower.gameArea;
-                        vshower.btnClickEvent += PushButton;
-
-                        // 不好的设计
-                        this.cleanBtnPair += oshower.CleanButton;
-                        this.btnImageSetFunc += vshower.SetBtnImage;
-                        this.startGame += vshower.EnableArea;
+                        gameArea = new OtherGameArea();
                     }
                     break;
             }
@@ -99,21 +64,16 @@ namespace CSharpGame
             int[] tmp = (int[])btnArry.Clone();
             pairPicCounts = MyFormat.countPairPic(tmp);
 
-            if (btnImageSetFunc != null)
+            for (int i = 0; i < btnArry.Length; i++)
             {
-                for (int i = 0; i < btnArry.Length; i++)
-                {
-                    btnImageSetFunc(i, btnArry[i]);
-                }
+                gameArea.SetBtnImage(i, btnArry[i]);
             }
 
-            //startGame();
-            //System.Windows.Forms.pa
         }
 
         public void Enable()
         {
-            startGame();
+            gameArea.EnableArea();
         }
 
         public int GetPicType(int pos)
@@ -125,7 +85,7 @@ namespace CSharpGame
 
         public void CleanBtnPair(int a, int b)
         {
-            cleanBtnPair(a,b);
+            gameArea.CleanBtnPair(a,b);
         }
 
         public void PushButton(int pos)
@@ -152,7 +112,7 @@ namespace CSharpGame
                     last_click = -1;
 
                     // 调用绑定的事件 消除btn
-                    cleanBtnPair(ret, pos);
+                    CleanBtnPair(ret, pos);
                     // 再调用后续的处理逻辑
                     ClearAnPair();
                     //int[] r = new int[2] {ret, pos};
@@ -188,14 +148,14 @@ namespace CSharpGame
         }
 
         //
-        // 提示功能移到logic中去，
+        // 提示功能移到logic中来
         //
         public void hintclicked()
         {
             PairPics pairpics = gerPairPics();
             if (pairpics != null)
             {
-                shower.HintBlick(pairpics.PicNO1, pairpics.PicNO2, 3);
+                gameArea.HintBlick(pairpics.PicNO1, pairpics.PicNO2, 3);
             }
             else
             {

@@ -15,10 +15,10 @@ namespace CSharpGame
         private TcpClient client;//基于TCP协议的客户端编程
         private int serverport = 8668;//服务器端端口号
         private NetworkStream ns;//用于获取和操作网络流
-        private Thread receive = null;//用于启动用户聊天的线程
-        private string clientname;//要加入聊天的客户姓名
+        //private Thread receive = null;//用于启动用户聊天的线程
+        //private string clientname;//要加入聊天的客户姓名
         public bool connected = false; //判断用户是否已经与服务器取得连接        
-        private bool privatemode = false; //判断用户之间的聊天是否属于私聊
+        //private bool privatemode = false; //判断用户之间的聊天是否属于私聊
         public delegate void GetWinCall(string id, string app1, string app2);//建立启动Windows控件的委托
 
         public void InitialSoc()

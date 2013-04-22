@@ -28,8 +28,7 @@ namespace CSharpGame
             this.Location = areaLocat;
             this.Size = areaSize;
 
-            userName = createLable(new Point(10, 0), new Size(70, 10), "userxxx");
-            gameStatus = createLable(new Point(85, 0), new Size(80, 10), "64/64");
+
 
             gameArea.Init(new Point(0, 12), new Size(areaSize.Width, areaSize.Height - 12));
             gameArea.BorderStyle = BorderStyle.None;
@@ -40,24 +39,7 @@ namespace CSharpGame
             this.Controls.Add(gameArea);
         }
 
-        private Label createLable(Point p, Size s, string txt)
-        {
-            Label lbl = new Label();
-            lbl.Location = p;
-            lbl.Size = s;
-            lbl.Text = txt;
 
-            return lbl;
-        }
 
-        private void UpdateStatus() 
-        { 
-        }
-
-        public void CleanButton(int a, int b)
-        {
-            gameArea.CleanBtnPair(a, b);
-            UpdateStatus();
-        }
     }
 }

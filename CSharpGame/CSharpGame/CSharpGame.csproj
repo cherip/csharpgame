@@ -67,9 +67,6 @@
     <Compile Include="MainLogic.cs" />
     <Compile Include="MyClientSoc.cs" />
     <Compile Include="MyFormat.cs" />
-    <Compile Include="OtherGameArea.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="PairPics.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
