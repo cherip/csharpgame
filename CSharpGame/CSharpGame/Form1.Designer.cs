@@ -211,17 +211,17 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(771, 341);
+            this.button2.Location = new System.Drawing.Point(712, 295);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 13;
-            this.button2.Text = "接受";
+            this.button2.Text = "准备";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(712, 295);
+            this.button3.Location = new System.Drawing.Point(811, 295);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
             this.button3.TabIndex = 14;
