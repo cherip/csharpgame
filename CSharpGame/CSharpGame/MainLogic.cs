@@ -34,6 +34,8 @@ namespace CSharpGame
 
         // 当前client的玩家的Logic
         Logic myLogic;
+        public int tableIdx;
+        public int seatIdx;
         PlayerStatus myStatus;
 
         // 其他玩家的Logic, 用于显示缩略图
@@ -60,7 +62,7 @@ namespace CSharpGame
 
             // 首先创建4个logic
             myLogic = new Logic(1);
-            myLogic.sendMsgEvent += SendCurrentData;
+            myLogic.sendMsgEvent += SendGameData;
 
             otherPlayersLogic = new List<Logic>();
             for (int i = 0; i < 3; i++)
@@ -383,10 +385,12 @@ namespace CSharpGame
             }
         }
 
-        public void SendCurrentData(Message msg)
+        public void SendGameData(Message msg)
         {
             if (keepalive)
-            {              
+            {
+                msg.reciType = ReciveType.Room;
+                msg.Num = this.tableIdx;
                 myClientSoc.SendMsg(msg);
             }
         }
@@ -447,8 +451,8 @@ namespace CSharpGame
                 hall.Hide();
                 myStatus = PlayerStatus.OnTable;
 
-                myLogic.tableIdx = tableIdx;
-                myLogic.seatIdx = seatIdx;
+                this.tableIdx = tableIdx;
+                this.seatIdx = seatIdx;
 
                 MsgSys seatMsg = new MsgSys();
                 seatMsg.sysType = MsgSysType.Seat;
