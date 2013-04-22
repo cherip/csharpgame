@@ -14,6 +14,9 @@ namespace CSharpGame
     class Logic
     {
         public string myClientName;
+        public int tableIdx;
+        public int seatIdx;
+
         public const int MAX_PIC = 64;
         int[] btnArry = new int[MAX_PIC];
         int last_click = -1;

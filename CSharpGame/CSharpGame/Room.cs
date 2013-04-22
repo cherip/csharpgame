@@ -40,7 +40,7 @@ namespace CSharpGame
             Size tableSize = new Size(150, 130);
             for (int i = 0; i < MaxTableNum; i++)
             {
-                gameTable table = new gameTable(i + 1);
+                gameTable table = new gameTable(i);
                 table.Location = new Point(startX + tableSize.Width * (i % TableNumInRow),
                                            startY + tableSize.Height * (i / TableNumInRow));
                 table.Size = tableSize;
@@ -95,6 +95,16 @@ namespace CSharpGame
                 this.panelTables.Show();
                 this.panelPlayers.Show();
             }
+        }
+
+        public void PlayerSeatDown(int tableIdx, int SeatIdx)
+        {
+            if (tableIdx < 0 || tableIdx >= tables.Count)
+            {
+                return;
+            }
+
+            tables[tableIdx].ClickSeat(SeatIdx);
         }
     }
 }

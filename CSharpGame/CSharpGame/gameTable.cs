@@ -26,7 +26,7 @@ namespace CSharpGame
         public gameTable(int idx)
             : this()
         {
-            this.tableNum.Text = System.Convert.ToString(idx);
+            this.tableNum.Text = System.Convert.ToString(idx + 1);
             tableIdx = idx;
 
             btnIdx = new Hashtable();
@@ -54,17 +54,20 @@ namespace CSharpGame
                     break;
                 case 1:         // 处理seattwo
                     {
-                        changeSeatStatus(this.seatTwo, param);
+                        this.Invoke(new EventHandler(changeSeatStatus),
+                                    new object[] { this.seatTwo, param });
                     }
                     break;
                 case 2:         // 处理seatthree
                     {
-                        changeSeatStatus(this.seatThree, param);
+                        this.Invoke(new EventHandler(changeSeatStatus),
+                                    new object[] { this.seatThree, param });
                     }
                     break;
                 case 3:         // 处理seatfour
                     {
-                        changeSeatStatus(this.seatFour, param);
+                        this.Invoke(new EventHandler(changeSeatStatus),
+                                    new object[] { this.seatFour, param });
                     }
                     break;
             }
@@ -76,10 +79,12 @@ namespace CSharpGame
             if (btn.Enabled == true)
             {
                 btn.Enabled = false;
+                btn.BackColor = System.Drawing.Color.WhiteSmoke;
             }
             else
             {
                 btn.Enabled = true;
+                btn.BackColor = System.Drawing.Color.Silver;
             }
         }
 
