@@ -146,10 +146,10 @@ namespace CSharpGame
             }
         }
 
-        private void conn_Click(object sender, EventArgs e)
-        {
-            mainLogic.ConnectNet();
-        }
+        //private void conn_Click(object sender, EventArgs e)
+        //{
+        //    mainLogic.ConnectNet();
+        //}
 
         //这个函数不需要了吧？
         //private void updateForm(object sender, int type)

@@ -95,6 +95,24 @@ namespace CSharpGame
             }
         }
 
+        public bool SendMsg(MsgSys msg)
+        {
+            Message fullMsg = new Message(msg);
+            return SendMsg(fullMsg);
+        }
+
+        public bool SendMsg(MsgGame msg)
+        {
+            Message fullMsg = new Message(msg);
+            return SendMsg(fullMsg);
+        }
+
+        public bool SendMsg(MsgChat msg)
+        {
+            Message fullMsg = new Message(msg);
+            return SendMsg(fullMsg);
+        }
+
         public bool SendMsg(Message msg) {
             try
             {

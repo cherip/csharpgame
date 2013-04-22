@@ -68,24 +68,15 @@ namespace MyGameServer
             Hashtable duizhan = new Hashtable();
             while (keepalive)
             {
-               try
-               {
-                   Byte[] LInfor = new Byte[1024];
-                   int msglen = client.Receive(LInfor, LInfor.Length, 0);
-                   Byte[] realDate = new Byte[msglen];
-                   System.Buffer.BlockCopy(LInfor, 0, realDate, 0, msglen);
+                try
+                {
+                    Byte[] LInfor = new Byte[1024];
+                    int msglen = client.Receive(LInfor, LInfor.Length, 0);
+                    Byte[] realDate = new Byte[msglen];
+                    System.Buffer.BlockCopy(LInfor, 0, realDate, 0, msglen);
 
-                   CSharpGame.Message clientMsg = (CSharpGame.Message)(CSharpGame.SerializationUnit.DeserializeObject(realDate));
-                   
-                   string clientcommand = System.Text.Encoding.BigEndianUnicode.GetString(LInfor);
-                   string[] tokens = clientcommand.Split(new Char[] { '|' });
-                   
-                   //
-                   // 把msg的封装改了一下。这么用吧 简洁一些。
-                   // 可以把后面的逻辑用函数提出去。 每种msg用一个函数处理，否则这一坨的代码太多了。
-                   //
-                   //if (clientMsg.msgType == CSharpGame.MsgType.Sys)
-                   //{
+                    CSharpGame.Message clientMsg = (CSharpGame.Message)(CSharpGame.SerializationUnit.DeserializeObject(realDate));
+
                     switch (clientMsg.msgType)
                     {
                         case MsgType.Sys:
@@ -102,97 +93,15 @@ namespace MyGameServer
                             break;
                         case MsgType.Chat:
                             {
-                                
+
                             }
                             break;
                     }
-                   switch(tokens[0])
-                   {
-                       case "login":
-                           {
-                               if (clients.Count != 0)
-                               {
-                                   for (int n = 0; n < clients.Count; n++)//将新用户的加入信息发送给其他用户
-                                   {
-                                       GameClient cl = (GameClient)clients[n];
-                                       Console.WriteLine(cl.Name + "xxxjion|" + tokens[1]);
-                                       SendToClient(cl, "xxxjion|" + tokens[1] + '|');
-                                   }
-                               }
-                               GameClient newGC = new GameClient(tokens[1], null, clientservice, client);
-                               clients.Add(newGC);
-                               Console.WriteLine(newGC.Name + "list|" + GetUserNameList());
-                               SendToClient(newGC, "list|" + GetUserNameList());
-                               break;
-                           }
-                       case "exit":
-                           {
-                               //int remove = 0;
-
-                               //bool found = false;
-
-                               //for (int i = 0; i < clients.Count; i++)
-                               //{
-                               //    GameClient cl = (GameClient)clients[i];
-                               //    Console.WriteLine(cl.Name + "xxxexit|" + tokens[1]);
-                               //    SendToClient(cl, "xxxexit|" + tokens[1] + '|');
-                               //    if (cl.Name.CompareTo(tokens[1]) == 0)
-                               //    {
-                               //        remove = i;
-                               //        found = true;
-                               //    }
-                               //}
-                               //if (found)
-                               //    clients.RemoveAt(remove);
-                               int remove = findGameClient(tokens[1]);
-                               if (remove != -1)
-                               {
-                                   clients.RemoveAt(remove);
-                               }
-                               client.Close();
-                               keepalive = false; 
-                               break;
-                           }
-                       case "invite":
-                           {
-                               int answer = findGameClient(tokens[2]);
-                               if (answer != -1)
-                               {
-                                   SendToClient((GameClient)clients[answer], "xxxinvite|" + tokens[1]);
-                               }
-                               break;
-                           }
-                       case "startgame":
-                           {
-                               int[] picArray = new int[64];
-                               MyFormat.genPic(ref picArray);
-                               string str = MyFormat.arrayToStr(picArray);
-                               foreach (GameClient cl in clients)
-                               {
-                                   SendToClient(cl, "xxxstartgame|" + str);
-                               }
-                               break;
-                           }
-                       case "gamedata":
-                           {
-                               foreach (GameClient cl in clients)
-                               {
-                                   if (true)//!cl.Name.Equals(tokens[1]))
-                                   {
-                                       SendToClient(cl, "xxxgamedata|" + tokens[2]);
-                                   }
-                               }
-                               break;
-                           }
-                   }
-
-                   
-
-               }
-               catch (System.Exception ex)
-               {
-                   client.Close();
-               }
+                }
+                catch (System.Exception ex)
+                {
+                    client.Close();
+                }
             }
         }
 
@@ -212,12 +121,21 @@ namespace MyGameServer
                         MsgSys s = new MsgSys();
                         s.sysType = MsgSysType.Judge;
                         string[] user_pwd = (string[])sysMsg.sysContent; 
-                        string[] judged = new string[2];
-                        judged[0] = "true";
-                        judged[1] = user_pwd[0];
-                        s.sysContent = (object)judged;
-                        GameClient newGC = new GameClient((string)judged[1], null, clientservice, client);
-                        SendToClient(newGC, new CSharpGame.Message(s));
+
+                        if (user_pwd == null || user_pwd.Length != 2 ||
+                            JudgeUserLogin(user_pwd[0], user_pwd[1]) == false)
+                        {
+                            s.sysContent = false; 
+                            GameClient newGC = new GameClient(user_pwd[0], null, clientservice, client);
+                            SendToClient(newGC, new CSharpGame.Message(s));
+                        }
+                        else
+                        {
+                            s.sysContent = true;
+                            GameClient newGC = new GameClient(user_pwd[0], null, clientservice, client);
+                            clients.Add(newGC);
+                            SendToClient(newGC, new CSharpGame.Message(s));
+                        }
                     }
                     break;
                 case MsgSysType.Online:
@@ -380,6 +298,7 @@ namespace MyGameServer
                 return false;
             }
         }
+
         public void SendToClient(GameClient cl, string clientCommand)
         {
             try
@@ -406,6 +325,13 @@ namespace MyGameServer
                 //cl.CLThread.Abort();
 
             }
+        }
+
+        // 判断用户登录
+        private bool JudgeUserLogin(string login, string pwd)
+        {
+            Console.WriteLine("user: {0} login error!", login);
+            return false;
         }
 
         public void InitGameStatus()

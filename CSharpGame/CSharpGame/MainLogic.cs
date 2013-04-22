@@ -132,38 +132,53 @@ namespace CSharpGame
         //
         // 网络通信的功能
         //
-        public void ConnectNet(Message msg)
+
+        public bool ConnectNet(Message msg)
         {
-            
+            if (myClientSoc.connected == false)
+            {
                 myClientSoc.InitialSoc();
+                // 如果网络连接失败
+                if (myClientSoc.connected == false)
+                {
+                    return false;
+                }
+            }
 
-                // 启动单独的线程用于接收服务器端发送来的消息
-                if (receiveThread == null)
-                    receiveThread = new Thread(new ThreadStart(NetRuning));
-                receiveThread.Start();
+            myClientSoc.SendMsg(msg);
+            Message serverMsg = myClientSoc.RecieveMsg();
+            if (serverMsg.msgType == MsgType.Sys)
+            {
+                MsgSys loginMsg = (MsgSys)serverMsg.msgContent;
+                if (loginMsg.sysType == MsgSysType.Judge)
+                {
+                    bool ret = (bool)loginMsg.sysContent;
+                    // 登录失败 直接返回
+                    if (ret != true)
+                        return false;
 
-                //myClientSoc.SendStr("login", msg);
-                myClientSoc.SendMsg(msg);
-            
+                    // 登录成功
+                    keepalive = true;
+                    //启动后台线程接受服务器端发送的消息
+                    if (receiveThread == null)
+                    {
+                        receiveThread = new Thread(new ThreadStart(NetRuning));
+                        receiveThread.Start();
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
-        public bool ConnectNet()
+        // 加密函数
+        private string EncodePwd(string pwd)
         {
-            if (keepalive == false)
-            {
-                keepalive = true;
-                Random r = new Random();
-
-                MsgSys sysMsg = new MsgSys();
-                sysMsg.sysType = MsgSysType.Online;
-                sysMsg.sysContent = "user" + r.Next(0, 1000);
-                
-                myLogic.myClientName = (string)sysMsg.sysContent;
-
-                Message conn = new Message(sysMsg);
-                ConnectNet(conn);
-            }
-            return true;
+            return pwd;
         }
 
         public bool PlayerLogin(string user, string pwd)
@@ -173,23 +188,10 @@ namespace CSharpGame
 
             MsgSys sysMsg = new MsgSys();
             sysMsg.sysType = MsgSysType.Login;
-            string[] user_pwd = new string[2];
-            user_pwd[0] = user;
-            user_pwd[1] = pwd;
+            string[] user_pwd = new string[2] { user, EncodePwd(pwd) };
             sysMsg.sysContent = user_pwd;
 
-            ConnectNet(new Message(sysMsg));
-            return true;
-            //if (true)
-            //{
-            //    // do otherthings
-            //    myStatus = PlayerStatus.OnLine;
-            //    return true;
-            //}
-            //else
-            //{
-            //    //return false;
-            //}
+            return ConnectNet(new Message(sysMsg));
         }
 
         public void CloseConn(string msg)
