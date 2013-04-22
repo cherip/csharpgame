@@ -100,16 +100,19 @@ namespace CSharpGame
         //
         public void ConnectNet(Message msg)
         {
-            myClientSoc.InitialSoc();
+            
+                myClientSoc.InitialSoc();
 
-            // 启动单独的线程用于接收服务器端发送来的消息
-            if (receiveThread == null)
-                receiveThread = new Thread(new ThreadStart(NetRuning));
-            receiveThread.Start();
 
-            //myClientSoc.SendStr("login", msg);
-            myClientSoc.SendMsg(msg);
 
+                // 启动单独的线程用于接收服务器端发送来的消息
+                if (receiveThread == null)
+                    receiveThread = new Thread(new ThreadStart(NetRuning));
+                receiveThread.Start();
+
+                //myClientSoc.SendStr("login", msg);
+                myClientSoc.SendMsg(msg);
+            
         }
 
         public bool ConnectNet()
@@ -143,7 +146,7 @@ namespace CSharpGame
             user_pwd[1] = pwd;
             sysMsg.sysContent = user_pwd;
             Message conn = new Message(sysMsg);
-            ConnectNet(conn);
+            ConnectNet();
             return true;
             //if (true)
             //{
