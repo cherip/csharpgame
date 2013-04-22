@@ -26,14 +26,16 @@ namespace CSharpGame
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             string apppath = Environment.CurrentDirectory;
-            using (StreamReader sr = File.OpenText(apppath + "\\ip.txt"))
-            {
-                string s = "";
-                while ((s = sr.ReadLine()) != null)
-                {
-                    serverip = s;
-                }            
-            }
+            //using (StreamReader sr = File.OpenText(apppath + "\\ip.txt"))
+            //{
+            //    string s = "";
+            //    while ((s = sr.ReadLine()) != null)
+            //    {
+            //        serverip = s;
+            //    }            
+            //}
+
+            serverip = "127.0.0.1";
 
             MainLogic gameLogic = new MainLogic();
             

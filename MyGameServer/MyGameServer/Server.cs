@@ -157,11 +157,11 @@ namespace MyGameServer
                         //GameClient newGC = clients[findGameClient((string)_sysMsg.userSender)];
                         //clients.Add(newGC);
 
-                        CSharpGame.MsgSys sysSend2 = new CSharpGame.MsgSys();
-                        sysSend2.sysType = CSharpGame.MsgSysType.List;
-                        // 这里改了一下 list消息的content是个用户名的list
-                        sysSend2.sysContent = GetUserNameList();
-                        SendToClient(newGC, new CSharpGame.Message(sysSend2));
+                        //CSharpGame.MsgSys sysSend2 = new CSharpGame.MsgSys();
+                        //sysSend2.sysType = CSharpGame.MsgSysType.List;
+                        //// 这里改了一下 list消息的content是个用户名的list
+                        //sysSend2.sysContent = GetUserNameList();
+                        //SendToClient(newGC, new CSharpGame.Message(sysSend2));
 
                         sendCurrentTables(newGC);
                     }
