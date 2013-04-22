@@ -184,5 +184,11 @@ namespace CSharpGame
             }
             return null;
         }
+
+        public void AddUser(string name)
+        {
+            this.myClientName = name;
+            gameArea.UpdateUser(name);
+        }
     }
 }

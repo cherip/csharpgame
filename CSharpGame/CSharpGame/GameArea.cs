@@ -114,6 +114,16 @@ namespace CSharpGame
         {
             ;
         }
+
+        public virtual void UpdateUser(string name)
+        {
+            ;
+        }
+
+        public virtual void ResetGameStatus()
+        {
+            ;
+        }
     }
 
     class MyGameArea : GameArea
@@ -223,6 +233,20 @@ namespace CSharpGame
         {
             base.CleanBtnPair(a, b);
             UpdateStatus();
+        }
+
+        public override void UpdateUser(string name)
+        {
+            base.UpdateUser(name);
+            this.userName.Text = name;
+            this.Refresh();
+        }
+
+        public override void ResetGameStatus()
+        {
+            base.ResetGameStatus();
+            this.gameStatus.Text = "64/64";
+            this.Refresh();
         }
     }
 }

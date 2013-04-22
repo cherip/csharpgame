@@ -24,7 +24,8 @@ namespace CSharpGame
     {
         public MsgType msgType;
         public object msgContent;
-        public ReciveType reciType; 
+        public ReciveType reciType;
+        public string userSender;
         public object Num;              // playername or roomidx
         //public MsgSys msgContent;
 

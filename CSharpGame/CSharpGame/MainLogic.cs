@@ -207,8 +207,6 @@ namespace CSharpGame
             {
                 myLogic.myClientName = user;
 
-  
-
                 // 登录成功
                 keepalive = true;
                 //启动后台线程接受服务器端发送的消息
@@ -380,6 +378,12 @@ namespace CSharpGame
                     {
                         int[] seatInfo = (int[])sysMsg.sysContent;
                         hall.PlayerSeatDown(seatInfo[0], seatInfo[1]);
+
+                        // 对于其他player 做下来的行为，如果和 本玩家处于同一房间则引发后续操作
+                        if (seatInfo[0] == this.tableIdx)
+                        { 
+                            
+                        }
                     }
                     break;
             }
@@ -457,6 +461,8 @@ namespace CSharpGame
                 MsgSys seatMsg = new MsgSys();
                 seatMsg.sysType = MsgSysType.Seat;
                 seatMsg.sysContent = new int[] { tableIdx, seatIdx };
+                Message msg = new Message(seatMsg);
+                msg.userSender = myLogic.myClientName;
                 myClientSoc.SendMsg(seatMsg);
 
                 // 这里为了简单起见，没有使用多线程，显示多界面了，每次只能有一个界面出现
