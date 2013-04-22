@@ -100,10 +100,13 @@ namespace CSharpGame
         //
         public void ConnectNet(Message msg)
         {
-            
+
+            if (keepalive == false)
+            {
+                keepalive = true;
                 myClientSoc.InitialSoc();
 
-
+            }
 
                 // 启动单独的线程用于接收服务器端发送来的消息
                 if (receiveThread == null)
@@ -146,7 +149,7 @@ namespace CSharpGame
             user_pwd[1] = pwd;
             sysMsg.sysContent = user_pwd;
             Message conn = new Message(sysMsg);
-            ConnectNet();
+            ConnectNet(conn);
             return true;
             //if (true)
             //{
