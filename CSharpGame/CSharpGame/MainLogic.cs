@@ -285,6 +285,7 @@ namespace CSharpGame
                         }
                         if (judged[0].Equals("true"))
                         {
+                            myStatus = PlayerStatus.OnLine;
                             myLogic.myClientName = judged[1];
                             MsgSys s = new MsgSys();
                             s.sysType = MsgSysType.Online;

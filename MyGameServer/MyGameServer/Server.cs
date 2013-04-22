@@ -269,7 +269,7 @@ namespace MyGameServer
                         {
                             readyUsers.Add((GameClient)clients[find]);
                         }
-                        if (readyUsers.Count == clients.Count)//全部准备
+                        if (readyUsers.Count == clients.Count)//全部准备 要改成房间的
                         {
                             //等待房主确认开始
                             MsgSys sysBroadcast = new MsgSys();
