@@ -113,6 +113,7 @@ namespace MyGameServer
         private void ProcessSysMsg(CSharpGame.Message _sysMsg, Socket client)
         {
             MsgSys sysMsg = (MsgSys)_sysMsg.msgContent;
+            string curr_user = _sysMsg.userSender;
             switch (sysMsg.sysType)
             {
                 case MsgSysType.Login:
@@ -202,7 +203,11 @@ namespace MyGameServer
                         //    BroadcastClient(new CSharpGame.Message(sysBroadcast));
                         //}
                         //客户端还要传桌子号过来
+                        int find = findGameClient(curr_user);
+                        GameClient gl = (GameClient)clients[find];
+                        
                         int tableIndex = (int)sysMsg.sysContent;
+                        gl.TableIdx = tableIndex;
                         tables[tableIndex].readycount++;
                         if (tables[tableIndex].readycount == tables[tableIndex].usercount)
                         {
