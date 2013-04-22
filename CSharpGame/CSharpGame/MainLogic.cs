@@ -171,7 +171,6 @@ namespace CSharpGame
                     return false;
                 }
             }
-
             return true;
         }
 
