@@ -274,6 +274,12 @@ namespace MyGameServer
                         ;
                     }
                     break;
+
+                case MsgSysType.FreshGameArea:
+                    {
+                        BroadcastRoom(_sysMsg);
+                    }
+                    break;
             }
 
          

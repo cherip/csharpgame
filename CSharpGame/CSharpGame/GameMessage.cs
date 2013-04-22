@@ -93,6 +93,7 @@ namespace CSharpGame
         Seat,
         Table,
         TableNoSeat,
+        FreshGameArea,
     }
 
     [Serializable]

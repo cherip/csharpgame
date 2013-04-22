@@ -384,6 +384,23 @@ namespace CSharpGame
                         hall.PlayerSeatDown(seatInfo[0], seatInfo[1], userSender);
                     }
                     break;
+                case MsgSysType.FreshGameArea:
+                    {
+                         
+                        for (int i = 0; i < 3; i++ )
+                        {
+                            if (otherPlayersLogic[i].myClientName != "")
+                            
+                            
+                            {
+                               // otherPlayersLogic[t].SetPlayer(tablesInfo.seatUser[k]);
+                                GameArea ga = otherPlayersLogic[i].gameArea;
+                                ga.Show();//出错。。。
+                                
+                            }
+                        }
+                    }
+                    break;
             }
         }
 
@@ -496,12 +513,21 @@ namespace CSharpGame
                 Message msg = new Message(seatMsg);
 
                 userSend(msg);
+                //告诉其他玩家刷新界面
+
+                MsgSys fresh = new MsgSys();
+                seatMsg.sysType = MsgSysType.FreshGameArea;
+                seatMsg.sysContent = new int[] { tableIdx, seatIdx };
+                Message m = new Message(seatMsg);
+                m.userSender = myLogic.myClientName;
+                m.Num = tableIdx;
+                userSend(m);
 
                 // 这里为了简单起见，没有使用多线程，显示多界面了，每次只能有一个界面出现
                 showGameRoom(tableIdx, seatIdx);
                 gameRoom.ShowDialog();
 //                showGameRoom(tableIdx);
-
+                
                 myStatus = PlayerStatus.OnLine;
                 hall.Show();
             }
