@@ -26,6 +26,7 @@ namespace MyGameServer
         public delegate void GetlbClientCall(string id, GameClient ipn);//不能在线程启动后又启动Windows窗体线程，这样是不安全的
         NetworkStream ns;
         private List<int[]> gameResetStatus;
+        private List<TableInfo> tables;
         
         //因此要建立一个委托
         public Server()
@@ -37,6 +38,7 @@ namespace MyGameServer
         {
             clients = new ArrayList();
             readyUsers = new List<GameClient>();
+            tables = new List<TableInfo>(9);
             tdListen = new Thread(new ThreadStart(StartListening));
             tdListen.Start();
         }
@@ -157,6 +159,11 @@ namespace MyGameServer
                         sysSend2.sysContent = GetUserNameList();
                         SendToClient(newGC, new CSharpGame.Message(sysSend2));
 
+                        CSharpGame.MsgSys sysSend3 = new CSharpGame.MsgSys();
+                        sysSend2.sysType = CSharpGame.MsgSysType.Table;
+                        // 发送Table的信息，初始化桌子
+                        sysSend2.sysContent = tables;
+                        SendToClient(newGC, new CSharpGame.Message(sysSend2));
                         //InitGameStatus();
                         //MsgSys sysBegin = new MsgSys();
                         //sysBegin.sysType = MsgSysType.Begin;
@@ -215,7 +222,17 @@ namespace MyGameServer
                         // 判断一下是否能做在这个位置
                         // 如果可以更新一下table的信息
                         // 然后广播回去。
-                        BroadcastClient(_sysMsg);
+                        int[] temp = (int[])_sysMsg.msgContent;
+                        if (tables[temp[0]].seats[1])
+                        {
+                            //能坐
+                            tables[temp[0]].seats[1] = false;
+                        }
+                        MsgSys sysBroadcast = new MsgSys();
+                        sysBroadcast.sysType = MsgSysType.Table;
+                        sysBroadcast.sysContent = tables;
+                        BroadcastClient(new CSharpGame.Message(sysBroadcast));
+                       
                     }
                     break;
             }
