@@ -159,6 +159,7 @@ namespace CSharpGame
 
                     // 登录成功
                     keepalive = true;
+                    myStatus = PlayerStatus.OnLine;
                     //启动后台线程接受服务器端发送的消息
                     if (receiveThread == null)
                     {
@@ -269,15 +270,15 @@ namespace CSharpGame
             {
                 case MsgSysType.Judge:
                     {
-                        string[] judged = (string[])sysMsg.sysContent;
-                        if (judged[0].Equals("false"))
+                        bool judged = (bool)sysMsg.sysContent;
+                        if (!judged)
                         {
                             MessageBox.Show("没有这个用户");
                         }
-                        if (judged[0].Equals("true"))
+                        if (judged)
                         {
                             myStatus = PlayerStatus.OnLine;
-                            myLogic.myClientName = judged[1];
+                           // myLogic.myClientName = judged[1];
                             MsgSys s = new MsgSys();
                             s.sysType = MsgSysType.Online;
                            

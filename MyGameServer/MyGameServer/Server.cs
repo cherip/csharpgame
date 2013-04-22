@@ -331,7 +331,8 @@ namespace MyGameServer
         private bool JudgeUserLogin(string login, string pwd)
         {
             Console.WriteLine("user: {0} login error!", login);
-            return false;
+            //return MyFile.Judge(login, pwd);
+            return true;//测试用
         }
 
         public void InitGameStatus()
