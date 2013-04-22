@@ -207,6 +207,19 @@ namespace MyGameServer
         {
             switch (sysMsg.sysType)
             {
+                case MsgSysType.Login:
+                    {
+                        MsgSys s = new MsgSys();
+                        s.sysType = MsgSysType.Judge;
+                        string[] user_pwd = (string[])sysMsg.sysContent; 
+                        string[] judged = new string[2];
+                        judged[0] = "true";
+                        judged[1] = user_pwd[0];
+                        s.sysContent = (object)judged;
+                        GameClient newGC = new GameClient((string)judged[1], null, clientservice, client);
+                        SendToClient(newGC, new CSharpGame.Message(s));
+                    }
+                    break;
                 case MsgSysType.Online:
                     {
                         if (clients.Count != 0)

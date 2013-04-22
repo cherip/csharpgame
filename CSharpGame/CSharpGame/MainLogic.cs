@@ -136,16 +136,25 @@ namespace CSharpGame
             // 现在do nothing，任何登录都能成功
             // ConnectNet() always return true;
 
-            if (true)
-            {
-                // do otherthings
-                myStatus = PlayerStatus.OnLine;
-                return true;
-            }
-            else
-            {
-                //return false;
-            }
+            MsgSys sysMsg = new MsgSys();
+            sysMsg.sysType = MsgSysType.Login;
+            string[] user_pwd = new string[2];
+            user_pwd[0] = user;
+            user_pwd[1] = pwd;
+            sysMsg.sysContent = user_pwd;
+            Message conn = new Message(sysMsg);
+            ConnectNet(conn);
+            return true;
+            //if (true)
+            //{
+            //    // do otherthings
+            //    myStatus = PlayerStatus.OnLine;
+            //    return true;
+            //}
+            //else
+            //{
+            //    //return false;
+            //}
         }
 
         public void CloseConn(string msg)
@@ -222,6 +231,26 @@ namespace CSharpGame
         {
             switch (sysMsg.sysType)
             {
+                case MsgSysType.Judge:
+                    {
+                        string[] judged = (string[])sysMsg.sysContent;
+                        if (judged[0].Equals("false"))
+                        {
+                            MessageBox.Show("没有这个用户");
+                        }
+                        if (judged[0].Equals("true"))
+                        {
+                            myLogic.myClientName = judged[1];
+                            MsgSys s = new MsgSys();
+                            s.sysType = MsgSysType.Online;
+                           
+                            s.sysContent = myLogic.myClientName;
+
+                            Message conn = new Message(s);
+                            myClientSoc.SendMsg(conn);
+                        }
+                    }
+                    break;
                 case MsgSysType.Join:
                     {
                         //某玩家加入

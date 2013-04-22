@@ -117,7 +117,8 @@ namespace CSharpGame
         Exit,
         CanStart,
         GameStart,
-
+        Login,
+        Judge,
     }
 
     [Serializable]
