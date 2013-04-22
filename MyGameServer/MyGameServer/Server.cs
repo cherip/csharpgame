@@ -148,7 +148,8 @@ namespace MyGameServer
                         }
 
                         GameClient newGC = new GameClient((string)sysMsg.sysContent, null, clientservice, client);
-                        clients.Add(newGC);
+                        
+                        //clients.Add(newGC);
 
                         CSharpGame.MsgSys sysSend2 = new CSharpGame.MsgSys();
                         sysSend2.sysType = CSharpGame.MsgSysType.List;
