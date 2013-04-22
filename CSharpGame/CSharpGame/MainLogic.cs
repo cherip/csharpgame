@@ -433,7 +433,12 @@ namespace CSharpGame
         //    }
 
         //}
-
+        public void userSend(string user, MsgSys msg)
+        {
+            Message mess = new Message(msg);
+            mess.userSender = user;
+            myClientSoc.SendMsg(mess);
+        }
 
         //
         //
