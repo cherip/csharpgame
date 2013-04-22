@@ -147,7 +147,7 @@ namespace CSharpGame
                 }
             }
 
-            myClientSoc.SendMsg(msg);
+            userSend(msg);
             Message serverMsg = myClientSoc.RecieveMsg();
             if (serverMsg.msgType == MsgType.Sys)
             {
@@ -236,7 +236,7 @@ namespace CSharpGame
                 MsgSys sysMsg = new MsgSys();
                 sysMsg.sysType = MsgSysType.Offline;
                 sysMsg.sysContent = myLogic.myClientName;
-                myClientSoc.SendMsg(new Message(sysMsg));
+                userSend(new Message(sysMsg));
                 receiveThread = null;
                 keepalive = false;
             }
@@ -320,7 +320,7 @@ namespace CSharpGame
                             s.sysContent = myLogic.myClientName;
 
                             Message conn = new Message(s);
-                            myClientSoc.SendMsg(conn);
+                            userSend(conn);
                         }
 
                         
@@ -395,7 +395,7 @@ namespace CSharpGame
             {
                 msg.reciType = ReciveType.Room;
                 msg.Num = this.tableIdx;
-                myClientSoc.SendMsg(msg);
+                userSend(msg);
             }
         }
 
@@ -419,7 +419,7 @@ namespace CSharpGame
                 sysMsg.sysType = MsgSysType.GameStart;
                 sysMsg.sysContent = null;
                 Message conn = new Message(sysMsg);
-                myClientSoc.SendMsg(conn);
+                userSend(conn);
             }
         }
 
@@ -433,18 +433,12 @@ namespace CSharpGame
         //    }
 
         //}
-        public void userSend(string user, MsgSys msg)
-        {
-            Message mess = new Message(msg);
-            mess.userSender = user;
-            myClientSoc.SendMsg(mess);
+        public void userSend(Message msg)
+        {      
+            msg.userSender = myLogic.myClientName;
+            myClientSoc.SendMsg(msg);
         }
-        public void userSend(string user, MsgGame msg)
-        {
-            Message mess = new Message(msg);
-            mess.userSender = user;
-            myClientSoc.SendMsg(mess);
-        }
+
 
         //
         //
@@ -473,8 +467,8 @@ namespace CSharpGame
                 seatMsg.sysType = MsgSysType.Seat;
                 seatMsg.sysContent = new int[] { tableIdx, seatIdx };
                 Message msg = new Message(seatMsg);
-                msg.userSender = myLogic.myClientName;
-                myClientSoc.SendMsg(seatMsg);
+               // msg.userSender = myLogic.myClientName;
+                userSend(msg);
 
                 // 这里为了简单起见，没有使用多线程，显示多界面了，每次只能有一个界面出现
                 gameRoom.ShowDialog();
