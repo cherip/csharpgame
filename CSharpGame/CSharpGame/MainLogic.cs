@@ -11,7 +11,18 @@ using System.Threading;
 
 namespace CSharpGame
 {
-    class MainLogic
+    // 这里简单的用enum表示玩家的状态，
+    // 要更复杂的话应该用 一个专门的class来表示玩家的状态
+    // 应该放入到Logic内才对 ，这里简单搞搞了
+    public enum PlayerStatus 
+    {
+        OnLine = 1,         // 已上线
+        OffLine,            // 下线
+        OnTable,            // 已经在桌子上做下了
+        OnGame              // 已经开始游戏了
+    }
+
+    public class MainLogic
     {
         // 网络通信的提供者
         MyClientSoc myClientSoc;
@@ -23,8 +34,12 @@ namespace CSharpGame
 
         // 当前client的玩家的Logic
         Logic myLogic;
+        PlayerStatus myStatus;
+
         // 其他玩家的Logic, 用于显示缩略图
         List<Logic> otherPlayersLogic;
+        public Room hall;
+        public CSharpGame gameRoom;
 
         public delegate bool CreateArea(object panel);
         public event CreateArea createMainArea;
@@ -39,10 +54,9 @@ namespace CSharpGame
             myLogic.sendMsgEvent += SendCurrentData;
             otherPlayersLogic = new List<Logic>();
 
-            // test codes
-          //  for (int i = 0; i < 3; i++)
-            //    otherPlayersLogic.Add(new Logic(2));
-            
+            // 生成界面的form
+            hall = new Room(this);
+            myStatus = PlayerStatus.OffLine;
         }
 
         private void InitComponent()
@@ -98,7 +112,7 @@ namespace CSharpGame
 
         }
 
-        public void ConnectNet()
+        public bool ConnectNet()
         {
             if (keepalive == false)
             {
@@ -113,6 +127,24 @@ namespace CSharpGame
 
                 Message conn = new Message(sysMsg);
                 ConnectNet(conn);
+            }
+            return true;
+        }
+
+        public bool PlayerLogin(string user, string pwd)
+        {
+            // 现在do nothing，任何登录都能成功
+            // ConnectNet() always return true;
+
+            if (true)
+            {
+                // do otherthings
+                myStatus = PlayerStatus.OnLine;
+                return true;
+            }
+            else
+            {
+                //return false;
             }
         }
 
@@ -236,6 +268,7 @@ namespace CSharpGame
                     break;
             }
         }
+
         public void SendCurrentData(Message msg)
         {
             if (keepalive)
@@ -278,5 +311,30 @@ namespace CSharpGame
 
         }
 
+
+        //
+        //
+        // 处理房间中的逻辑
+        //
+        //
+        public void ClickSeat(int tableIdx, int seatIdx)
+        {
+            // do nothing now...
+            if (myStatus == PlayerStatus.OnLine)
+            {
+                // 
+                // 添加一种网络消息，表示玩家做下了某个桌子
+                // 其他玩家更加该消息，更新table的状态
+                //
+                // sendNetMsg(thisplayer on table)
+
+                gameRoom = new CSharpGame(this);
+                hall.Hide();
+                myStatus = PlayerStatus.OnTable;
+
+                // 这里为了简单起见，没有使用多线程，显示多界面了，每次只能有一个界面出现
+                gameRoom.ShowDialog();
+            }
+        }
     }
 }

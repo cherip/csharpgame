@@ -37,17 +37,23 @@ namespace CSharpGame
             //myLogic.InitLogic();
 
             InitializeComponent();
-            initCreateControl();
+            //initCreateControl();
 
             myInitial();
+        }
+
+        public CSharpGame(MainLogic logic)
+            : this()
+        {
+            mainLogic = logic;
+            mainLogic.createMainArea += CreateMainArea;
+            mainLogic.createOppeArea += CreateOppeArea;
         }
 
         private void initCreateControl()
         {
             // 初始化 自己的游戏界面
             mainLogic = new MainLogic();
-            mainLogic.createMainArea += CreateMainArea;
-            mainLogic.createOppeArea += CreateOppeArea;
 
             // 初始化其他玩家的游戏界面， 这里应该由其他玩家控制。
             // 测试情况下 初始化一个小的

@@ -234,5 +234,12 @@ namespace CSharpGame.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        internal static System.Drawing.Bitmap head {
+            get {
+                object obj = ResourceManager.GetObject("head", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

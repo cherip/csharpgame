@@ -18,6 +18,8 @@ namespace MyGameServer
 
         private Socket sock;
 
+        private int tableIdx;
+
         public GameClient(string _name, EndPoint _endpoint, Thread _thread, Socket _sock)
         {
             //
@@ -64,6 +66,13 @@ namespace MyGameServer
 
             set { name = value; }
 
+        }
+
+        public int TableIdx
+        {
+            get { return tableIdx; }
+
+            set { tableIdx = value; }
         }
 
         public Socket Sock  // 获取和设置套接口

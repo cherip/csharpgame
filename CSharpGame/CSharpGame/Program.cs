@@ -22,8 +22,11 @@ namespace CSharpGame
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new CSharpGame());
-            
+
+            MainLogic gameLogic = new MainLogic();
+
+            // 启动界面
+            Application.Run(gameLogic.hall);
         }
     }
 }

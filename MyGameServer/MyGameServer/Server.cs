@@ -271,7 +271,7 @@ namespace MyGameServer
                         //服务器生成初始数据，图片数组，副数广播
                         MsgSys sysBroadcast = new MsgSys();
                         sysBroadcast.sysType = MsgSysType.Begin;
-                        sysBroadcast.sysContent = null;//把所有玩家名字发给用户
+                        sysBroadcast.sysContent = null;
                         BroadcastClient(new CSharpGame.Message(sysBroadcast));
                     }
                     break;
@@ -325,6 +325,11 @@ namespace MyGameServer
             {
                 SendToClient(cl, msg);
             }
+        }
+
+        private void BroadcastRoom(CSharpGame.Message msg)
+        {
+
         }
 
         public bool SendToClient(GameClient cl, CSharpGame.Message mes)
