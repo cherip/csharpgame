@@ -15,7 +15,7 @@ namespace CSharpGame
     {
         public string myClientName;
         public const int MAX_PIC = 64;
-        int[] butArry = new int[MAX_PIC];
+        int[] btnArry = new int[MAX_PIC];
         int last_click = -1;
 
         int pairPicCounts = -1;//记录当前副图的总共消除次数
@@ -95,15 +95,15 @@ namespace CSharpGame
         // 通过传入的数组 初始化逻辑
         public void InitGame(int[] gameReset)
         {
-            butArry = (int[])gameReset.Clone();
-            int[] tmp = (int[])butArry.Clone();
+            btnArry = (int[])gameReset.Clone();
+            int[] tmp = (int[])btnArry.Clone();
             pairPicCounts = MyFormat.countPairPic(tmp);
 
             if (btnImageSetFunc != null)
             {
-                for (int i = 0; i < butArry.Length; i++)
+                for (int i = 0; i < btnArry.Length; i++)
                 {
-                    btnImageSetFunc(i, butArry[i]);
+                    btnImageSetFunc(i, btnArry[i]);
                 }
             }
 
@@ -118,9 +118,9 @@ namespace CSharpGame
 
         public int GetPicType(int pos)
         {
-            if (pos < 0 || pos >= butArry.Length)
+            if (pos < 0 || pos >= btnArry.Length)
                 return -1;
-            return butArry[pos];
+            return btnArry[pos];
         }
 
         public void CleanBtnPair(int a, int b)
@@ -136,7 +136,7 @@ namespace CSharpGame
             }
             else
             {
-                if (last_click != pos && butArry[last_click] == butArry[pos])
+                if (last_click != pos && btnArry[last_click] == btnArry[pos])
                 {
                     //传给mainlogic
                     MsgGame msggame = new MsgGame();
@@ -146,8 +146,8 @@ namespace CSharpGame
                     Message msgtosend = new Message(msggame);
                     sendMsgEvent(msgtosend);
 
-                    butArry[last_click] = -1;
-                    butArry[pos] = -1;
+                    btnArry[last_click] = -1;
+                    btnArry[pos] = -1;
                     int ret = last_click;
                     last_click = -1;
 
@@ -187,5 +187,41 @@ namespace CSharpGame
             }
         }
 
+        //
+        // 提示功能移到logic中去，
+        //
+        public void hintclicked()
+        {
+            PairPics pairpics = gerPairPics();
+            if (pairpics != null)
+            {
+                shower.HintBlick(pairpics.PicNO1, pairpics.PicNO2, 3);
+            }
+            else
+            {
+                MessageBox.Show("NO hint!!!");
+            }
+        }
+
+        private PairPics gerPairPics()//提示功能中，获得两个相同图像的按钮
+        {
+            PairPics pairpics = new PairPics();
+            for (int i = 0; i < MAX_PIC; i++)
+            {
+                if (btnArry[i] != -1)
+                {
+                    for (int j = i + 1; j < MAX_PIC; j++)
+                    {
+                        if (btnArry[j] != -1 && btnArry[i] == btnArry[j])
+                        {
+                                pairpics.PicNO1 = i;
+                                pairpics.PicNO2 = j;
+                                return pairpics;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
     }
 }

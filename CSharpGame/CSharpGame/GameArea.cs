@@ -144,5 +144,19 @@ namespace CSharpGame
                 this.Enabled = true;
             }
         }
+
+        public void HintBlick(int pos_a, int pos_b, int times)
+        {
+            for (int i = 0; i < times; i++)
+            {
+                btnArry[pos_a].Visible = false;
+                btnArry[pos_b].Visible = false;
+                Thread.Sleep(100);
+                btnArry[pos_a].Visible = true;
+                btnArry[pos_b].Visible = true;
+                this.Refresh();
+                Thread.Sleep(100);
+            }
+        }
     }
 }

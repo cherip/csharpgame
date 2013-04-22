@@ -28,10 +28,11 @@ namespace CSharpGame
             this.Location = areaLocat;
             this.Size = areaSize;
 
-            userName = createLable(new Point(0, 0), new Size(80, 10), "userxxx");
+            userName = createLable(new Point(10, 0), new Size(70, 10), "userxxx");
             gameStatus = createLable(new Point(85, 0), new Size(80, 10), "64/64");
 
             gameArea.Init(new Point(0, 12), new Size(areaSize.Width, areaSize.Height - 12));
+            gameArea.BorderStyle = BorderStyle.None;
             //gameArea = new GameArea();
 
             this.Controls.Add(userName);

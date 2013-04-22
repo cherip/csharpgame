@@ -12,26 +12,45 @@ namespace CSharpGame
         Chat
     }
 
+    public enum ReciveType
+    {
+        ALL,
+        Room,
+        Player
+    }
+
     [Serializable]
     public class Message
     {
         public MsgType msgType;
         public object msgContent;
+        public ReciveType reciType; 
+        public object Num;              // playername or roomidx
         //public MsgSys msgContent;
 
+        public Message()
+        {
+            // 默认的消息是全局广播消息
+            reciType = ReciveType.ALL;
+            Num = null;
+        }
+
         public Message(MsgGame msg) 
+            : this()
         {
             msgType = MsgType.Game;
             msgContent = msg;
         }
 
         public Message(MsgChat msg)
+            : this()
         {
             msgType = MsgType.Chat;
             msgContent = msg;
         }
 
         public Message(MsgSys msg)
+            : this()
         {
             msgType = MsgType.Sys;
             msgContent = msg;
