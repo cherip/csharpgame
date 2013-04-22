@@ -12,6 +12,7 @@ namespace CSharpGame
 {
     class MyClientSoc
     {
+        
         private TcpClient client;//基于TCP协议的客户端编程
         private int serverport = 8668;//服务器端端口号
         private NetworkStream ns;//用于获取和操作网络流
@@ -29,7 +30,7 @@ namespace CSharpGame
                 try
                 {
                     client = new TcpClient();
-                    client.Connect("127.0.0.1", serverport);
+                    client.Connect(Program.serverip, serverport);
                     ns = client.GetStream(); //用来获得答应的数据流
                     connected = true;
 
