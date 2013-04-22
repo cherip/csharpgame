@@ -187,18 +187,33 @@ namespace MyGameServer
                     break;
                 case MsgSysType.Ready:
                     {
-                        int find = findGameClient((string)sysMsg.sysContent);
-                        if (find != -1)
+                        
+                        //int find = findGameClient((string)sysMsg.sysContent);
+                        //if (find != -1)
+                        //{
+                        //    readyUsers.Add((GameClient)clients[find]);
+                        //}
+                        //if (readyUsers.Count == clients.Count)//全部准备 要改成房间的
+                        //{
+                        //    //等待房主确认开始
+                        //    MsgSys sysBroadcast = new MsgSys();
+                        //    sysBroadcast.sysType = MsgSysType.CanStart;
+                        //    sysBroadcast.sysContent = GetUserNameList();//把所有玩家名字发给用户
+                        //    BroadcastClient(new CSharpGame.Message(sysBroadcast));
+                        //}
+                        //客户端还要传桌子号过来
+                        int tableIndex = (int)sysMsg.sysContent;
+                        tables[tableIndex].readycount++;
+                        if (tables[tableIndex].readycount == tables[tableIndex].usercount)
                         {
-                            readyUsers.Add((GameClient)clients[find]);
-                        }
-                        if (readyUsers.Count == clients.Count)//全部准备 要改成房间的
-                        {
-                            //等待房主确认开始
+                            //发送开始
+                            InitGameStatus();
                             MsgSys sysBroadcast = new MsgSys();
-                            sysBroadcast.sysType = MsgSysType.CanStart;
-                            sysBroadcast.sysContent = GetUserNameList();//把所有玩家名字发给用户
-                            BroadcastClient(new CSharpGame.Message(sysBroadcast));
+                            sysBroadcast.sysType = MsgSysType.Begin;
+                            sysBroadcast.sysContent = gameResetStatus[0];
+                            BroadcastRoom(new CSharpGame.Message(sysBroadcast));
+
+
                         }
                     }
                     break;
@@ -223,11 +238,12 @@ namespace MyGameServer
                         // 如果可以更新一下table的信息
                         // 然后广播回去。
                         int[] temp = (int[])_sysMsg.msgContent;
-                        if (tables[temp[0]].seats[1])
-                        {
-                            //能坐
-                            tables[temp[0]].seats[1] = false;
-                        }
+                        //if (tables[temp[0]].seats[1])
+                        //{
+                        //    //能坐
+                        //    tables[temp[0]].seats[1] = false;
+                        //}
+                        tables[temp[0]].usercount++;
                         MsgSys sysBroadcast = new MsgSys();
                         sysBroadcast.sysType = MsgSysType.Table;
                         sysBroadcast.sysContent = tables;
@@ -235,6 +251,10 @@ namespace MyGameServer
                        
                     }
                     break;
+                case MsgSysType.TableNoSeat:
+                    {
+
+                    }
             }
 
          
