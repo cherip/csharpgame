@@ -50,7 +50,12 @@ namespace MyGameServer
                     // 表示改玩家赢了
                     return 2;
                 }
-                return 1;
+                else
+                {
+                    pairClean[seatIdx] = 0;
+                    return 1;
+                }
+                
             }
             return 0;
         }
