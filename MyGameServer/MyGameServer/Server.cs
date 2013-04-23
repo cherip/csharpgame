@@ -252,8 +252,9 @@ namespace MyGameServer
                         //sysBroadcast.sysType = MsgSysType.Table;
                         //sysBroadcast.sysContent = tables;
                         //BroadcastClient(new CSharpGame.Message(sysBroadcast));
-
                         BroadcastClient(_sysMsg);
+
+                       
                     }
                     break;
                 case MsgSysType.TableNoSeat:
