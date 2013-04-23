@@ -29,16 +29,16 @@
         private void InitializeComponent()
         {
             this.panelLogin = new System.Windows.Forms.Panel();
-            this.txtUserName = new System.Windows.Forms.TextBox();
-            this.lblUserName = new System.Windows.Forms.Label();
-            this.lblPwd = new System.Windows.Forms.Label();
-            this.txtPwd = new System.Windows.Forms.TextBox();
-            this.btnLogin = new System.Windows.Forms.Button();
             this.btnRegister = new System.Windows.Forms.Button();
+            this.btnLogin = new System.Windows.Forms.Button();
+            this.txtPwd = new System.Windows.Forms.TextBox();
+            this.lblPwd = new System.Windows.Forms.Label();
+            this.lblUserName = new System.Windows.Forms.Label();
+            this.txtUserName = new System.Windows.Forms.TextBox();
             this.panelTables = new System.Windows.Forms.Panel();
             this.panelPlayers = new System.Windows.Forms.Panel();
-            this.lblPlayersList = new System.Windows.Forms.Label();
             this.listPlayers = new System.Windows.Forms.ListBox();
+            this.lblPlayersList = new System.Windows.Forms.Label();
             this.panelLogin.SuspendLayout();
             this.panelPlayers.SuspendLayout();
             this.SuspendLayout();
@@ -56,38 +56,14 @@
             this.panelLogin.Size = new System.Drawing.Size(192, 115);
             this.panelLogin.TabIndex = 0;
             // 
-            // txtUserName
+            // btnRegister
             // 
-            this.txtUserName.Location = new System.Drawing.Point(54, 24);
-            this.txtUserName.Name = "txtUserName";
-            this.txtUserName.Size = new System.Drawing.Size(130, 21);
-            this.txtUserName.TabIndex = 0;
-            // 
-            // lblUserName
-            // 
-            this.lblUserName.AutoSize = true;
-            this.lblUserName.Location = new System.Drawing.Point(7, 27);
-            this.lblUserName.Name = "lblUserName";
-            this.lblUserName.Size = new System.Drawing.Size(41, 12);
-            this.lblUserName.TabIndex = 1;
-            this.lblUserName.Text = "用户名";
-            // 
-            // lblPwd
-            // 
-            this.lblPwd.AutoSize = true;
-            this.lblPwd.Location = new System.Drawing.Point(7, 58);
-            this.lblPwd.Name = "lblPwd";
-            this.lblPwd.Size = new System.Drawing.Size(29, 12);
-            this.lblPwd.TabIndex = 2;
-            this.lblPwd.Text = "密码";
-            // 
-            // txtPwd
-            // 
-            this.txtPwd.Location = new System.Drawing.Point(54, 55);
-            this.txtPwd.Name = "txtPwd";
-            this.txtPwd.PasswordChar = '*';
-            this.txtPwd.Size = new System.Drawing.Size(130, 21);
-            this.txtPwd.TabIndex = 3;
+            this.btnRegister.Location = new System.Drawing.Point(109, 82);
+            this.btnRegister.Name = "btnRegister";
+            this.btnRegister.Size = new System.Drawing.Size(75, 23);
+            this.btnRegister.TabIndex = 5;
+            this.btnRegister.Text = "注册";
+            this.btnRegister.UseVisualStyleBackColor = true;
             // 
             // btnLogin
             // 
@@ -99,14 +75,38 @@
             this.btnLogin.UseVisualStyleBackColor = true;
             this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
             // 
-            // btnRegister
+            // txtPwd
             // 
-            this.btnRegister.Location = new System.Drawing.Point(109, 82);
-            this.btnRegister.Name = "btnRegister";
-            this.btnRegister.Size = new System.Drawing.Size(75, 23);
-            this.btnRegister.TabIndex = 5;
-            this.btnRegister.Text = "注册";
-            this.btnRegister.UseVisualStyleBackColor = true;
+            this.txtPwd.Location = new System.Drawing.Point(54, 55);
+            this.txtPwd.Name = "txtPwd";
+            this.txtPwd.PasswordChar = '*';
+            this.txtPwd.Size = new System.Drawing.Size(130, 21);
+            this.txtPwd.TabIndex = 3;
+            // 
+            // lblPwd
+            // 
+            this.lblPwd.AutoSize = true;
+            this.lblPwd.Location = new System.Drawing.Point(7, 58);
+            this.lblPwd.Name = "lblPwd";
+            this.lblPwd.Size = new System.Drawing.Size(29, 12);
+            this.lblPwd.TabIndex = 2;
+            this.lblPwd.Text = "密码";
+            // 
+            // lblUserName
+            // 
+            this.lblUserName.AutoSize = true;
+            this.lblUserName.Location = new System.Drawing.Point(7, 27);
+            this.lblUserName.Name = "lblUserName";
+            this.lblUserName.Size = new System.Drawing.Size(41, 12);
+            this.lblUserName.TabIndex = 1;
+            this.lblUserName.Text = "用户名";
+            // 
+            // txtUserName
+            // 
+            this.txtUserName.Location = new System.Drawing.Point(54, 24);
+            this.txtUserName.Name = "txtUserName";
+            this.txtUserName.Size = new System.Drawing.Size(130, 21);
+            this.txtUserName.TabIndex = 0;
             // 
             // panelTables
             // 
@@ -124,15 +124,6 @@
             this.panelPlayers.Size = new System.Drawing.Size(191, 284);
             this.panelPlayers.TabIndex = 2;
             // 
-            // lblPlayersList
-            // 
-            this.lblPlayersList.AutoSize = true;
-            this.lblPlayersList.Location = new System.Drawing.Point(7, 12);
-            this.lblPlayersList.Name = "lblPlayersList";
-            this.lblPlayersList.Size = new System.Drawing.Size(53, 12);
-            this.lblPlayersList.TabIndex = 0;
-            this.lblPlayersList.Text = "在线玩家";
-            // 
             // listPlayers
             // 
             this.listPlayers.FormattingEnabled = true;
@@ -141,6 +132,15 @@
             this.listPlayers.Name = "listPlayers";
             this.listPlayers.Size = new System.Drawing.Size(175, 244);
             this.listPlayers.TabIndex = 1;
+            // 
+            // lblPlayersList
+            // 
+            this.lblPlayersList.AutoSize = true;
+            this.lblPlayersList.Location = new System.Drawing.Point(7, 12);
+            this.lblPlayersList.Name = "lblPlayersList";
+            this.lblPlayersList.Size = new System.Drawing.Size(53, 12);
+            this.lblPlayersList.TabIndex = 0;
+            this.lblPlayersList.Text = "在线玩家";
             // 
             // Room
             // 
