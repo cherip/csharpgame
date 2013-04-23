@@ -16,6 +16,7 @@ namespace CSharpGame
         public const int MAX_PIC = 64;
         static System.Timers.Timer timeElapsed;//计时器
         int curTime = 0;//当前游戏剩余时间
+        int total = 1;//默认是1副图
         //Button[] butArry = new Button[MAX_PIC];
         string username;
         //Hashtable btnVal;
@@ -108,7 +109,8 @@ namespace CSharpGame
 
         private void radioClicked(object sender, EventArgs e)
         {
-
+            RadioButton rb = (RadioButton)sender;
+            total = int.Parse(rb.Text);
         }
 
 
@@ -257,7 +259,7 @@ namespace CSharpGame
 
         private void button2_Click(object sender, EventArgs e)
         {
-            mainLogic.UserReady();
+            mainLogic.UserReady(total);
         }
 
         private void button3_Click(object sender, EventArgs e)

@@ -292,11 +292,11 @@ namespace CSharpGame
             //获得其他玩家数据，根据username更新界面
             for (int i = 0; i < otherPlayersLogic.Count; i++)
             {
-                //if (otherPlayersLogic[i].myClientName == gamMsg.userName && otherPlayersLogic[i].myClientName != null)
-                //{
+                if (otherPlayersLogic[i].myClientName == gamMsg.userName && otherPlayersLogic[i].myClientName != null)
+                {
                     //更新指定玩家的界面
                     otherPlayersLogic[i].CleanBtnPair(gamMsg.cleanPair[0],gamMsg.cleanPair[1]);
-                //}
+                }
             }
         }
 
@@ -431,7 +431,7 @@ namespace CSharpGame
             }
         }
 
-        public void UserReady()
+        public void UserReady(int total)
         {
             if (keepalive)
             {
