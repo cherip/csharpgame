@@ -239,14 +239,14 @@ namespace CSharpGame
         {
             base.UpdateUser(name);
             this.userName.Text = name;
-            this.Refresh();
+//            this.Refresh();
         }
 
         public override void ResetGameStatus()
         {
             base.ResetGameStatus();
             this.gameStatus.Text = "64/64";
-            this.Refresh();
+//            this.Refresh();
         }
     }
 }

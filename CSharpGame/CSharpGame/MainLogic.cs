@@ -387,16 +387,35 @@ namespace CSharpGame
                 case MsgSysType.FreshGameArea:
                     {
                          
-                        for (int i = 0; i < 3; i++ )
-                        {
-                            if (otherPlayersLogic[i].myClientName != "")
-                            
-                            
-                            {
-                               // otherPlayersLogic[t].SetPlayer(tablesInfo.seatUser[k]);
-                                GameArea ga = otherPlayersLogic[i].gameArea;
-                                ga.Show();//出错。。。
+                        //for (int i = 0; i < 3; i++ )
+                        //{
+                        //    if (otherPlayersLogic[i].myClientName != "")
+                        //    {
+                        //       //// otherPlayersLogic[t].SetPlayer(tablesInfo.seatUser[k]);
+                        //       // GameArea ga = otherPlayersLogic[i].gameArea;
+                        //       // ga.Show();//出错。。。
                                 
+                        //    }
+                        //}
+
+                        int[] tableInfo = (int[])sysMsg.sysContent;
+                        if (tableInfo[0] == this.tableIdx)
+                        {
+                            int mypos = this.seatIdx;
+                            int t = 0;
+                            gameTable tablesInfo = hall.tables[tableIdx];
+                            for (int i = mypos + 1; i < mypos + 4; i++)
+                            {
+                                int k = i % 4;
+                                if (tablesInfo.seatUser[k] != "" &&
+                                    tablesInfo.seatUser[k] != "Server")
+                                {
+                                    otherPlayersLogic[t].SetPlayer(tablesInfo.seatUser[k]);
+                                    GameArea ga = otherPlayersLogic[t].gameArea;
+                                    //ga.Show();
+                                    ga.Invoke(new showFun(ga.Show));
+                                }
+                                t++;
                             }
                         }
                     }

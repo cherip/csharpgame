@@ -153,17 +153,9 @@ namespace MyGameServer
                             BroadcastClient(new CSharpGame.Message(sysBroadcast));
                         }
 
-                        GameClient newGC = new GameClient((string)sysMsg.sysContent, null, clientservice, client);
-                        //GameClient newGC = clients[findGameClient((string)_sysMsg.userSender)];
-                        //clients.Add(newGC);
+                        //GameClient newGC = new GameClient((string)sysMsg.sysContent, null, clientservice, client);
 
-                        //CSharpGame.MsgSys sysSend2 = new CSharpGame.MsgSys();
-                        //sysSend2.sysType = CSharpGame.MsgSysType.List;
-                        //// 这里改了一下 list消息的content是个用户名的list
-                        //sysSend2.sysContent = GetUserNameList();
-                        //SendToClient(newGC, new CSharpGame.Message(sysSend2));
-
-                        sendCurrentTables(newGC);
+                        sendCurrentTables((string)sysMsg.sysContent);
                     }
                     break;
                 case MsgSysType.Offline:
@@ -238,11 +230,6 @@ namespace MyGameServer
                         // 然后广播回去。
 
                         int[] temp = (int[])sysMsg.sysContent;
-                        //if (tables[temp[0]].seats[1])
-                        //{
-                        //    //能坐
-                        //    tables[temp[0]].seats[1] = false;
-                        //}
                         tables[temp[0]].usercount++;
                         string userSend = (string)_sysMsg.userSender;
                         foreach (GameClient gc in clients)
@@ -403,11 +390,22 @@ namespace MyGameServer
 
         }
 
-        private void sendCurrentTables(GameClient gc)
+        private void sendCurrentTables(string username)
         {
+            GameClient toUser = null;
+            foreach (GameClient gc in clients)
+            {
+                if (gc.Name == username)
+                {
+                    toUser = gc;
+                    break;
+                }
+            }
+            if (toUser == null) return;
+
             foreach (GameClient gcc in clients)
             {
-                if (gc == gcc) continue;
+                if (gcc.Name == username) continue;
                 if (gcc.TableIdx != -1)
                 {
                     MsgSys sysMsg = new MsgSys();
@@ -415,8 +413,8 @@ namespace MyGameServer
                     sysMsg.sysContent = new int[] { gcc.TableIdx, gcc.SeatIdx };
                     CSharpGame.Message msg = new CSharpGame.Message(sysMsg);
                     msg.userSender = gcc.Name;
-                    //SendToClient(gc, msg);
-                    BroadcastClient(msg);
+                    SendToClient(toUser, msg);
+                    //BroadcastClient(msg);
                 }
             }
         }
