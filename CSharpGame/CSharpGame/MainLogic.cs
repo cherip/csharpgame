@@ -579,6 +579,12 @@ namespace CSharpGame
             Message msg = new Message(seatMsg);
             userSend(msg);
 
+            foreach (Logic lg in otherPlayersLogic)
+            {
+                lg.UserQuit();
+                lg.HideArea();
+            }
+
             // 然后将当前的table信息清空
             this.tableIdx = -1;
             this.seatIdx = -1;
