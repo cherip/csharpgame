@@ -579,10 +579,13 @@ namespace CSharpGame
             Message msg = new Message(seatMsg);
             userSend(msg);
 
-            foreach (Logic l in otherPlayersLogic)
+            foreach (Logic lg in otherPlayersLogic)
             {
-                l.UserQuit();
+                lg.UserQuit();
+                lg.HideArea();
             }
+
+
             // 然后将当前的table信息清空
             this.tableIdx = -1;
             this.seatIdx = -1;
@@ -604,6 +607,12 @@ namespace CSharpGame
                     GameArea ga = otherPlayersLogic[t].gameArea;
                     ga.UnGameStatus();
                     ga.Show();
+                }
+                else
+                {
+                    GameArea ga = otherPlayersLogic[t].gameArea;
+                    ga.UnGameStatus();
+                    //ga.Show();
                 }
                 t++;
             }

@@ -206,6 +206,10 @@ namespace CSharpGame
             {
                 gameArea.Invoke(new showFun(gameArea.Show));
             }
+            else
+            {
+                gameArea.Show();
+            }
         }
 
         public void HideArea()
@@ -213,6 +217,10 @@ namespace CSharpGame
             if (gameArea.InvokeRequired)
             {
                 gameArea.Invoke(new showFun(gameArea.Hide));
+            }
+            else
+            {
+                gameArea.Hide();
             }
         }
     }
