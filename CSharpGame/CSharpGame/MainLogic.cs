@@ -424,7 +424,15 @@ namespace CSharpGame
                                     otherPlayersLogic[t].SetPlayer(tablesInfo.seatUser[k]);
                                     GameArea ga = otherPlayersLogic[t].gameArea;
                                     //ga.Show();
-                                    ga.Invoke(new showFun(ga.Show));
+                                    try
+                                    {
+                                        ga.Invoke(new showFun(ga.Show));
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        ga.Show();
+                                    }
+                                    
                                 }
                                 t++;
                             }
