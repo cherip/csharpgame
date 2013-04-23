@@ -409,6 +409,7 @@ namespace MyGameServer
                     sysMsg.sysContent = new int[] { gcc.TableIdx, gcc.SeatIdx };
                     CSharpGame.Message msg = new CSharpGame.Message(sysMsg);
                     msg.userSender = gcc.Name;
+                    System.Console.WriteLine("send seat to {0}, {1}", toUser.Name, gcc.Name);
                     SendToClient(toUser, msg);
                     //BroadcastClient(msg);
                 }
