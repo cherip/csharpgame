@@ -601,6 +601,12 @@ namespace CSharpGame
                     ga.UnGameStatus();
                     ga.Show();
                 }
+                else
+                {
+                    GameArea ga = otherPlayersLogic[t].gameArea;
+                    ga.UnGameStatus();
+                    //ga.Show();
+                }
                 t++;
             }
         }
