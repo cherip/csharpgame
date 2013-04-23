@@ -382,19 +382,12 @@ namespace CSharpGame
                         int[] seatInfo = (int[])sysMsg.sysContent;
                         string userSender = (string)_sysMsg.userSender; 
                         hall.PlayerSeatDown(seatInfo[0], seatInfo[1], userSender);
-                        //if (!userSender.Equals(myLogic.myClientName))
-                        //{
-                        //    hall.tables[seatInfo[0]].seatUser[seatInfo[1]] = userSender;
-                        //    otherPlayersLogic[seatInfo[1]].SetPlayer(userSender);
 
-                        //}
-                       
-                    }
-                    break;
-                case MsgSysType.FreshGameArea:
-                    {
-                        int[] tableInfo = (int[])sysMsg.sysContent;
-                        if (tableInfo[0] == this.tableIdx)
+                        
+                        // 如果seat信息的发送者不是服务器 或者 自己
+                        // 则改变gamearea的界面，表示有人上线或者下线。
+                        if (userSender != "Server" && userSender != myLogic.myClientName &&
+                            seatInfo[0] == this.tableIdx)
                         {
                             int mypos = this.seatIdx;
                             int t = 0;
@@ -413,6 +406,15 @@ namespace CSharpGame
                                 t++;
                             }
                         }
+                    }
+                    break;
+                case MsgSysType.FreshGameArea:
+                    {
+                        //int[] tableInfo = (int[])sysMsg.sysContent;
+                        //if (tableInfo[0] == this.tableIdx)
+                        //{
+                       
+                        //}
                     }
                     break;
             }
@@ -530,7 +532,6 @@ namespace CSharpGame
                 Message msg = new Message(seatMsg);
 
                 userSend(msg);
-
 
                 // 这里为了简单起见，没有使用多线程，显示多界面了，每次只能有一个界面出现
                 showGameRoom(tableIdx, seatIdx);

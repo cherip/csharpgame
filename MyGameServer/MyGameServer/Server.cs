@@ -205,8 +205,6 @@ namespace MyGameServer
                             CSharpGame.Message m = new CSharpGame.Message(sysBroadcast);
                             m.Num = tableIndex;
                             BroadcastRoom(m);
-
-
                         }
                     }
                     break;
@@ -227,10 +225,9 @@ namespace MyGameServer
                     break;
                 case MsgSysType.Seat:
                     {
-                        // 判断一下是否能做在这个位置
-                        // 如果可以更新一下table的信息
-                        // 然后广播回去。
-
+                        // 
+                        // 首先更新当前发生者gc的状态
+                        //
                         int[] temp = (int[])sysMsg.sysContent;
                         tables[temp[0]].usercount++;
                         string userSend = (string)_sysMsg.userSender;
@@ -250,13 +247,9 @@ namespace MyGameServer
                                 break;
                             }
                         }
-                        //MsgSys sysBroadcast = new MsgSys();
-                        //sysBroadcast.sysType = MsgSysType.Table;
-                        //sysBroadcast.sysContent = tables;
-                        //BroadcastClient(new CSharpGame.Message(sysBroadcast));
-                        BroadcastClient(_sysMsg);
 
-                       
+                        // 把消息转发给所有人 通知客户端更新seat的信息
+                        BroadcastClient(_sysMsg);
                     }
                     break;
                 case MsgSysType.TableNoSeat:
