@@ -435,9 +435,10 @@ namespace CSharpGame
             {
                 MsgSys sysMsg = new MsgSys();
                 sysMsg.sysType = MsgSysType.Ready;
-                sysMsg.sysContent = myLogic.myClientName;
+                sysMsg.sysContent = tableIdx;
                 Message conn = new Message(sysMsg);
-                myClientSoc.SendMsg(conn);
+
+                userSend(conn);
             }
         }
 

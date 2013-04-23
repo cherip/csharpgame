@@ -202,7 +202,9 @@ namespace MyGameServer
                             MsgSys sysBroadcast = new MsgSys();
                             sysBroadcast.sysType = MsgSysType.Begin;
                             sysBroadcast.sysContent = gameResetStatus[0];
-                            BroadcastRoom(new CSharpGame.Message(sysBroadcast));
+                            CSharpGame.Message m = new CSharpGame.Message(sysBroadcast);
+                            m.Num = tableIndex;
+                            BroadcastRoom(m);
 
 
                         }
