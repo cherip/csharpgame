@@ -10,8 +10,8 @@ namespace CSharpGame
 
     static class Program
     {
-        //[DllImport("kernel32.dll")]
-        //public static extern bool AllocConsole();
+        [DllImport("kernel32.dll")]
+        public static extern bool AllocConsole();
 
         public static string serverip;
        

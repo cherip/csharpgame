@@ -29,6 +29,10 @@ namespace CSharpGame
 
         // 接受服务器消息，会改变界面的
         private Thread receiveThread;
+        private Thread msgProcessor;
+        List<Message> msgList;
+        private Object thisLock;
+
         // 保持连接？
         public bool keepalive = true;
 
@@ -43,6 +47,7 @@ namespace CSharpGame
 
         public Room hall;
         public CSharpGame gameRoom;
+        public bool GameRoomIsWorking;
 
         public MainLogic()
         {
@@ -52,8 +57,11 @@ namespace CSharpGame
             // 生成界面的form
             hall = new Room(this);
             gameRoom = CreateGameForm();
+            GameRoomIsWorking = false;
 
             myStatus = PlayerStatus.OffLine;
+            msgList = new List<Message>();
+            thisLock = new Object();
         }
 
         private CSharpGame CreateGameForm()
@@ -167,16 +175,6 @@ namespace CSharpGame
                     // 登录成功
                     keepalive = true;
                     myStatus = PlayerStatus.OnLine;
-                    //启动后台线程接受服务器端发送的消息
-                    //if (receiveThread == null)
-                    //{
-                    //    receiveThread = new Thread(new ThreadStart(NetRuning));
-
-                    //}
-                    //receiveThread.Start();
-                   
-
-                    
                 }
                 else
                 {
@@ -215,6 +213,9 @@ namespace CSharpGame
                 {
                     receiveThread = new Thread(new ThreadStart(NetRuning));
                     receiveThread.Start();
+
+                    msgProcessor = new Thread(new ThreadStart(MsgProcessor));
+                    msgProcessor.Start();
                 }
 
                 // 这里有 bug
@@ -244,6 +245,7 @@ namespace CSharpGame
             }
 
         }
+
         public void NetRuning()
         {
             while (keepalive)
@@ -252,12 +254,35 @@ namespace CSharpGame
                 if (myClientSoc.connected)
                 {
                     Message serverMsg = myClientSoc.RecieveMsg();
-                    processMsg(serverMsg);
+                    lock (thisLock)
+                    {
+                        this.msgList.Add(serverMsg);
+                    }
+                    //Thread cmdThread = new Thread(new ThreadStart(processMsg));
+                    //processMsg(serverMsg);
                 }
             }
 
             //  keepalive = false;
             myClientSoc.CloseConn();
+        }
+
+        public void MsgProcessor()
+        {
+            while (true)
+            {
+                if (this.msgList.Count != 0)
+                {
+                    Message msg;
+                    lock (thisLock)
+                    {
+                        msg = this.msgList[0];
+                        this.msgList.RemoveAt(0);
+                    }
+
+                    processMsg(msg);
+                }
+            }
         }
 
         //
@@ -325,9 +350,6 @@ namespace CSharpGame
                             Message conn = new Message(s);
                             userSend(conn);
                         }
-
-                        
-
                     }
                     break;
                 case MsgSysType.Join:
@@ -380,10 +402,11 @@ namespace CSharpGame
                 case MsgSysType.Seat:
                     {
                         int[] seatInfo = (int[])sysMsg.sysContent;
-                        string userSender = (string)_sysMsg.userSender; 
+                        string userSender = (string)_sysMsg.userSender;
+                        System.Console.WriteLine("seat {0} {1} {2}", userSender, seatInfo[0], seatInfo[1]);
                         hall.PlayerSeatDown(seatInfo[0], seatInfo[1], userSender);
 
-                        
+                      
                         // 如果seat信息的发送者不是服务器 或者 自己
                         // 则改变gamearea的界面，表示有人上线或者下线。
                         if (userSender != "Server" && userSender != myLogic.myClientName &&
@@ -456,16 +479,6 @@ namespace CSharpGame
             }
         }
 
-        //public void tellServer()
-        //private void ProcessGameMsg(MsgGame gameMsg)
-        //{
-        //    int[] pair = gameMsg.cleanPair;
-        //    if (pair == null || pair.Length != 2)
-        //    {
-        //        return;
-        //    }
-
-        //}
         public void userSend(Message msg)
         {      
             msg.userSender = myLogic.myClientName;
@@ -535,7 +548,10 @@ namespace CSharpGame
 
                 // 这里为了简单起见，没有使用多线程，显示多界面了，每次只能有一个界面出现
                 showGameRoom(tableIdx, seatIdx);
+
+                GameRoomIsWorking = true;
                 gameRoom.ShowDialog();
+                GameRoomIsWorking = false;
 //                showGameRoom(tableIdx);
                 
                 myStatus = PlayerStatus.OnLine;
