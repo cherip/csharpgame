@@ -587,6 +587,7 @@ namespace CSharpGame
         public delegate void showFun();
         private void showGameRoom(int tableIdx, int seatIdx)
         {
+            myLogic.gameArea.UnGameStatus();
             gameTable tablesInfo = hall.tables[tableIdx];
             int mypos = seatIdx;
             int t = 0;
@@ -597,6 +598,7 @@ namespace CSharpGame
                 {
                     otherPlayersLogic[t].SetPlayer(tablesInfo.seatUser[k]);
                     GameArea ga = otherPlayersLogic[t].gameArea;
+                    ga.UnGameStatus();
                     ga.Show();
                 }
                 t++;

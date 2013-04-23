@@ -130,6 +130,7 @@ namespace MyGameServer
                 BroadcastClient(m);
 
                 // 一些房间的游戏信息清空
+                tables[tabIdx].readycount = 0;
                 tables[tabIdx].usercount = 0;
                 tables[tabIdx].tabelEable = false;
             }
@@ -295,12 +296,15 @@ namespace MyGameServer
                         }
 
                         // 把消息转发给所有人 通知客户端更新seat的信息
-                            BroadcastClient(_sysMsg);
-
+                        BroadcastClient(_sysMsg);
+                        if (tables[temp[0]].tabelEable)
+                        {
+                            tables[temp[0]].readycount--;
+                        }
 
                         // 如果是在游戏中退出的，且如果是该游戏的最后一名玩家，
                         // 则通知所有人该房间游戏结束
-                        if (tables[temp[0]].usercount == 0 && tables[temp[0]].tabelEable)
+                        if (tables[temp[0]].readycount == 0 && tables[temp[0]].tabelEable)
                         {
                             MsgSys sysGameOver = new MsgSys();
                             sysGameOver.sysType = MsgSysType.GameOver;
