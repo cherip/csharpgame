@@ -295,7 +295,8 @@ namespace MyGameServer
                         }
 
                         // 把消息转发给所有人 通知客户端更新seat的信息
-                        BroadcastClient(_sysMsg);
+                            BroadcastClient(_sysMsg);
+
 
                         // 如果是在游戏中退出的，且如果是该游戏的最后一名玩家，
                         // 则通知所有人该房间游戏结束

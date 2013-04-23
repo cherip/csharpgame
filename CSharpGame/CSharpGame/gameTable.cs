@@ -18,6 +18,7 @@ namespace CSharpGame
         public string[] seatUser = new string[4] { "", "", "", "" };
         public List<Button> seatList;
         private int tableIdx;
+        bool Isgaming = false;
 
         public gameTable()
         {
@@ -74,8 +75,9 @@ namespace CSharpGame
                 Button btn = this.seatList[seatIdx];
                 btn.Text = "";
                 btn.BackColor = System.Drawing.Color.Silver;
-                btn.Enabled = true;
                 seatUser[seatIdx] = "";
+                if (Isgaming == false)
+                    btn.Enabled = true;
             }
         }
 
@@ -92,6 +94,7 @@ namespace CSharpGame
                 {
                     c.Enabled = false;
                 }
+                Isgaming = true;
             }
         }
 
@@ -108,6 +111,7 @@ namespace CSharpGame
                     if (c.Text == "")
                         c.Enabled = true;
                 }
+                Isgaming = false;
             }
         }
 
