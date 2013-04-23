@@ -26,7 +26,7 @@ namespace CSharpGame
 
 
         //消除之后传给服务器
-        public delegate void SendmsgDeleg(Message msggame);
+        public delegate void SendmsgDeleg(MsgGame msggame);
         public event SendmsgDeleg sendMsgEvent;
 
         public GameArea gameArea;
@@ -70,7 +70,7 @@ namespace CSharpGame
             {
                 gameArea.SetBtnImage(i, btnArry[i]);
             }
-
+            gameArea.Reset();
         }
 
         public void Enable()
@@ -105,8 +105,7 @@ namespace CSharpGame
                     msggame.userName = myClientName;
                     msggame.cleanPair[0] = last_click;
                     msggame.cleanPair[1] = pos;
-                    Message msgtosend = new Message(msggame);
-                    sendMsgEvent(msgtosend);
+                    sendMsgEvent(msggame);
 
                     btnArry[last_click] = -1;
                     btnArry[pos] = -1;
@@ -190,12 +189,31 @@ namespace CSharpGame
         {
             this.myClientName = name;
             gameArea.UpdateUser(name);
+            ShowArea();
         }
 
         public void UserQuit()
         {
             this.myClientName = "";
             gameArea.ResetGameStatus();
+            HideArea();
+        }
+
+        public delegate void showFun();
+        public void ShowArea()
+        {
+            if (gameArea.InvokeRequired)
+            {
+                gameArea.Invoke(new showFun(gameArea.Show));
+            }
+        }
+
+        public void HideArea()
+        {
+            if (gameArea.InvokeRequired)
+            {
+                gameArea.Invoke(new showFun(gameArea.Hide));
+            }
         }
     }
 }

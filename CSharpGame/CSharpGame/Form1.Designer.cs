@@ -159,6 +159,7 @@
             this.Controls.Add(this.label1);
             this.Name = "CSharpGame";
             this.Text = "找对对";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.CSharpGame_FormClosed);
             this.Load += new System.EventHandler(this.CSharpGame_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

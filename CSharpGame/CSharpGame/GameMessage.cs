@@ -63,6 +63,8 @@ namespace CSharpGame
     {
         public string userName;
         public int[] cleanPair;
+        public int seatIdx;
+        public int tableIdx;
         public MsgGame()
         {
             userName = null;
@@ -94,6 +96,11 @@ namespace CSharpGame
         Table,
         TableNoSeat,
         FreshGameArea,
+        //EnterRoom,
+        LeaveRoom,
+        GameOver,
+        GameOn,
+        NewRound,
     }
 
     [Serializable]

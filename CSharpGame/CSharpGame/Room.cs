@@ -84,27 +84,11 @@ namespace CSharpGame
                                            this.txtPwd.Text))
             {
                 this.panelLogin.Hide();
-                //this.InitControl();
-
-                //// 测试代码
-                //List<string> names = new List<string>();
-                //names.Add("limian");
-                //names.Add("xiaoyong");
-                //AddPlayers(names);
+                this.Text = "Room | " + this.txtUserName.Text;
 
                 this.panelTables.Show();
                 this.panelPlayers.Show();
             }
-        }
-
-        public void PlayerSeatDown(int tableIdx, int SeatIdx)
-        {
-            if (tableIdx < 0 || tableIdx >= tables.Count)
-            {
-                return;
-            }
-
-            tables[tableIdx].ClickSeat(SeatIdx);
         }
 
         public void PlayerSeatDown(int tableIdx, int SeatIdx, string user)
@@ -114,12 +98,35 @@ namespace CSharpGame
                 return;
             }
 
-            if (tables[tableIdx].seatUser[SeatIdx] == "")
-                tables[tableIdx].seatUser[SeatIdx] = user;
-            else
-                tables[tableIdx].seatUser[SeatIdx] = "";
+            tables[tableIdx].PlayerEnter(SeatIdx, user);
+        }
 
-            tables[tableIdx].ClickSeat(SeatIdx);
+        public void PlayerLeaveTable(int tableIdx, int SeatIdx, string user)
+        {
+            if (tableIdx < 0 || tableIdx >= tables.Count)
+            {
+                return;
+            }
+
+            tables[tableIdx].PlayerLeave(SeatIdx, user);
+        }
+
+        public void TableGameOn(int tableIdx)
+        {
+            if (tableIdx < 0 || tableIdx >= tables.Count)
+            {
+                return;
+            }
+            tables[tableIdx].GameOn();
+        }
+
+        public void TableGameOver(int tableIdx)
+        {
+            if (tableIdx < 0 || tableIdx >= tables.Count)
+            {
+                return;
+            }
+            tables[tableIdx].GameOver();
         }
     }
 }

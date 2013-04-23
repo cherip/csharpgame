@@ -71,13 +71,13 @@
             // 
             // seatTwo
             // 
-            this.seatTwo.BackgroundImage = global::CSharpGame.Properties.Resources.head;
+            this.seatTwo.BackColor = System.Drawing.Color.Silver;
             this.seatTwo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.seatTwo.Location = new System.Drawing.Point(81, 43);
             this.seatTwo.Name = "seatTwo";
             this.seatTwo.Size = new System.Drawing.Size(36, 36);
             this.seatTwo.TabIndex = 2;
-            this.seatTwo.UseVisualStyleBackColor = true;
+            this.seatTwo.UseVisualStyleBackColor = false;
             this.seatTwo.Click += new System.EventHandler(this.seatOne_Click);
             // 
             // seatOne

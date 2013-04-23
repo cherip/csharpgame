@@ -64,6 +64,37 @@ namespace CSharpGame
             }
         }
 
+        public delegate void resetFunc();
+        public void Reset()
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new resetFunc(Reset));
+            }
+            else
+            {
+                foreach (Button b in btnArry)
+                {
+                    b.Visible = true;
+                }
+            }
+        }
+
+        public void UnGameStatus()
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new resetFunc(UnGameStatus));
+            }
+            else
+            {
+                foreach (Button b in btnArry)
+                {
+                    b.Visible = false;
+                }
+            }
+        }
+
         public delegate void CleanBtnPairDele(int a, int b);
         public virtual void CleanBtnPair(int a, int b)
         {
@@ -189,6 +220,8 @@ namespace CSharpGame
                 Thread.Sleep(100);
             }
         }
+
+
     }
 
     class OtherGameArea : GameArea

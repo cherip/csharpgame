@@ -18,19 +18,21 @@ namespace CSharpGame
         int curTime = 0;//当前游戏剩余时间
         int total = 1;//默认是1副图
         //Button[] butArry = new Button[MAX_PIC];
-        string username;
+        //string username;
         //Hashtable btnVal;
-        private static Thread pthread;
+        //private static Thread pthread;
 
-        public delegate void PairBingoHandle(object sender, EventArgs e);//消除两张图代理
-        public event PairBingoHandle pairBingoEvent;//消除事件
+        //public delegate void PairBingoHandle(object sender, EventArgs e);//消除两张图代理
+        //public event PairBingoHandle pairBingoEvent;//消除事件
         public delegate void ListviewDeleg(string userName);
         public delegate void LableDeleg(string s);
         public delegate void ButtonDeleg(int i);
 
-        Logic myLogic;
+        //Logic myLogic;
         //GameArea gameArea;
         MainLogic mainLogic;
+
+        //List<GameArea> otherPlayerDisplay;
 
         public CSharpGame()
         {
@@ -112,21 +114,6 @@ namespace CSharpGame
             RadioButton rb = (RadioButton)sender;
             total = int.Parse(rb.Text);
         }
-
-
-        //private void refreshButton(int i)
-        //{
-        //    if (butArry[i].InvokeRequired)
-        //    {
-        //        ButtonDeleg bd = new ButtonDeleg(refreshButton);
-        //        butArry[i].Invoke(bd, new object[] { i });
-        //    }
-        //    else
-        //    {
-        //        int type = myLogic.GetPicType(i);
-        //        butArry[i].BackgroundImage = picList.Images[type];
-        //    }
-        //}
     
         void  timeElapsed_Elapsed(object source, System.Timers.ElapsedEventArgs e)//计时事件响应，更新processbar
         {
@@ -147,52 +134,6 @@ namespace CSharpGame
                 else timeElapseBar.Value = curTime;                              
             }
         }
-
-        //private void conn_Click(object sender, EventArgs e)
-        //{
-        //    mainLogic.ConnectNet();
-        //}
-
-        //这个函数不需要了吧？
-        //private void updateForm(object sender, int type)
-        //{    
-        //    switch (type)
-        //    {
-        //        case 1:
-        //            {
-        //                string[] nameList = (string[])sender;
-        //                foreach (string s in nameList)
-        //                {
-        //                    adduserList(s);
-        //                }
-        //                break;
-        //            }
-        //        case 2:
-        //            {
-        //                removeExited((string)sender);
-        //                break;
-        //            }
-        //        case 3:
-        //            {
-        //                adduserList((string)sender);
-        //                break;
-        //            }
-        //        case 4:
-        //            {
-        //                showInviteRequst((string)sender);
-        //                break;
-        //            }
-        //        case 5:
-        //            {
-        //                for (int i = 0; i < butArry.Length; i++)
-        //                {
-        //                    refreshButton(i);
-        //                }
-        //                break;
-        //            }
-        //    }
-        //}
-
 
 
         private void showInviteRequst(string param)
@@ -271,6 +212,12 @@ namespace CSharpGame
         private void CSharpGame_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void CSharpGame_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            // 用户退出相当于 用户从模拟重新点击了一次seat
+            mainLogic.QuitGameArea();
         }
     }
 }

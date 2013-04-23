@@ -32,6 +32,7 @@ namespace MyGameServer
         public Server()
         {
             InitializeComponent();
+            button1_Click(null, null);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -110,7 +111,41 @@ namespace MyGameServer
         private void ProcessGamMsg(CSharpGame.Message gamMsg)
         {
             // 指向同一房间内的玩家广播
-            BroadcastRoom(gamMsg);
+            //BroadcastRoom(gamMsg);
+
+            // 服务器处理客户端的游戏情况
+            MsgGame msgGame = (MsgGame)gamMsg.msgContent;
+            int tabIdx = msgGame.tableIdx;
+            int seatIdx = msgGame.seatIdx;
+
+            int ret = tables[tabIdx].PlayerCleanPair(seatIdx);
+            if (ret == 2)
+            {
+                // players win
+                MsgSys sysGameOver = new MsgSys();
+                sysGameOver.sysType = MsgSysType.GameOver;
+                sysGameOver.sysContent = tabIdx;
+                CSharpGame.Message m = new CSharpGame.Message(sysGameOver);
+                m.userSender = msgGame.userName;
+                BroadcastClient(m);
+
+                // 一些房间的游戏信息清空
+                tables[tabIdx].usercount = 0;
+                tables[tabIdx].tabelEable = false;
+            }
+            else if (ret == 1) 
+            {
+                // player 完成一幅牌
+                MsgSys sysReset = new MsgSys();
+                sysReset.sysType = MsgSysType.NewRound;
+                sysReset.sysContent = tables[tabIdx].GetGameForPlayer(seatIdx);
+                CSharpGame.Message m = new CSharpGame.Message(sysReset);
+                m.userSender = msgGame.userName;
+                m.Num = tabIdx;
+                m.reciType = ReciveType.Room;
+                BroadcastRoom(m);
+                //SentToUser(m, msgGame.userName);
+            }
         }
 
         private void ProcessSysMsg(CSharpGame.Message _sysMsg, Socket client)
@@ -174,34 +209,33 @@ namespace MyGameServer
                     break;
                 case MsgSysType.Ready:
                     {
-                        
-                        //int find = findGameClient((string)sysMsg.sysContent);
-                        //if (find != -1)
-                        //{
-                        //    readyUsers.Add((GameClient)clients[find]);
-                        //}
-                        //if (readyUsers.Count == clients.Count)//全部准备 要改成房间的
-                        //{
-                        //    //等待房主确认开始
-                        //    MsgSys sysBroadcast = new MsgSys();
-                        //    sysBroadcast.sysType = MsgSysType.CanStart;
-                        //    sysBroadcast.sysContent = GetUserNameList();//把所有玩家名字发给用户
-                        //    BroadcastClient(new CSharpGame.Message(sysBroadcast));
-                        //}
                         //客户端还要传桌子号过来
                         int find = findGameClient(curr_user);
                         GameClient gl = (GameClient)clients[find];
                         
-                        int tableIndex = (int)sysMsg.sysContent;
-                        gl.TableIdx = tableIndex;
+                        //int tableIndex = (int)sysMsg.sysContent;
+                        //gl.TableIdx = tableIndex;
+                        int tableIndex = gl.TableIdx;
                         tables[tableIndex].readycount++;
                         if (tables[tableIndex].readycount == tables[tableIndex].usercount)
                         {
+                            //首先发送消息通知客户端，某房间游戏已经开始
+                            MsgSys sysGameOn = new MsgSys();
+                            sysGameOn.sysType = MsgSysType.GameOn;
+                            sysGameOn.sysContent = tableIndex;
+                            BroadcastClient(new CSharpGame.Message(sysGameOn));
+
+                            // 这里没有写 牌数的问题
+                            // 所以默认给table设个牌数2
+                            // 要完成牌数的功能 只要在InitGame前 设置tableInfo中的totalRound
+                            tables[tableIndex].totalRound = 2;
+
                             //发送开始
-                            InitGameStatus();
+                            InitTableGame(tableIndex);
                             MsgSys sysBroadcast = new MsgSys();
                             sysBroadcast.sysType = MsgSysType.Begin;
-                            sysBroadcast.sysContent = gameResetStatus[0];
+                            //sysBroadcast.sysContent = //gameResetStatus[0];
+                            sysBroadcast.sysContent = tables[tableIndex].gameResetStatus[0];
                             CSharpGame.Message m = new CSharpGame.Message(sysBroadcast);
                             m.Num = tableIndex;
                             BroadcastRoom(m);
@@ -235,21 +269,47 @@ namespace MyGameServer
                         {
                             if (gc.Name == userSend)
                             {
-                                if (gc.TableIdx == -1)
-                                {
-                                    gc.TableIdx = temp[0];
-                                    gc.SeatIdx = temp[1];
-                                }
-                                else
-                                {
-                                    gc.TableIdx = -1;
-                                }
-                                break;
+                                gc.TableIdx = temp[0];
+                                gc.SeatIdx = temp[1];
                             }
                         }
 
                         // 把消息转发给所有人 通知客户端更新seat的信息
                         BroadcastClient(_sysMsg);
+                    }
+                    break;
+                case MsgSysType.LeaveRoom:
+                    {
+                        // 
+                        // 首先更新当前发生者gc的状态
+                        //
+                        int[] temp = (int[])sysMsg.sysContent;
+                        tables[temp[0]].usercount--;
+                        string userSend = (string)_sysMsg.userSender;
+                        foreach (GameClient gc in clients)
+                        {
+                            if (gc.Name == userSend)
+                            {
+                                gc.TableIdx = -1;
+                            }
+                        }
+
+                        // 把消息转发给所有人 通知客户端更新seat的信息
+                        BroadcastClient(_sysMsg);
+
+                        // 如果是在游戏中退出的，且如果是该游戏的最后一名玩家，
+                        // 则通知所有人该房间游戏结束
+                        if (tables[temp[0]].usercount == 0 && tables[temp[0]].tabelEable)
+                        {
+                            MsgSys sysGameOver = new MsgSys();
+                            sysGameOver.sysType = MsgSysType.GameOver;
+                            sysGameOver.sysContent = temp[0];
+                            CSharpGame.Message m = new CSharpGame.Message(sysGameOver);
+                            m.userSender = "Server";
+                            BroadcastClient(m);
+
+                            tables[temp[0]].tabelEable = false;
+                        }
                     }
                     break;
                 case MsgSysType.TableNoSeat:
@@ -306,6 +366,15 @@ namespace MyGameServer
             return -1;
         }
 
+
+        private void SentToUser(CSharpGame.Message msg, string user)
+        {
+            int find = findGameClient(user);
+            GameClient gl = (GameClient)clients[find];
+
+            SendToClient(gl, msg);
+        }
+
         private void BroadcastClient(CSharpGame.Message msg)
         {
             foreach (GameClient cl in clients)
@@ -334,6 +403,7 @@ namespace MyGameServer
 
                 if (s.Connected)
                 {
+                    System.Console.WriteLine("send seat to {0}, {1}", cl.Name, (string)mes.userSender);
                     s.Send(outbytes, outbytes.Length, 0);
                 }
 
@@ -409,7 +479,7 @@ namespace MyGameServer
                     sysMsg.sysContent = new int[] { gcc.TableIdx, gcc.SeatIdx };
                     CSharpGame.Message msg = new CSharpGame.Message(sysMsg);
                     msg.userSender = gcc.Name;
-                    System.Console.WriteLine("send seat to {0}, {1}", toUser.Name, gcc.Name);
+
                     SendToClient(toUser, msg);
                     //BroadcastClient(msg);
                 }
@@ -425,6 +495,22 @@ namespace MyGameServer
                 MyFormat.genPic(ref game);
                 gameResetStatus.Add((int[])game.Clone());
             }
+        }
+
+        public void InitTableGame(int tableIdx)
+        {
+            //gameResetStatus = new List<int[]>();
+            tables[tableIdx].gameResetStatus = new List<int[]>();
+            tables[tableIdx].gameAnswer = new List<int>();
+            for (int i = 0; i < tables[tableIdx].totalRound; i++)
+            {
+                int[] game = new int[64];
+                MyFormat.genPic(ref game);
+                tables[tableIdx].gameResetStatus.Add((int[])game.Clone());
+                tables[tableIdx].gameAnswer.Add(MyFormat.countPairPic(game));
+            }
+            tables[tableIdx].GameStart();
+            tables[tableIdx].tabelEable = true;
         }
     }
 }

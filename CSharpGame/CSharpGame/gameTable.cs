@@ -16,7 +16,7 @@ namespace CSharpGame
         public event playerClickSeat clickSeatCallback;
         Hashtable btnIdx;
         public string[] seatUser = new string[4] { "", "", "", "" };
-
+        public List<Button> seatList;
         private int tableIdx;
 
         public gameTable()
@@ -35,64 +35,84 @@ namespace CSharpGame
             btnIdx.Add(this.seatTwo, 1);
             btnIdx.Add(this.seatThree, 2);
             btnIdx.Add(this.seatFour, 3);
+
+            seatList = new List<Button>();
+            seatList.Add(this.seatOne);
+            seatList.Add(this.seatTwo);
+            seatList.Add(this.seatThree);
+            seatList.Add(this.seatFour);
         }
 
-        // 提供给外面的 控制seat状态的方法
-        // 不会触发 callback 行为
-        public void ClickSeat(int idx)
-        {
-            // 不好的地方，用idx 控制一个table下的4个seat
-            EventArgs param = null;
-            switch (idx)
-            {
-                    // 处理seatOne
-                case 0:
-                    {
-                        //seatOne_Click(this.seatOne, param);
-                        this.Invoke(new EventHandler(changeSeatStatus), 
-                                    new object[] { this.seatOne, param });
-                    }
-                    break;
-                case 1:         // 处理seattwo
-                    {
-                        this.Invoke(new EventHandler(changeSeatStatus),
-                                    new object[] { this.seatTwo, param });
-                    }
-                    break;
-                case 2:         // 处理seatthree
-                    {
-                        this.Invoke(new EventHandler(changeSeatStatus),
-                                    new object[] { this.seatThree, param });
-                    }
-                    break;
-                case 3:         // 处理seatfour
-                    {
-                        this.Invoke(new EventHandler(changeSeatStatus),
-                                    new object[] { this.seatFour, param });
-                    }
-                    break;
-            }
-        }
 
-        private void changeSeatStatus(object sender, EventArgs e)
+        public delegate void logicClickSeat(int seatIdx, string user);
+        public void PlayerEnter(int seatIdx, string user)
         {
-            Button btn = (Button)sender;
-            if (btn.Enabled == true)
+            if (this.InvokeRequired)
             {
-                btn.Enabled = false;
-                btn.BackColor = System.Drawing.Color.WhiteSmoke;
+                this.Invoke(new logicClickSeat(PlayerEnter),
+                            new object[] { seatIdx, user });
             }
             else
             {
-                btn.Enabled = true;
+                Button btn = this.seatList[seatIdx];
+                btn.Enabled = false;
+                seatUser[seatIdx] = user;
+                btn.Text = user;
+                btn.BackColor = System.Drawing.Color.WhiteSmoke;
+            }
+        }
+
+        public void PlayerLeave(int seatIdx, string user)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new logicClickSeat(PlayerLeave),
+                            new object[] { seatIdx, user });
+            }
+            else
+            {
+                Button btn = this.seatList[seatIdx];
+                btn.Text = "";
                 btn.BackColor = System.Drawing.Color.Silver;
+                btn.Enabled = true;
+                seatUser[seatIdx] = "";
+            }
+        }
+
+        public delegate void gameFunc();
+        public void GameOn()
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new gameFunc(GameOn));
+            }
+            else
+            {
+                foreach (Button c in seatList)
+                {
+                    c.Enabled = false;
+                }
+            }
+        }
+
+        public void GameOver()
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new gameFunc(GameOver));
+            }
+            else
+            {
+                foreach (Button c in seatList)
+                {
+                    if (c.Text == "")
+                        c.Enabled = true;
+                }
             }
         }
 
         private void seatOne_Click(object sender, EventArgs e)
         {
-            // 首先改变 seat的状态
-            changeSeatStatus(sender, e);
             // 然后再触发callback函数，通知上层用户点击了seat
             if (clickSeatCallback != null)
             {
