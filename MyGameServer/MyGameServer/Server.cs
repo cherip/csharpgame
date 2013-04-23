@@ -111,7 +111,7 @@ namespace MyGameServer
         private void ProcessGamMsg(CSharpGame.Message gamMsg)
         {
             // 指向同一房间内的玩家广播
-            //BroadcastRoom(gamMsg);
+            BroadcastRoom(gamMsg);
 
             // 服务器处理客户端的游戏情况
             MsgGame msgGame = (MsgGame)gamMsg.msgContent;
