@@ -30,6 +30,7 @@ namespace CSharpGame
         // 接受服务器消息，会改变界面的
         private Thread receiveThread;
         private Thread msgProcessor;
+
         List<Message> msgList;
         private Object thisLock;
 
@@ -37,16 +38,17 @@ namespace CSharpGame
         public bool keepalive = true;
 
         // 当前client的玩家的Logic
-        Logic myLogic;
+        //Logic myLogic;
         public int tableIdx;
         public int seatIdx;
         PlayerStatus myStatus;
+        public string myClientName;
 
         // 其他玩家的Logic, 用于显示缩略图
-        List<Logic> otherPlayersLogic;
+        //List<Logic> otherPlayersLogic;
 
-        public Room hall;
-        public CSharpGame gameRoom;
+        public Hall hall;
+        public Room gameRoom;
         public bool GameRoomIsWorking;
 
         public MainLogic()
@@ -55,8 +57,10 @@ namespace CSharpGame
             keepalive = false;
 
             // 生成界面的form
-            hall = new Room(this);
-            gameRoom = CreateGameForm();
+            hall = new Hall(this);
+            gameRoom = new Room(this);
+            gameRoom.Draw();
+            //gameRoom = CreateGameForm();
             GameRoomIsWorking = false;
 
             myStatus = PlayerStatus.OffLine;
@@ -67,87 +71,43 @@ namespace CSharpGame
             this.seatIdx = -1;
         }
 
-        private CSharpGame CreateGameForm()
-        {
-            CSharpGame gameForm = new CSharpGame(this);
-
-            // 首先创建4个logic
-            myLogic = new Logic(1);
-            myLogic.sendMsgEvent += SendGameData;
-
-            otherPlayersLogic = new List<Logic>();
-            for (int i = 0; i < 3; i++)
-            {
-                otherPlayersLogic.Add(new Logic(2));
-            }
-
-            // 将Logic的界面显示到gameForm中
-            GameArea ga = myLogic.gameArea;
-            gameForm.CreateMainArea(ga);
-            // 游戏开始前隐藏btn
-            ga.UnGameStatus();
-            List<GameArea> ret = new List<GameArea>();
-            foreach (Logic lg in otherPlayersLogic)
-            {
-                ret.Add(lg.gameArea);
-                lg.gameArea.Hide();
-            }
-            gameForm.CreateOppeArea(ret);
-            foreach (Logic lg in otherPlayersLogic)
-            {
-                lg.gameArea.UnGameStatus();
-            }
-
-            return gameForm;
-        }
-
         private void InitGame(MsgSys msg)
         {
-            // 初始化所有玩家的状态
-            int[] gameStart = (int[])msg.sysContent;
-            StartPlayerShow(gameStart);
-            myLogic.Enable();
+            //// 初始化所有玩家的状态
+            //int[] gameStart = (int[])msg.sysContent;
+            //StartPlayerShow(gameStart);
+            //myLogic.Enable();
         }
 
         public void TestStart()
         {
-            //int[] tester = new int[64];
-            //MyFormat.genPic(ref tester);
-            //// 初始本地的
-            //myLogic.InitGame(tester);
-            ////myLogic.startGame();
-            //// 其他玩家的
-            //foreach (Logic lg in otherPlayersLogic)
-            //{
-            //    lg.InitGame(tester);
-            //}
-            //myLogic.Enable();
+
         }
 
-        public void StartPlayerShow(int[] gameStatus)
-        {
-            // 初始本地的
-            myLogic.InitGame(gameStatus);
-            //myLogic.startGame();
-            // 其他玩家的
-            foreach (Logic lg in otherPlayersLogic)
-            {
-                if (lg.myClientName != "")
-                {
-                    lg.InitGame(gameStatus);
-                }
-            }
-        }
+        //public void StartPlayerShow(int[] gameStatus)
+        //{
+        //    // 初始本地的
+        //    myLogic.InitGame(gameStatus);
+        //    //myLogic.startGame();
+        //    // 其他玩家的
+        //    foreach (Logic lg in otherPlayersLogic)
+        //    {
+        //        if (lg.myClientName != "")
+        //        {
+        //            lg.InitGame(gameStatus);
+        //        }
+        //    }
+        //}
 
         //
         // 处理游戏的logic
         //
 
         // 提示功能
-        public void HintNext(object sender, EventArgs e)
-        {
-            myLogic.hintclicked();
-        }
+        //public void HintNext(object sender, EventArgs e)
+        //{
+        //    //myLogic.hintclicked();
+        //}
 
         //
         // 网络通信的功能
@@ -216,7 +176,8 @@ namespace CSharpGame
 
             if (ConnectNet(new Message(sysMsg)))
             {
-                myLogic.myClientName = user;
+                //myLogic.myClientName = user;
+                this.myClientName = user;
 
                 // 登录成功
                 keepalive = true;
@@ -234,10 +195,8 @@ namespace CSharpGame
                 // 准备发送一个online的命令，服务器把当前所有的table的情况发回来。
                 MsgSys s = new MsgSys();
                 s.sysType = MsgSysType.Online;
-                s.sysContent = myLogic.myClientName;
-                Message conn = new Message(s);
-                conn.userSender = myLogic.myClientName;
-                myClientSoc.SendMsg(conn);
+                s.sysContent = this.myClientName;
+                userSend(new Message(s));
 
                 return true;
             }
@@ -250,7 +209,7 @@ namespace CSharpGame
             {
                 MsgSys sysMsg = new MsgSys();
                 sysMsg.sysType = MsgSysType.Offline;
-                sysMsg.sysContent = myLogic.myClientName;
+                sysMsg.sysContent = this.myClientName;
                 userSend(new Message(sysMsg));
                 receiveThread = null;
                 keepalive = false;
@@ -270,8 +229,6 @@ namespace CSharpGame
                     {
                         this.msgList.Add(serverMsg);
                     }
-                    //Thread cmdThread = new Thread(new ThreadStart(processMsg));
-                    //processMsg(serverMsg);
                 }
             }
             myClientSoc.CloseConn();
@@ -329,14 +286,19 @@ namespace CSharpGame
         private void ProcessGamMsg(MsgGame gamMsg)
         {
             //获得其他玩家数据，根据username更新界面
-            for (int i = 0; i < otherPlayersLogic.Count; i++)
-            {
-                if (otherPlayersLogic[i].myClientName == gamMsg.userName && otherPlayersLogic[i].myClientName != null)
-                {
-                    //更新指定玩家的界面
-                    otherPlayersLogic[i].CleanBtnPair(gamMsg.cleanPair[0],gamMsg.cleanPair[1]);
-                }
-            }
+            //for (int i = 0; i < otherPlayersLogic.Count; i++)
+            //{
+            //    if (otherPlayersLogic[i].myClientName == gamMsg.userName && otherPlayersLogic[i].myClientName != null)
+            //    {
+            //        //更新指定玩家的界面
+            //        otherPlayersLogic[i].CleanBtnPair(gamMsg.cleanPair[0],gamMsg.cleanPair[1]);
+            //    }
+            //}
+            //if (gamMsg.tableIdx == this.tableIdx)
+            //{
+            gameRoom.PlayerCleanPair(gamMsg.seatIdx, gamMsg.cleanPair[0],
+                                        gamMsg.cleanPair[1]);
+            //}
         }
 
         private void ProcessSysMsg(Message _sysMsg)
@@ -344,28 +306,6 @@ namespace CSharpGame
             MsgSys sysMsg = (MsgSys)_sysMsg.msgContent;
             switch (sysMsg.sysType)
             {
-                case MsgSysType.Judge:
-                    {
-
-                        bool judged = (bool)sysMsg.sysContent;
-                        if (!judged)
-                        {
-                            MessageBox.Show("没有这个用户");
-                        }
-                        if (judged)
-                        {
-                            myStatus = PlayerStatus.OnLine;
-                           // myLogic.myClientName = judged[1];
-                            MsgSys s = new MsgSys();
-                            s.sysType = MsgSysType.Online;
-                           
-                            s.sysContent = myLogic.myClientName;
-
-                            Message conn = new Message(s);
-                            userSend(conn);
-                        }
-                    }
-                    break;
                 case MsgSysType.Join:
                     {
                         //某玩家加入
@@ -389,23 +329,7 @@ namespace CSharpGame
                     break;
                 case MsgSysType.CanStart:
                     {
-                        //通知 全部准备好
-                        List<string> userList = (List<string>)sysMsg.sysContent;//所有准备好的玩家的名字
-                        for (int i = 0; i < userList.Count; i++)
-                        {
-                            if (userList[i] != myLogic.myClientName)
-                            {
-                                Logic lg = new Logic(2);
-                                lg.myClientName = userList[i];
-                                otherPlayersLogic.Add(new Logic(2));
-                            }
-                        }
-                        if (userList[0] == myLogic.myClientName)
-                        {
-                            MsgSys msgStart = new MsgSys();
-                            msgStart.sysType = MsgSysType.GameStart;
-                            msgStart.sysContent = null;
-                         }
+                        ;
                     }
                     break;
                 case MsgSysType.Begin:
@@ -417,21 +341,7 @@ namespace CSharpGame
                     {
                         string userRefresh = (string)_sysMsg.userSender;
                         int[] gameStatus = (int[])sysMsg.sysContent;
-                        if (userRefresh == myLogic.myClientName)
-                        {
-                            myLogic.InitGame(gameStatus);
-                        }
-                        else
-                        {
-                            foreach (Logic lg in otherPlayersLogic)
-                            {
-                                if (lg.myClientName == userRefresh)
-                                {
-                                    lg.InitGame(gameStatus);
-                                    break;
-                                }
-                            }
-                        }
+                        gameRoom.RefreshGame(userRefresh, gameStatus);
                     }
                     break;
                 case MsgSysType.Seat:
@@ -441,12 +351,11 @@ namespace CSharpGame
                         //System.Console.WriteLine("seat {0} {1} {2}", userSender, seatInfo[0], seatInfo[1]);
                         hall.PlayerSeatDown(seatInfo[0], seatInfo[1], userSender);
 
-                        // 如果当前桌子有人发来信息，且不是本人说明有后来的玩家进入
+                        // 如果当前桌子有人发来信息
                         // 则更新先进入者的信息
-                        if (userSender != myLogic.myClientName && seatInfo[0] == this.tableIdx)
+                        if (seatInfo[0] == this.seatIdx && userSender != this.myClientName)
                         {
-                            int otherLogicPos = (seatInfo[1] - seatIdx + 4) % 4 - 1;
-                            otherPlayersLogic[otherLogicPos].SetPlayer(userSender);
+                            gameRoom.PlayerEnterRoom(seatInfo[1], userSender);
                         }
                     }
                     break;
@@ -457,10 +366,11 @@ namespace CSharpGame
                         string userSender = (string)_sysMsg.userSender;
                         
                         hall.PlayerLeaveTable(seatInfo[0], seatInfo[1], userSender);
-                        if (userSender != myLogic.myClientName && seatInfo[0] == this.tableIdx)
+                        // 如果当前桌子有人发来信息
+                        // 则更新先进入者的信息
+                        if (seatInfo[0] == this.seatIdx)
                         {
-                            int otherLogicPos = (seatInfo[1] - seatIdx + 4) % 4 - 1;
-                            otherPlayersLogic[otherLogicPos].UserQuit();
+                            gameRoom.PlayerLeaveRoom(seatInfo[1], userSender);
                         }
                     }
                     break;
@@ -484,13 +394,7 @@ namespace CSharpGame
                         string user = _sysMsg.userSender;
                         if (tableIdx == this.tableIdx)
                         {
-                            MessageBox.Show(user + " WIN!!!");
-
-                            myLogic.gameArea.UnGameStatus();
-                            foreach (Logic lg in otherPlayersLogic)
-                            {
-                                lg.gameArea.UnGameStatus();
-                            }
+                            gameRoom.Win(user);
                         }
                     }
                     break;
@@ -504,12 +408,9 @@ namespace CSharpGame
             {
                 msg.tableIdx = this.tableIdx;
                 msg.seatIdx = this.seatIdx;
-                //msg.userName = myLogic.myClientName;
-
                 Message sendMsg = new Message(msg);
                 sendMsg.reciType = ReciveType.Room;
                 sendMsg.Num = this.tableIdx;
-                //MsgGame msg
                 userSend(sendMsg);
             }
         }
@@ -541,7 +442,7 @@ namespace CSharpGame
 
         public void userSend(Message msg)
         {      
-            msg.userSender = myLogic.myClientName;
+            msg.userSender = this.myClientName;
             myClientSoc.SendMsg(msg);
         }
 
@@ -579,11 +480,7 @@ namespace CSharpGame
             Message msg = new Message(seatMsg);
             userSend(msg);
 
-            foreach (Logic lg in otherPlayersLogic)
-            {
-                lg.UserQuit();
-                lg.HideArea();
-            }
+            gameRoom.PlayerLeaveRoom(this.seatIdx, this.myClientName);
 
             // 然后将当前的table信息清空
             this.tableIdx = -1;
@@ -593,27 +490,19 @@ namespace CSharpGame
         public delegate void showFun();
         private void showGameRoom(int tableIdx, int seatIdx)
         {
-            myLogic.gameArea.UnGameStatus();
             gameTable tablesInfo = hall.tables[tableIdx];
+            tablesInfo.seatUser[seatIdx] = this.myClientName;
             int mypos = seatIdx;
-            int t = 0;
-            for (int i = mypos + 1; i < mypos + 4; i++)
+            // 玩家进入游戏房间时，将当前的所有的同桌人一起加入房间。
+            // 第一个进入的人即本地玩家。
+            for (int i = mypos; i < mypos + 4; i++)
             { 
                 int k = i % 4;
+                // 存在一个问题，自己的username可能传不过去了。
                 if (tablesInfo.seatUser[k] != "")
                 {
-                    otherPlayersLogic[t].SetPlayer(tablesInfo.seatUser[k]);
-                    GameArea ga = otherPlayersLogic[t].gameArea;
-                    ga.UnGameStatus();
-                    ga.Show();
+                    gameRoom.PlayerEnterRoom(i, tablesInfo.seatUser[k]);
                 }
-                else
-                {
-                    GameArea ga = otherPlayersLogic[t].gameArea;
-                    ga.UnGameStatus();
-                    //ga.Show();
-                }
-                t++;
             }
         }
 
@@ -638,7 +527,7 @@ namespace CSharpGame
                 showGameRoom(tableIdx, seatIdx);
 
                 gameRoom.Text = "连连看-房间" + System.Convert.ToString(tableIdx + 1);
-                gameRoom.Text += "|" + myLogic.myClientName;
+                gameRoom.Text += "|" + this.myClientName;
                 GameRoomIsWorking = true;
                 
                 gameRoom.ShowDialog();

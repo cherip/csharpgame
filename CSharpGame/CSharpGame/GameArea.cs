@@ -34,7 +34,7 @@ namespace CSharpGame
             int btn_margin_x = (int)(w * 0.1) / 2;
             int btn_margin_y = (int)(h * 0.1) / 2;
 
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CSharpGame));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Room));
             for (int i = 0; i < 64; i++)
             {
                 System.Windows.Forms.Button buttonNew = new System.Windows.Forms.Button();
