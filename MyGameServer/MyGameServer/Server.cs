@@ -23,7 +23,7 @@ namespace MyGameServer
         private Thread tdListen;//定义一个线程，用于监听客户的连接请求 
         private ArrayList clients; //申名一个一维数组，用来存储连接到服务器的客户信息
         private List<GameClient> readyUsers;
-        public delegate void GetlbClientCall(string id, GameClient ipn);//不能在线程启动后又启动Windows窗体线程，这样是不安全的
+        private Hashtable userandsocket;
         NetworkStream ns;
         private List<int[]> gameResetStatus;
         private List<TableInfo> tables;
@@ -38,6 +38,7 @@ namespace MyGameServer
 
         private void button1_Click(object sender, EventArgs e)
         {
+            userandsocket = new Hashtable();
             clients = new ArrayList();
             readyUsers = new List<GameClient>();
             tables = new List<TableInfo>(9);
@@ -73,6 +74,7 @@ namespace MyGameServer
             Socket client = clientsocket;
             bool keepalive = true; //各个客户Socket线程存活的标识   
             Hashtable duizhan = new Hashtable();
+            
             while (keepalive)
             {
                 try
@@ -104,7 +106,11 @@ namespace MyGameServer
                 }
                 catch (System.Exception ex)
                 {
+                    string duanxian = (string)userandsocket[client];
+                    userandsocket.Remove(client);
+
                     client.Close();
+                    
                 }
             }
         }
@@ -185,6 +191,7 @@ namespace MyGameServer
                             s.sysContent = true;
                             GameClient newGC = new GameClient(user_pwd[0], null, clientservice, client);
                             clients.Add(newGC);
+                            userandsocket[client] = curr_user;
                             SendToClient(newGC, new CSharpGame.Message(s));
                         }
                     }
