@@ -219,5 +219,15 @@ namespace CSharpGame
             // 用户退出相当于 用户从模拟重新点击了一次seat
             mainLogic.QuitGameArea();
         }
+
+        public void ControlAdjustNO()
+        {
+            this.ControlBox = false;
+        }
+
+        public void ControlAdjustYes()
+        {
+            this.ControlBox = true;
+        }
     }
 }

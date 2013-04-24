@@ -484,13 +484,39 @@ namespace CSharpGame
                         string user = _sysMsg.userSender;
                         if (tableIdx == this.tableIdx)
                         {
-                            MessageBox.Show(user + " WIN!!!");
-
+                           
                             myLogic.gameArea.UnGameStatus();
                             foreach (Logic lg in otherPlayersLogic)
                             {
                                 lg.gameArea.UnGameStatus();
                             }
+
+                            if (gameRoom.InvokeRequired)
+                            {
+                                gameRoom.Invoke(new showFun(gameRoom.ControlAdjustNO));
+                            }
+                            else gameRoom.ControlAdjustNO();
+                           
+                           
+                                if (MessageBox.Show(user + "获胜！", "游戏提示消息！", MessageBoxButtons.OK, MessageBoxIcon.Question) == DialogResult.OK)
+                                {
+                                    
+                                    if (gameRoom.InvokeRequired)
+                                    {
+                                        gameRoom.Invoke(new showFun(gameRoom.ControlAdjustYes));
+                                    }
+                                    else gameRoom.ControlAdjustYes();
+                                }
+                                else
+                                {
+                                    if (gameRoom.InvokeRequired)
+                                    {
+                                        gameRoom.Invoke(new showFun(gameRoom.ControlAdjustYes));
+                                    }
+                                    else gameRoom.ControlAdjustYes();
+                                }
+                            
+                           
                         }
                     }
                     break;
@@ -592,6 +618,7 @@ namespace CSharpGame
         }
 
         public delegate void showFun();
+       // public delegate void showFun(bool b);
         private void showGameRoom(int tableIdx, int seatIdx)
         {
             myLogic.gameArea.UnGameStatus();

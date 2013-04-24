@@ -128,5 +128,7 @@ namespace CSharpGame
             }
             tables[tableIdx].GameOver();
         }
+
+
     }
 }

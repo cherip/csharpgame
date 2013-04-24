@@ -65,7 +65,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(682, 73);
+            this.label1.Location = new System.Drawing.Point(674, 137);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(65, 12);
             this.label1.TabIndex = 2;
@@ -74,7 +74,7 @@
             // radioButton1
             // 
             this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(753, 71);
+            this.radioButton1.Location = new System.Drawing.Point(745, 135);
             this.radioButton1.Name = "radioButton1";
             this.radioButton1.Size = new System.Drawing.Size(29, 16);
             this.radioButton1.TabIndex = 3;
@@ -86,7 +86,7 @@
             // radioButton2
             // 
             this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(788, 71);
+            this.radioButton2.Location = new System.Drawing.Point(780, 135);
             this.radioButton2.Name = "radioButton2";
             this.radioButton2.Size = new System.Drawing.Size(29, 16);
             this.radioButton2.TabIndex = 3;
@@ -98,7 +98,7 @@
             // radioButton3
             // 
             this.radioButton3.AutoSize = true;
-            this.radioButton3.Location = new System.Drawing.Point(823, 71);
+            this.radioButton3.Location = new System.Drawing.Point(815, 135);
             this.radioButton3.Name = "radioButton3";
             this.radioButton3.Size = new System.Drawing.Size(29, 16);
             this.radioButton3.TabIndex = 3;
@@ -109,7 +109,7 @@
             // 
             // hintbtn
             // 
-            this.hintbtn.Location = new System.Drawing.Point(782, 23);
+            this.hintbtn.Location = new System.Drawing.Point(774, 87);
             this.hintbtn.Name = "hintbtn";
             this.hintbtn.Size = new System.Drawing.Size(75, 23);
             this.hintbtn.TabIndex = 4;
@@ -126,7 +126,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(677, 23);
+            this.button2.Location = new System.Drawing.Point(669, 87);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 13;
@@ -136,7 +136,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(709, 131);
+            this.button1.Location = new System.Drawing.Point(701, 195);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 14;
