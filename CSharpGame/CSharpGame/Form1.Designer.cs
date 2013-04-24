@@ -122,7 +122,7 @@
             // 
             // timeElapseBar
             // 
-            this.timeElapseBar.Location = new System.Drawing.Point(7, 628);
+            this.timeElapseBar.Location = new System.Drawing.Point(-83, 646);
             this.timeElapseBar.Name = "timeElapseBar";
             this.timeElapseBar.Size = new System.Drawing.Size(668, 14);
             this.timeElapseBar.TabIndex = 5;
@@ -158,6 +158,7 @@
             // 
             // panelMyArea
             // 
+            this.panelMyArea.BackColor = System.Drawing.Color.Transparent;
             this.panelMyArea.Location = new System.Drawing.Point(7, 41);
             this.panelMyArea.Name = "panelMyArea";
             this.panelMyArea.Size = new System.Drawing.Size(605, 581);
@@ -165,6 +166,7 @@
             // 
             // panelOtherArea
             // 
+            this.panelOtherArea.BackColor = System.Drawing.Color.Transparent;
             this.panelOtherArea.Location = new System.Drawing.Point(618, 94);
             this.panelOtherArea.Name = "panelOtherArea";
             this.panelOtherArea.Size = new System.Drawing.Size(239, 528);
@@ -174,6 +176,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(862, 642);
             this.Controls.Add(this.panelOtherArea);
             this.Controls.Add(this.panelMyArea);

@@ -132,7 +132,7 @@ namespace CSharpGame
             this.Location = local;
             this.Size = size;
 
-            this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            //this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.TabIndex = 0;
             this.Enabled = false;
         }
