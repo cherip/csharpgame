@@ -229,7 +229,7 @@ namespace MyGameServer
                             // 这里没有写 牌数的问题
                             // 所以默认给table设个牌数2
                             // 要完成牌数的功能 只要在InitGame前 设置tableInfo中的totalRound
-                            tables[tableIndex].totalRound = 2;
+                            tables[tableIndex].totalRound = 1;
 
                             //发送开始
                             InitTableGame(tableIndex);
@@ -285,7 +285,11 @@ namespace MyGameServer
                         // 首先更新当前发生者gc的状态
                         //
                         int[] temp = (int[])sysMsg.sysContent;
-                        tables[temp[0]].usercount--;
+                        if (tables[temp[0]].usercount != 0)
+                        {
+                            tables[temp[0]].usercount--;
+                        }
+                       
                         string userSend = (string)_sysMsg.userSender;
                         foreach (GameClient gc in clients)
                         {
@@ -297,11 +301,15 @@ namespace MyGameServer
 
                         // 把消息转发给所有人 通知客户端更新seat的信息
                         BroadcastClient(_sysMsg);
-                        if (tables[temp[0]].tabelEable)
+                        //if (tables[temp[0]].tabelEable)
+                        //{
+                        //    tables[temp[0]].readycount--;
+                        //}
+                        if (tables[temp[0]].readycount != 0)
                         {
                             tables[temp[0]].readycount--;
                         }
-
+                        
                         // 如果是在游戏中退出的，且如果是该游戏的最后一名玩家，
                         // 则通知所有人该房间游戏结束
                         if (tables[temp[0]].readycount == 0 && tables[temp[0]].tabelEable)
