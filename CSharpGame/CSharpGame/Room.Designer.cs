@@ -119,18 +119,19 @@
             // 
             this.panelPlayers.Controls.Add(this.listPlayers);
             this.panelPlayers.Controls.Add(this.lblPlayersList);
-            this.panelPlayers.Location = new System.Drawing.Point(424, 133);
+            this.panelPlayers.Location = new System.Drawing.Point(424, 12);
             this.panelPlayers.Name = "panelPlayers";
-            this.panelPlayers.Size = new System.Drawing.Size(191, 284);
+            this.panelPlayers.Size = new System.Drawing.Size(191, 405);
             this.panelPlayers.TabIndex = 2;
             // 
             // listPlayers
             // 
+            this.listPlayers.BackColor = System.Drawing.SystemColors.InactiveCaptionText;
             this.listPlayers.FormattingEnabled = true;
             this.listPlayers.ItemHeight = 12;
             this.listPlayers.Location = new System.Drawing.Point(9, 32);
             this.listPlayers.Name = "listPlayers";
-            this.listPlayers.Size = new System.Drawing.Size(175, 244);
+            this.listPlayers.Size = new System.Drawing.Size(175, 352);
             this.listPlayers.TabIndex = 1;
             // 
             // lblPlayersList
@@ -151,7 +152,7 @@
             this.Controls.Add(this.panelTables);
             this.Controls.Add(this.panelLogin);
             this.Name = "Room";
-            this.Text = "Room";
+            this.Text = "游戏大厅";
             this.panelLogin.ResumeLayout(false);
             this.panelLogin.PerformLayout();
             this.panelPlayers.ResumeLayout(false);

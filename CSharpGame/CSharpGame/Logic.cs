@@ -49,6 +49,7 @@ namespace CSharpGame
                         MyGameArea area = new MyGameArea();
                         area.btnClickEvent += PushButton;
                         gameArea = area;
+                        gameArea.BackgroundImage  = global::CSharpGame.Properties.Resources.background1;
                     }
                     break;
                 case 2:
@@ -89,6 +90,7 @@ namespace CSharpGame
         {
             gameArea.CleanBtnPair(a,b);
         }
+
 
         public void PushButton(int pos)
         {
@@ -164,6 +166,16 @@ namespace CSharpGame
             }
         }
 
+        public void showSameList()
+        {
+            List<int> sameList = gerSameList();
+            if (sameList != null)
+            {
+                gameArea.ShowSameList(sameList);
+            }
+            else MessageBox.Show("No Same Pictures!!!");
+        }
+
         private PairPics gerPairPics()//提示功能中，获得两个相同图像的按钮
         {
             PairPics pairpics = new PairPics();
@@ -184,6 +196,36 @@ namespace CSharpGame
             }
             return null;
         }
+        private List<int> gerSameList()//与i相同的所有的j都显示
+        {
+            List<int> sameList = new List<int>();
+            for (int i = 0; i < MAX_PIC; i++)
+            {
+                if (btnArry[i] != -1)
+                {
+                    for (int j = i + 1; j < MAX_PIC; j++)
+                    {
+                        if (btnArry[j] != -1 && btnArry[i] == btnArry[j])
+                        {
+                            sameList.Add(j);                                                  
+                        }
+                    }
+                    sameList.Add(i);
+                    if (sameList.Count == 1)
+                    {
+                        sameList.Clear();
+                        
+                    }
+                    else return sameList;
+                    
+                    
+                   
+                }
+            }
+            return null;
+        }
+
+
 
         public void SetPlayer(string name)
         {

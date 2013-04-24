@@ -57,7 +57,7 @@ namespace CSharpGame
                 buttonNew.UseVisualStyleBackColor = true;
 
                 //buttonNew.Click += new System.EventHandler(this.picBtn_Clicked);
-
+                
                 btnVal.Add(buttonNew, i);
                 btnArry[i] = buttonNew;
                 this.Controls.Add(buttonNew);
@@ -155,6 +155,11 @@ namespace CSharpGame
         {
             ;
         }
+
+        public virtual void ShowSameList(List<int> l)
+        {
+            ;
+        }
     }
 
     class MyGameArea : GameArea
@@ -171,7 +176,7 @@ namespace CSharpGame
         public override void Draw(Point local, Size size)
         {
             base.Draw(local, size);
-
+           
             // 本地的btn显示界面上面没有多的显示信息，直接用全部区域
             CreateBtn(new Point(0,0), size);
             
@@ -221,6 +226,22 @@ namespace CSharpGame
             }
         }
 
+        public override void ShowSameList(List<int> l)
+        {
+            base.ShowSameList(l);
+            for (int i = 0; i < 64; i++ )
+            {
+                if (btnArry[i].Image != null)
+                {
+                    btnArry[i].Image = null;
+                }
+                
+            }
+            for (int i = 0; i < l.Count; i ++ )
+            {
+                btnArry[l[i]].Image = global::CSharpGame.Properties.Resources.yes;
+            }
+        }
 
     }
 

@@ -33,6 +33,7 @@
             this.seatThree = new System.Windows.Forms.Button();
             this.seatTwo = new System.Windows.Forms.Button();
             this.seatOne = new System.Windows.Forms.Button();
+            this.gamestartlabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // tableNum
@@ -91,11 +92,22 @@
             this.seatOne.UseVisualStyleBackColor = false;
             this.seatOne.Click += new System.EventHandler(this.seatOne_Click);
             // 
+            // gamestartlabel
+            // 
+            this.gamestartlabel.Font = new System.Drawing.Font("微软雅黑", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.gamestartlabel.Location = new System.Drawing.Point(42, 51);
+            this.gamestartlabel.Name = "gamestartlabel";
+            this.gamestartlabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.gamestartlabel.Size = new System.Drawing.Size(35, 19);
+            this.gamestartlabel.TabIndex = 5;
+            this.gamestartlabel.Text = "已开始";
+            // 
             // gameTable
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
+            this.Controls.Add(this.gamestartlabel);
             this.Controls.Add(this.seatFour);
             this.Controls.Add(this.seatThree);
             this.Controls.Add(this.seatTwo);
@@ -115,5 +127,6 @@
         private System.Windows.Forms.Button seatTwo;
         private System.Windows.Forms.Button seatThree;
         private System.Windows.Forms.Button seatFour;
+        private System.Windows.Forms.Label gamestartlabel;
     }
 }

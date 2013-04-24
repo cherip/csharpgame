@@ -149,6 +149,11 @@ namespace CSharpGame
             myLogic.hintclicked();
         }
 
+        public void SameBtn(object sender, EventArgs e)
+        {
+            myLogic.showSameList();
+        }
+
         //
         // 网络通信的功能
         //
@@ -177,7 +182,7 @@ namespace CSharpGame
                     // 登录失败 直接返回
                     if (ret != true)
                     {
-                        MessageBox.Show("没有这个用户");
+                        MessageBox.Show("登录失败！");
                         return false;
                     }
 
@@ -350,7 +355,8 @@ namespace CSharpGame
                         bool judged = (bool)sysMsg.sysContent;
                         if (!judged)
                         {
-                            MessageBox.Show("没有这个用户");
+                            MessageBox.Show("登录失败！");
+                            myClientSoc.CloseConn();
                         }
                         if (judged)
                         {
@@ -370,6 +376,11 @@ namespace CSharpGame
                     {
                         //某玩家加入
                         string userName = (string)sysMsg.sysContent;
+                        if (!userName.Equals(myLogic.myClientName))
+                        {
+                            hall.AddOnePlayers(userName);
+                        }
+                       
                        // Logic lg = new Logic(2);
                       //  lg.myClientName = userName;
                        // otherPlayersLogic.Add(new Logic(2));
@@ -379,6 +390,7 @@ namespace CSharpGame
                     {
                         //在线玩家列表
                         List<string> userList = (List<string>)sysMsg.sysContent;
+                        hall.AddPlayers(userList);
                     }
                     break;
                 case MsgSysType.Exit:
@@ -546,7 +558,7 @@ namespace CSharpGame
             {
                 MsgSys sysMsg = new MsgSys();
                 sysMsg.sysType = MsgSysType.Ready;
-                sysMsg.sysContent = tableIdx;
+                sysMsg.sysContent = total;
                 Message conn = new Message(sysMsg);
 
                 userSend(conn);

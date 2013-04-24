@@ -37,6 +37,7 @@ namespace CSharpGame
         public CSharpGame()
         {
             InitializeComponent();
+            this.ControlBox = false;
             myInitial();
         }
 
@@ -47,6 +48,7 @@ namespace CSharpGame
 
             // 将闪烁的btn的点击事件和logic中的逻辑绑定
             this.hintbtn.Click += new System.EventHandler(logic.HintNext);
+            this.sameBtn.Click += new System.EventHandler(logic.SameBtn);
         }
 
         public delegate bool CreateArea(object panel);
@@ -217,17 +219,28 @@ namespace CSharpGame
         private void CSharpGame_FormClosed(object sender, FormClosedEventArgs e)
         {
             // 用户退出相当于 用户从模拟重新点击了一次seat
-            mainLogic.QuitGameArea();
+           
+            
         }
 
         public void ControlAdjustNO()
         {
-            this.ControlBox = false;
+            exitBtn.Enabled = false;
         }
 
         public void ControlAdjustYes()
         {
-            this.ControlBox = true;
+            exitBtn.Enabled = true;
+        }
+
+        private void exitBtn_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("您确定要退出吗？", "游戏提示消息！", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
+            {
+                this.Hide();
+                mainLogic.QuitGameArea();
+            }
+           
         }
     }
 }

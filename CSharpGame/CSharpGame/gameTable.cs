@@ -23,6 +23,7 @@ namespace CSharpGame
         public gameTable()
         {
             InitializeComponent();
+            this.gamestartlabel.Visible = false;
         }
 
         public gameTable(int idx)
@@ -93,6 +94,7 @@ namespace CSharpGame
                 foreach (Button c in seatList)
                 {
                     c.Enabled = false;
+                    gamestartlabel.Visible = true;
                 }
                 Isgaming = true;
             }
@@ -109,7 +111,10 @@ namespace CSharpGame
                 foreach (Button c in seatList)
                 {
                     if (c.Text == "")
+                    {
                         c.Enabled = true;
+                        gamestartlabel.Visible = false;
+                    }
                 }
                 Isgaming = false;
             }

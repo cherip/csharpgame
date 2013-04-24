@@ -27,6 +27,7 @@ namespace MyGameServer
         NetworkStream ns;
         private List<int[]> gameResetStatus;
         private List<TableInfo> tables;
+        private static int total = 1;
         
         //因此要建立一个委托
         public Server()
@@ -153,6 +154,7 @@ namespace MyGameServer
         {
             MsgSys sysMsg = (MsgSys)_sysMsg.msgContent;
             string curr_user = _sysMsg.userSender;
+            
             switch (sysMsg.sysType)
             {
                 case MsgSysType.Login:
@@ -161,11 +163,21 @@ namespace MyGameServer
                         s.sysType = MsgSysType.Judge;
                         string[] user_pwd = (string[])sysMsg.sysContent; 
 
+                        
                         if (user_pwd == null || user_pwd.Length != 2 ||
                             JudgeUserLogin(user_pwd[0], user_pwd[1]) == false)
                         {
                             s.sysContent = false; 
                             GameClient newGC = new GameClient(user_pwd[0], null, clientservice, client);
+                            SendToClient(newGC, new CSharpGame.Message(s));
+                        }
+                        else if (findGameClient(user_pwd[0]) != -1)//重名登录
+                                              
+                        {
+                            
+                            s.sysContent = false;
+                            GameClient newGC = new GameClient(user_pwd[0], null, clientservice, client);
+                           
                             SendToClient(newGC, new CSharpGame.Message(s));
                         }
                         else
@@ -179,6 +191,20 @@ namespace MyGameServer
                     break;
                 case MsgSysType.Online:
                     {
+
+                        GameClient newGC = new GameClient((string)sysMsg.sysContent, null, clientservice, client);
+                        for (int i = 0; i < tables.Count; i++)
+                        {
+                            if (tables[i].tabelEable)
+                            {
+                                MsgSys sysGameOn = new MsgSys();
+                                sysGameOn.sysType = MsgSysType.GameOn;
+                                sysGameOn.sysContent = i;
+                                SendToClient(newGC, new CSharpGame.Message(sysGameOn));
+                            }
+                        }
+
+                        
                         if (clients.Count != 0)
                         {
                             // 写个 广播函数 
@@ -187,11 +213,20 @@ namespace MyGameServer
                             sysBroadcast.sysType = MsgSysType.Join;
                             sysBroadcast.sysContent = sysMsg.sysContent;
                             BroadcastClient(new CSharpGame.Message(sysBroadcast));
+                           
+                            Thread.Sleep(100);
+                            MsgSys sendback = new MsgSys();
+                            sendback.sysType = MsgSysType.List;
+                            List<string> userList = GetUserNameList();
+                            sendback.sysContent = userList;
+                            SendToClient(newGC, new CSharpGame.Message(sendback));
                         }
 
-                        //GameClient newGC = new GameClient((string)sysMsg.sysContent, null, clientservice, client);
+                        
+
 
                         sendCurrentTables((string)sysMsg.sysContent);
+                      
                     }
                     break;
                 case MsgSysType.Offline:
@@ -213,7 +248,7 @@ namespace MyGameServer
                         //客户端还要传桌子号过来
                         int find = findGameClient(curr_user);
                         GameClient gl = (GameClient)clients[find];
-                        
+                        total = (int)sysMsg.sysContent;
                         //int tableIndex = (int)sysMsg.sysContent;
                         //gl.TableIdx = tableIndex;
                         int tableIndex = gl.TableIdx;
@@ -226,10 +261,10 @@ namespace MyGameServer
                             sysGameOn.sysContent = tableIndex;
                             BroadcastClient(new CSharpGame.Message(sysGameOn));
 
-                            // 这里没有写 牌数的问题
-                            // 所以默认给table设个牌数2
-                            // 要完成牌数的功能 只要在InitGame前 设置tableInfo中的totalRound
-                            tables[tableIndex].totalRound = 1;
+                            
+                            // 完成牌数的功能 在InitGame前 设置tableInfo中的totalRound
+                            tables[tableIndex].totalRound = total;
+                            ;
 
                             //发送开始
                             InitTableGame(tableIndex);

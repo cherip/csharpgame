@@ -23,7 +23,7 @@ namespace MyGameServer
         public TableInfo()
         {
             seats = new bool[4]{true,true,true,true};//初始化都能坐
-            tabelEable = true;
+            tabelEable = false;
             usercount = 0;
             readycount = 0;
 

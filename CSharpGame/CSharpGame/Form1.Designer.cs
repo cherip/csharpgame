@@ -39,6 +39,8 @@
             this.timeElapseBar = new System.Windows.Forms.ProgressBar();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.exitBtn = new System.Windows.Forms.Button();
+            this.sameBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // picList
@@ -77,7 +79,7 @@
             this.radioButton1.Location = new System.Drawing.Point(745, 135);
             this.radioButton1.Name = "radioButton1";
             this.radioButton1.Size = new System.Drawing.Size(29, 16);
-            this.radioButton1.TabIndex = 3;
+            this.radioButton1.TabIndex = 1;
             this.radioButton1.TabStop = true;
             this.radioButton1.Text = "1";
             this.radioButton1.UseVisualStyleBackColor = true;
@@ -89,9 +91,9 @@
             this.radioButton2.Location = new System.Drawing.Point(780, 135);
             this.radioButton2.Name = "radioButton2";
             this.radioButton2.Size = new System.Drawing.Size(29, 16);
-            this.radioButton2.TabIndex = 3;
+            this.radioButton2.TabIndex = 2;
             this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "3";
+            this.radioButton2.Text = "2";
             this.radioButton2.UseVisualStyleBackColor = true;
             this.radioButton2.CheckedChanged += new System.EventHandler(this.radioClicked);
             // 
@@ -103,7 +105,7 @@
             this.radioButton3.Size = new System.Drawing.Size(29, 16);
             this.radioButton3.TabIndex = 3;
             this.radioButton3.TabStop = true;
-            this.radioButton3.Text = "5";
+            this.radioButton3.Text = "3";
             this.radioButton3.UseVisualStyleBackColor = true;
             this.radioButton3.CheckedChanged += new System.EventHandler(this.radioClicked);
             // 
@@ -136,7 +138,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(701, 195);
+            this.button1.Location = new System.Drawing.Point(669, 204);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 14;
@@ -144,11 +146,32 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button3_Click);
             // 
+            // exitBtn
+            // 
+            this.exitBtn.Location = new System.Drawing.Point(774, 204);
+            this.exitBtn.Name = "exitBtn";
+            this.exitBtn.Size = new System.Drawing.Size(75, 23);
+            this.exitBtn.TabIndex = 15;
+            this.exitBtn.Text = "退出房间";
+            this.exitBtn.UseVisualStyleBackColor = true;
+            this.exitBtn.Click += new System.EventHandler(this.exitBtn_Click);
+            // 
+            // sameBtn
+            // 
+            this.sameBtn.Location = new System.Drawing.Point(669, 289);
+            this.sameBtn.Name = "sameBtn";
+            this.sameBtn.Size = new System.Drawing.Size(75, 23);
+            this.sameBtn.TabIndex = 16;
+            this.sameBtn.Text = "显示相同";
+            this.sameBtn.UseVisualStyleBackColor = true;
+            // 
             // CSharpGame
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(862, 817);
+            this.Controls.Add(this.sameBtn);
+            this.Controls.Add(this.exitBtn);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.timeElapseBar);
             this.Controls.Add(this.button2);
@@ -177,6 +200,8 @@
         private System.Windows.Forms.ProgressBar timeElapseBar;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button exitBtn;
+        private System.Windows.Forms.Button sameBtn;
     }
 }
 

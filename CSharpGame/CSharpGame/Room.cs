@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace CSharpGame
 {
@@ -72,6 +73,19 @@ namespace CSharpGame
                 }
             }
         }
+        public delegate void addOnePlayers(string playersName);
+        public void AddOnePlayers(string playersName)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new addOnePlayers(AddOnePlayers),
+                            new object[] { playersName });
+            }
+            else
+            {
+                 listPlayers.Items.Add(playersName);       
+            }
+        }
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
@@ -84,8 +98,8 @@ namespace CSharpGame
                                            this.txtPwd.Text))
             {
                 this.panelLogin.Hide();
-                this.Text = "Room | " + this.txtUserName.Text;
-
+                this.Text = "游戏大厅 | " + this.txtUserName.Text;
+                
                 this.panelTables.Show();
                 this.panelPlayers.Show();
             }
