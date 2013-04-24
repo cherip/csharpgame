@@ -38,9 +38,10 @@
             this.hintbtn = new System.Windows.Forms.Button();
             this.timeElapseBar = new System.Windows.Forms.ProgressBar();
             this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.exitBtn = new System.Windows.Forms.Button();
             this.sameBtn = new System.Windows.Forms.Button();
+            this.panelMyArea = new System.Windows.Forms.Panel();
+            this.panelOtherArea = new System.Windows.Forms.Panel();
             this.SuspendLayout();
             // 
             // picList
@@ -67,7 +68,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(674, 137);
+            this.label1.Location = new System.Drawing.Point(656, 74);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(65, 12);
             this.label1.TabIndex = 2;
@@ -76,7 +77,7 @@
             // radioButton1
             // 
             this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(745, 135);
+            this.radioButton1.Location = new System.Drawing.Point(727, 72);
             this.radioButton1.Name = "radioButton1";
             this.radioButton1.Size = new System.Drawing.Size(29, 16);
             this.radioButton1.TabIndex = 1;
@@ -88,7 +89,7 @@
             // radioButton2
             // 
             this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(780, 135);
+            this.radioButton2.Location = new System.Drawing.Point(762, 72);
             this.radioButton2.Name = "radioButton2";
             this.radioButton2.Size = new System.Drawing.Size(29, 16);
             this.radioButton2.TabIndex = 2;
@@ -100,7 +101,7 @@
             // radioButton3
             // 
             this.radioButton3.AutoSize = true;
-            this.radioButton3.Location = new System.Drawing.Point(815, 135);
+            this.radioButton3.Location = new System.Drawing.Point(797, 72);
             this.radioButton3.Name = "radioButton3";
             this.radioButton3.Size = new System.Drawing.Size(29, 16);
             this.radioButton3.TabIndex = 3;
@@ -111,7 +112,7 @@
             // 
             // hintbtn
             // 
-            this.hintbtn.Location = new System.Drawing.Point(774, 87);
+            this.hintbtn.Location = new System.Drawing.Point(756, 12);
             this.hintbtn.Name = "hintbtn";
             this.hintbtn.Size = new System.Drawing.Size(75, 23);
             this.hintbtn.TabIndex = 4;
@@ -121,14 +122,14 @@
             // 
             // timeElapseBar
             // 
-            this.timeElapseBar.Location = new System.Drawing.Point(7, 765);
+            this.timeElapseBar.Location = new System.Drawing.Point(7, 628);
             this.timeElapseBar.Name = "timeElapseBar";
             this.timeElapseBar.Size = new System.Drawing.Size(668, 14);
             this.timeElapseBar.TabIndex = 5;
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(669, 87);
+            this.button2.Location = new System.Drawing.Point(646, 12);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 13;
@@ -136,19 +137,9 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(669, 204);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 14;
-            this.button1.Text = "测试按钮";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button3_Click);
-            // 
             // exitBtn
             // 
-            this.exitBtn.Location = new System.Drawing.Point(774, 204);
+            this.exitBtn.Location = new System.Drawing.Point(757, 41);
             this.exitBtn.Name = "exitBtn";
             this.exitBtn.Size = new System.Drawing.Size(75, 23);
             this.exitBtn.TabIndex = 15;
@@ -158,21 +149,36 @@
             // 
             // sameBtn
             // 
-            this.sameBtn.Location = new System.Drawing.Point(669, 289);
+            this.sameBtn.Location = new System.Drawing.Point(646, 41);
             this.sameBtn.Name = "sameBtn";
             this.sameBtn.Size = new System.Drawing.Size(75, 23);
             this.sameBtn.TabIndex = 16;
             this.sameBtn.Text = "显示相同";
             this.sameBtn.UseVisualStyleBackColor = true;
             // 
+            // panelMyArea
+            // 
+            this.panelMyArea.Location = new System.Drawing.Point(7, 41);
+            this.panelMyArea.Name = "panelMyArea";
+            this.panelMyArea.Size = new System.Drawing.Size(605, 581);
+            this.panelMyArea.TabIndex = 17;
+            // 
+            // panelOtherArea
+            // 
+            this.panelOtherArea.Location = new System.Drawing.Point(618, 94);
+            this.panelOtherArea.Name = "panelOtherArea";
+            this.panelOtherArea.Size = new System.Drawing.Size(239, 528);
+            this.panelOtherArea.TabIndex = 18;
+            // 
             // CSharpGame
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(862, 817);
+            this.ClientSize = new System.Drawing.Size(862, 642);
+            this.Controls.Add(this.panelOtherArea);
+            this.Controls.Add(this.panelMyArea);
             this.Controls.Add(this.sameBtn);
             this.Controls.Add(this.exitBtn);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.timeElapseBar);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.hintbtn);
@@ -199,9 +205,10 @@
         private System.Windows.Forms.Button hintbtn;
         private System.Windows.Forms.ProgressBar timeElapseBar;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button exitBtn;
         private System.Windows.Forms.Button sameBtn;
+        private System.Windows.Forms.Panel panelMyArea;
+        private System.Windows.Forms.Panel panelOtherArea;
     }
 }
 

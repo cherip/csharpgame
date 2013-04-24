@@ -49,6 +49,9 @@ namespace CSharpGame
             // 将闪烁的btn的点击事件和logic中的逻辑绑定
             this.hintbtn.Click += new System.EventHandler(logic.HintNext);
             this.sameBtn.Click += new System.EventHandler(logic.SameBtn);
+
+            this.hintbtn.Visible = false;
+            this.sameBtn.Visible = false;
         }
 
         public delegate bool CreateArea(object panel);
@@ -61,9 +64,10 @@ namespace CSharpGame
             else 
             {
                 GameArea ga = (GameArea)panel;
-                ga.Draw(new Point(2, 2), new Size(666, 600));
+                ga.Draw(new Point(0, 0), this.panelMyArea.Size);
                 ga.picList = this.picList;
-                this.Controls.Add(ga);
+                //this.Controls.Add(ga);
+                this.panelMyArea.Controls.Add(ga);
             }
             return true;
         }
@@ -78,14 +82,16 @@ namespace CSharpGame
             {
                 // do something
                 List<GameArea> ga_list = (List<GameArea>)panel;
-                int start_x = 2;
-                int start_y = 612;
+                int start_x = 0;
+                int start_y = 0;
+                int w = this.panelOtherArea.Size.Width;
+                int h = this.panelOtherArea.Size.Height / 3;
                 foreach (GameArea ga in ga_list)
                 {
-                    ga.Draw(new Point(start_x, start_y), new Size(222, 200));
+                    ga.Draw(new Point(start_x, start_y), new Size(w, h));
                     ga.picList = this.picList;
-                    start_x += 222;
-                    this.Controls.Add(ga);
+                    start_y += h;
+                    this.panelOtherArea.Controls.Add(ga);
                 }
             }
             return true;
@@ -203,6 +209,9 @@ namespace CSharpGame
         private void button2_Click(object sender, EventArgs e)
         {
             mainLogic.UserReady(total);
+            ((Button)sender).Visible = false;
+            this.hintbtn.Visible = true;
+            this.sameBtn.Visible = true;
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -237,6 +246,10 @@ namespace CSharpGame
         {
             if (MessageBox.Show("您确定要退出吗？", "游戏提示消息！", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
             {
+
+                this.hintbtn.Visible = false;
+                this.sameBtn.Visible = false;
+                this.button2.Visible = true;
                 this.Hide();
                 mainLogic.QuitGameArea();
             }
