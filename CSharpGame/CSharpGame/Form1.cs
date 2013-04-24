@@ -228,8 +228,8 @@ namespace CSharpGame
         private void CSharpGame_FormClosed(object sender, FormClosedEventArgs e)
         {
             // 用户退出相当于 用户从模拟重新点击了一次seat
-           
-            
+
+            mainLogic.QuitGameArea();
         }
 
         public void ControlAdjustNO()

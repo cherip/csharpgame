@@ -14,11 +14,14 @@ namespace CSharpGame
     {
         public List<gameTable> tables;
         MainLogic mainLogic;
+        public delegate void btnClick(object sender, EventArgs e);
+        public event btnClick btnClickEvent;
 
         public Room()
         {
             InitializeComponent();
             InitControl();
+            
         }
 
         public Room(MainLogic logic)
@@ -33,6 +36,7 @@ namespace CSharpGame
 
         public void InitControl() 
         {
+            //this.ControlBox = false;
             tables = new List<gameTable>();
             const int MaxTableNum = 9;
             const int TableNumInRow = 3;
@@ -73,6 +77,22 @@ namespace CSharpGame
                 }
             }
         }
+        public delegate void removePlayer(string playersName);
+        public void RemovePlayers(string playersName)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new removePlayer(RemovePlayers),
+                           new object[] { playersName });
+            }
+            else
+            {
+                
+                    listPlayers.Items.Remove(playersName);
+                
+            }
+        }
+
         public delegate void addOnePlayers(string playersName);
         public void AddOnePlayers(string playersName)
         {
@@ -90,9 +110,10 @@ namespace CSharpGame
         private void btnLogin_Click(object sender, EventArgs e)
         {
 
-            // 这里的逻辑是： 点击登录，玩家直接登录，
+            // 点击登录，玩家直接登录，
             // 如果要做用户名和密码的话，则传递user和pwd给connect函数
-            // 通过返回结果 判断是否进去下一个界面还是让用户重新登录
+            // 通过返回结果 判断是进去下一个界面还是让用户重新登录
+            this.ControlBox = false;
 
             if (this.mainLogic.PlayerLogin(this.txtUserName.Text,
                                            this.txtPwd.Text))
@@ -142,6 +163,24 @@ namespace CSharpGame
             }
             tables[tableIdx].GameOver();
         }
+
+        private void hallexit_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("真的要退出游戏吗？", "提示消息！", MessageBoxButtons.OK, MessageBoxIcon.Question) == DialogResult.OK)
+            {
+                btnClickEvent(sender, e);
+            }
+        }
+
+        private void Room_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            
+                btnClickEvent(sender, e);
+            
+        }
+           
+
+        
 
 
     }

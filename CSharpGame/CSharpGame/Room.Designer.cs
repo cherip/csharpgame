@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.panelLogin = new System.Windows.Forms.Panel();
-            this.btnRegister = new System.Windows.Forms.Button();
             this.btnLogin = new System.Windows.Forms.Button();
             this.txtPwd = new System.Windows.Forms.TextBox();
             this.lblPwd = new System.Windows.Forms.Label();
@@ -37,37 +36,29 @@
             this.txtUserName = new System.Windows.Forms.TextBox();
             this.panelTables = new System.Windows.Forms.Panel();
             this.panelPlayers = new System.Windows.Forms.Panel();
+            this.hallexit = new System.Windows.Forms.Button();
             this.listPlayers = new System.Windows.Forms.ListBox();
             this.lblPlayersList = new System.Windows.Forms.Label();
             this.panelLogin.SuspendLayout();
+            this.panelTables.SuspendLayout();
             this.panelPlayers.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelLogin
             // 
-            this.panelLogin.Controls.Add(this.btnRegister);
             this.panelLogin.Controls.Add(this.btnLogin);
             this.panelLogin.Controls.Add(this.txtPwd);
             this.panelLogin.Controls.Add(this.lblPwd);
             this.panelLogin.Controls.Add(this.lblUserName);
             this.panelLogin.Controls.Add(this.txtUserName);
-            this.panelLogin.Location = new System.Drawing.Point(424, 12);
+            this.panelLogin.Location = new System.Drawing.Point(224, 133);
             this.panelLogin.Name = "panelLogin";
             this.panelLogin.Size = new System.Drawing.Size(192, 115);
             this.panelLogin.TabIndex = 0;
             // 
-            // btnRegister
-            // 
-            this.btnRegister.Location = new System.Drawing.Point(109, 82);
-            this.btnRegister.Name = "btnRegister";
-            this.btnRegister.Size = new System.Drawing.Size(75, 23);
-            this.btnRegister.TabIndex = 5;
-            this.btnRegister.Text = "注册";
-            this.btnRegister.UseVisualStyleBackColor = true;
-            // 
             // btnLogin
             // 
-            this.btnLogin.Location = new System.Drawing.Point(9, 82);
+            this.btnLogin.Location = new System.Drawing.Point(65, 82);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(75, 23);
             this.btnLogin.TabIndex = 4;
@@ -110,6 +101,7 @@
             // 
             // panelTables
             // 
+            this.panelTables.Controls.Add(this.panelLogin);
             this.panelTables.Location = new System.Drawing.Point(2, 12);
             this.panelTables.Name = "panelTables";
             this.panelTables.Size = new System.Drawing.Size(419, 406);
@@ -117,12 +109,23 @@
             // 
             // panelPlayers
             // 
+            this.panelPlayers.Controls.Add(this.hallexit);
             this.panelPlayers.Controls.Add(this.listPlayers);
             this.panelPlayers.Controls.Add(this.lblPlayersList);
             this.panelPlayers.Location = new System.Drawing.Point(424, 12);
             this.panelPlayers.Name = "panelPlayers";
             this.panelPlayers.Size = new System.Drawing.Size(191, 405);
             this.panelPlayers.TabIndex = 2;
+            // 
+            // hallexit
+            // 
+            this.hallexit.Location = new System.Drawing.Point(54, 340);
+            this.hallexit.Name = "hallexit";
+            this.hallexit.Size = new System.Drawing.Size(75, 23);
+            this.hallexit.TabIndex = 2;
+            this.hallexit.Text = "退出";
+            this.hallexit.UseVisualStyleBackColor = true;
+            this.hallexit.Click += new System.EventHandler(this.hallexit_Click);
             // 
             // listPlayers
             // 
@@ -131,7 +134,7 @@
             this.listPlayers.ItemHeight = 12;
             this.listPlayers.Location = new System.Drawing.Point(9, 32);
             this.listPlayers.Name = "listPlayers";
-            this.listPlayers.Size = new System.Drawing.Size(175, 352);
+            this.listPlayers.Size = new System.Drawing.Size(175, 268);
             this.listPlayers.TabIndex = 1;
             // 
             // lblPlayersList
@@ -150,11 +153,12 @@
             this.ClientSize = new System.Drawing.Size(622, 430);
             this.Controls.Add(this.panelPlayers);
             this.Controls.Add(this.panelTables);
-            this.Controls.Add(this.panelLogin);
             this.Name = "Room";
-            this.Text = "游戏大厅";
+            this.Text = "联机版找对对";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Room_FormClosing);
             this.panelLogin.ResumeLayout(false);
             this.panelLogin.PerformLayout();
+            this.panelTables.ResumeLayout(false);
             this.panelPlayers.ResumeLayout(false);
             this.panelPlayers.PerformLayout();
             this.ResumeLayout(false);
@@ -168,12 +172,12 @@
         private System.Windows.Forms.Label lblUserName;
         private System.Windows.Forms.TextBox txtPwd;
         private System.Windows.Forms.Label lblPwd;
-        private System.Windows.Forms.Button btnRegister;
         private System.Windows.Forms.Button btnLogin;
         private System.Windows.Forms.Panel panelTables;
         private System.Windows.Forms.Panel panelPlayers;
         private System.Windows.Forms.ListBox listPlayers;
         private System.Windows.Forms.Label lblPlayersList;
+        private System.Windows.Forms.Button hallexit;
 
     }
 }

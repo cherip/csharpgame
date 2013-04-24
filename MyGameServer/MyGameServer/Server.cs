@@ -107,9 +107,23 @@ namespace MyGameServer
                 catch (System.Exception ex)
                 {
                     string duanxian = (string)userandsocket[client];
-                    userandsocket.Remove(client);
+                    if (duanxian != null)
+                    {
+                        userandsocket.Remove(client);
 
-                    client.Close();
+                        MsgSys sysBroadcast = new MsgSys();
+                        sysBroadcast.sysType = MsgSysType.Exit;
+                        sysBroadcast.sysContent = duanxian;
+                        BroadcastClient(new CSharpGame.Message(sysBroadcast));
+                        int remove = findGameClient((string)sysBroadcast.sysContent);
+                        if (remove != -1)
+                        {
+                            clients.RemoveAt(remove);
+                        }
+
+                        client.Close();
+                    }
+                    
                     
                 }
             }
@@ -191,7 +205,7 @@ namespace MyGameServer
                             s.sysContent = true;
                             GameClient newGC = new GameClient(user_pwd[0], null, clientservice, client);
                             clients.Add(newGC);
-                            userandsocket[client] = curr_user;
+                            userandsocket[client] = user_pwd[0];
                             SendToClient(newGC, new CSharpGame.Message(s));
                         }
                     }

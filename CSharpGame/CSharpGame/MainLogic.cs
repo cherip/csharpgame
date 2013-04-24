@@ -49,6 +49,8 @@ namespace CSharpGame
         public CSharpGame gameRoom;
         public bool GameRoomIsWorking;
 
+
+
         public MainLogic()
         {
             myClientSoc = new MyClientSoc();
@@ -59,10 +61,12 @@ namespace CSharpGame
             gameRoom = CreateGameForm();
             GameRoomIsWorking = false;
 
+            
             myStatus = PlayerStatus.OffLine;
             msgList = new List<Message>();
             thisLock = new Object();
 
+            hall.btnClickEvent += ExitHall;
             this.tableIdx = -1;
             this.seatIdx = -1;
         }
@@ -144,6 +148,15 @@ namespace CSharpGame
         //
 
         // 提示功能
+        public void ExitHall(object sender, EventArgs e)
+        {
+            if (myLogic != null && myClientSoc != null && myLogic.myClientName != null)
+            {
+                CloseConn();
+                Environment.Exit(0);
+            }
+        }
+
         public void HintNext(object sender, EventArgs e)
         {
             myLogic.hintclicked();
@@ -249,7 +262,7 @@ namespace CSharpGame
             return false;
         }
 
-        public void CloseConn(string msg)
+        public void CloseConn()
         {
             if (keepalive)
             {
@@ -397,6 +410,7 @@ namespace CSharpGame
                     {
                         //某玩家退出
                         string userName = (string)sysMsg.sysContent;
+                        hall.RemovePlayers(userName);
                     }
                     break;
                 case MsgSysType.CanStart:
