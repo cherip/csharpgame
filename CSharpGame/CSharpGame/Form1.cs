@@ -240,6 +240,9 @@ namespace CSharpGame
         public void ControlAdjustYes()
         {
             exitBtn.Enabled = true;
+            this.button2.Visible = true;
+            hintbtn.Visible = false;
+            sameBtn.Visible = false;
         }
 
         private void exitBtn_Click(object sender, EventArgs e)

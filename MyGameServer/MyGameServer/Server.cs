@@ -106,6 +106,7 @@ namespace MyGameServer
                 }
                 catch (System.Exception ex)
                 {
+                    //用户意外掉线的处理，从hashtable中找到用户，然后在clients中干掉用户
                     string duanxian = (string)userandsocket[client];
                     if (duanxian != null)
                     {
@@ -152,7 +153,7 @@ namespace MyGameServer
 
                 // 一些房间的游戏信息清空
                 tables[tabIdx].readycount = 0;
-                tables[tabIdx].usercount = 0;
+                //tables[tabIdx].usercount = 0;
                 tables[tabIdx].tabelEable = false;
             }
             else if (ret == 1) 

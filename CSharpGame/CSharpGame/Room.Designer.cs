@@ -40,7 +40,6 @@
             this.listPlayers = new System.Windows.Forms.ListBox();
             this.lblPlayersList = new System.Windows.Forms.Label();
             this.panelLogin.SuspendLayout();
-            this.panelTables.SuspendLayout();
             this.panelPlayers.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -51,7 +50,7 @@
             this.panelLogin.Controls.Add(this.lblPwd);
             this.panelLogin.Controls.Add(this.lblUserName);
             this.panelLogin.Controls.Add(this.txtUserName);
-            this.panelLogin.Location = new System.Drawing.Point(224, 133);
+            this.panelLogin.Location = new System.Drawing.Point(423, 12);
             this.panelLogin.Name = "panelLogin";
             this.panelLogin.Size = new System.Drawing.Size(192, 115);
             this.panelLogin.TabIndex = 0;
@@ -101,7 +100,6 @@
             // 
             // panelTables
             // 
-            this.panelTables.Controls.Add(this.panelLogin);
             this.panelTables.Location = new System.Drawing.Point(2, 12);
             this.panelTables.Name = "panelTables";
             this.panelTables.Size = new System.Drawing.Size(419, 406);
@@ -151,6 +149,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(622, 430);
+            this.Controls.Add(this.panelLogin);
             this.Controls.Add(this.panelPlayers);
             this.Controls.Add(this.panelTables);
             this.Name = "Room";
@@ -158,7 +157,6 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Room_FormClosing);
             this.panelLogin.ResumeLayout(false);
             this.panelLogin.PerformLayout();
-            this.panelTables.ResumeLayout(false);
             this.panelPlayers.ResumeLayout(false);
             this.panelPlayers.PerformLayout();
             this.ResumeLayout(false);
