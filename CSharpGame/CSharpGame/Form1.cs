@@ -13,14 +13,12 @@ namespace CSharpGame
 {
     public partial class CSharpGame : Form
     {
+        //进入游戏界面
         public const int MAX_PIC = 64;
         static System.Timers.Timer timeElapsed;//计时器
         int curTime = 0;//当前游戏剩余时间
-        int total = 1;//默认是1副图
-        //Button[] butArry = new Button[MAX_PIC];
-        //string username;
-        //Hashtable btnVal;
-        //private static Thread pthread;
+        int total = 1;//游戏副数，默认是1副图
+        
 
         //public delegate void PairBingoHandle(object sender, EventArgs e);//消除两张图代理
         //public event PairBingoHandle pairBingoEvent;//消除事件
@@ -30,10 +28,9 @@ namespace CSharpGame
 
         //Logic myLogic;
         //GameArea gameArea;
-        MainLogic mainLogic;
+        MainLogic mainLogic;// 主逻辑
 
-        //List<GameArea> otherPlayerDisplay;
-
+       
         public CSharpGame()
         {
             InitializeComponent();
@@ -55,7 +52,7 @@ namespace CSharpGame
         }
 
         public delegate bool CreateArea(object panel);
-        public bool CreateMainArea(object panel)
+        public bool CreateMainArea(object panel)//创建我的游戏区域
         {
             if (this.InvokeRequired)
             {
@@ -72,7 +69,7 @@ namespace CSharpGame
             return true;
         }
 
-        public bool CreateOppeArea(object panel)
+        public bool CreateOppeArea(object panel)//创建对手的游戏界面
         {
             if (this.InvokeRequired)
             {
@@ -206,7 +203,7 @@ namespace CSharpGame
             //myLogic.inviteUser(textBox1.Text);
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void button2_Click(object sender, EventArgs e)//用户点击准备，交予主逻辑处理
         {
             mainLogic.UserReady(total);
             ((Button)sender).Visible = false;
@@ -229,12 +226,12 @@ namespace CSharpGame
         {
             // 用户退出相当于 用户从模拟重新点击了一次seat
 
-            mainLogic.QuitGameArea();
+            mainLogic.QuitGameArea();//用户退出游戏画面
         }
 
         public void ControlAdjustNO()
         {
-            exitBtn.Enabled = false;
+            exitBtn.Enabled = false;    //按钮处理
         }
 
         public void ControlAdjustYes()
@@ -245,7 +242,7 @@ namespace CSharpGame
             sameBtn.Visible = false;
         }
 
-        private void exitBtn_Click(object sender, EventArgs e)
+        private void exitBtn_Click(object sender, EventArgs e)//退出按钮处理
         {
             if (MessageBox.Show("您确定要退出吗？", "游戏提示消息！", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
             {

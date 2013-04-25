@@ -115,6 +115,8 @@ namespace CSharpGame
                     if (c.Text == "")
                     {
                         c.Enabled = true;
+                        c.BackColor = System.Drawing.Color.Tan;
+                        c.FlatStyle = FlatStyle.Standard;
                         gamestartlabel.Visible = false;
                     }
                 }

@@ -269,11 +269,11 @@
             this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.Font = new System.Drawing.Font("宋体", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label3.ForeColor = System.Drawing.Color.Goldenrod;
-            this.label3.Location = new System.Drawing.Point(39, 12);
+            this.label3.Location = new System.Drawing.Point(12, 12);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(279, 33);
+            this.label3.Size = new System.Drawing.Size(312, 33);
             this.label3.TabIndex = 23;
-            this.label3.Text = "欢迎来到找对对！";
+            this.label3.Text = "欢迎来到消灭对对！";
             // 
             // label4
             // 
@@ -304,7 +304,7 @@
             this.DoubleBuffered = true;
             this.ForeColor = System.Drawing.Color.Yellow;
             this.Name = "CSharpGame";
-            this.Text = "找对对";
+            this.Text = "消灭对对";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.CSharpGame_FormClosed);
             this.Load += new System.EventHandler(this.CSharpGame_Load);
             this.panel1.ResumeLayout(false);

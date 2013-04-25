@@ -113,7 +113,7 @@ namespace CSharpGame
             // 点击登录，玩家直接登录，
             // 如果要做用户名和密码的话，则传递user和pwd给connect函数
             // 通过返回结果 判断是进去下一个界面还是让用户重新登录
-            this.ControlBox = false;
+           // this.ControlBox = false;
 
             if (this.mainLogic.PlayerLogin(this.txtUserName.Text,
                                            this.txtPwd.Text))

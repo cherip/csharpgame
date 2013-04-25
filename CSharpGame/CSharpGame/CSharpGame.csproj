@@ -56,7 +56,6 @@
     <Compile Include="GameArea.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="GameClient.cs" />
     <Compile Include="GameMessage.cs" />
     <Compile Include="gameTable.cs">
       <SubType>UserControl</SubType>

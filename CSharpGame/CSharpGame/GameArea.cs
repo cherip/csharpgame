@@ -23,6 +23,7 @@ namespace CSharpGame
             btnVal = new Hashtable();
         }
 
+        //在panel中绘制游戏button
         public void CreateBtn(Point local, Size areaSize)
         {
             int margin_x = (int)(areaSize.Width * 0.05 / 2);
@@ -47,7 +48,7 @@ namespace CSharpGame
 
                 buttonNew.Location = new System.Drawing.Point(local_x, local_y);
 
-                buttonNew.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button1.BackgroundImage")));
+                
                 buttonNew.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
 
                 buttonNew.Name = "button" + System.Convert.ToString(i);
@@ -65,7 +66,7 @@ namespace CSharpGame
         }
 
         public delegate void resetFunc();
-        public void Reset()
+        public void Reset()//显示button
         {
             if (this.InvokeRequired)
             {
@@ -84,7 +85,7 @@ namespace CSharpGame
             }
         }
 
-        public void UnGameStatus()
+        public void UnGameStatus()//设置 没开始游戏状态
         {
             if (this.InvokeRequired)
             {
@@ -100,7 +101,7 @@ namespace CSharpGame
         }
 
         public delegate void CleanBtnPairDele(int a, int b);
-        public virtual void CleanBtnPair(int a, int b)
+        public virtual void CleanBtnPair(int a, int b)//给LOGIC调用的方法，消除一对
         {
             if (this.InvokeRequired)
             {
@@ -166,7 +167,7 @@ namespace CSharpGame
         }
     }
 
-    class MyGameArea : GameArea
+    class MyGameArea : GameArea//我的游戏区域
     {
         public delegate void btnClick(int idx);
         public event btnClick btnClickEvent;
@@ -216,7 +217,7 @@ namespace CSharpGame
             }
         }
 
-        public override void HintBlick(int pos_a, int pos_b, int times)
+        public override void HintBlick(int pos_a, int pos_b, int times)//提示时闪烁
         {
             for (int i = 0; i < times; i++)
             {
@@ -230,7 +231,7 @@ namespace CSharpGame
             }
         }
 
-        public override void ShowSameList(List<int> l)
+        public override void ShowSameList(List<int> l)//找到相同图标后显示前景图片
         {
             base.ShowSameList(l);
             for (int i = 0; i < 64; i++ )
@@ -249,7 +250,7 @@ namespace CSharpGame
 
     }
 
-    class OtherGameArea : GameArea
+    class OtherGameArea : GameArea//对手的游戏区域
     {
         Label userName;
         Label gameStatus;
@@ -263,11 +264,12 @@ namespace CSharpGame
         public override void Draw(Point local, Size size)
         {
             base.Draw(local, size);
-
+            
             userName = createLable(new Point(10, 0), new Size(70, 10), "userxxx");
-            gameStatus = createLable(new Point(85, 0), new Size(80, 10), "64/64");
+            gameStatus = createLable(new Point(85, 0), new Size(80, 10), "");
 
             CreateBtn(new Point(0, 12), new Size(size.Width, size.Height - 12));
+
 
             this.Controls.Add(userName);
             this.Controls.Add(gameStatus);
@@ -276,10 +278,12 @@ namespace CSharpGame
         private Label createLable(Point p, Size s, string txt)
         {
             Label lbl = new Label();
+            lbl.Font = new Font("微软雅黑", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            
             lbl.Location = p;
             lbl.Size = s;
             lbl.Text = txt;
-
+            
             return lbl;
         }
 

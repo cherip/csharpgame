@@ -11,9 +11,8 @@ using System.Threading;
 
 namespace CSharpGame
 {
-    // 这里简单的用enum表示玩家的状态，
-    // 要更复杂的话应该用 一个专门的class来表示玩家的状态
-    // 应该放入到Logic内才对 ，这里简单搞搞了
+    // 用enum表示玩家的状态，
+       
     public enum PlayerStatus 
     {
         OnLine = 1,         // 已上线
@@ -33,7 +32,7 @@ namespace CSharpGame
         List<Message> msgList;
         private Object thisLock;
 
-        // 保持连接？
+        // 保持连接
         public bool keepalive = true;
 
         // 当前client的玩家的Logic
@@ -45,9 +44,9 @@ namespace CSharpGame
         // 其他玩家的Logic, 用于显示缩略图
         List<Logic> otherPlayersLogic;
 
-        public Room hall;
-        public CSharpGame gameRoom;
-        public bool GameRoomIsWorking;
+        public Room hall;//游戏大厅
+        public CSharpGame gameRoom;//游戏界面
+        public bool GameRoomIsWorking;//游戏大厅桌子是否已经开始玩
 
 
 
@@ -55,7 +54,7 @@ namespace CSharpGame
         {
             myClientSoc = new MyClientSoc();
             keepalive = false;
-
+            //初始化数据
             // 生成界面的form
             hall = new Room(this);
             gameRoom = CreateGameForm();
@@ -309,6 +308,8 @@ namespace CSharpGame
                     }
 
                     processMsg(msg);
+                    
+                    
                 }
                 else
                 {
@@ -325,22 +326,32 @@ namespace CSharpGame
         {
             // 这里客户端的接受服务器消息主要逻辑，
             // 为从服务器端发生的消息作出各种反应
-            switch (msg.msgType)
+            try
             {
-                case MsgType.Sys:
-                    {
-                        //MsgSys sysMsg = (MsgSys)msg.msgContent;
+                switch (msg.msgType)
+                {
+                    case MsgType.Sys:
+                        {
+                            //MsgSys sysMsg = (MsgSys)msg.msgContent;
 
-                        ProcessSysMsg(msg);
-                    }
-                    break;
-                case MsgType.Game:
-                    {
-                        MsgGame gamMsg = (MsgGame)msg.msgContent;
-                        ProcessGamMsg(gamMsg);
-                    }
-                    break;
+                            ProcessSysMsg(msg);
+                        }
+                        break;
+                    case MsgType.Game:
+                        {
+                            MsgGame gamMsg = (MsgGame)msg.msgContent;
+                            ProcessGamMsg(gamMsg);
+                        }
+                        break;
+                }
+                
             }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show("服务器没响应，休息一会吧~亲~");
+                Environment.Exit(0);
+            }
+            
             return true;
         }
 
@@ -362,7 +373,7 @@ namespace CSharpGame
             MsgSys sysMsg = (MsgSys)_sysMsg.msgContent;
             switch (sysMsg.sysType)
             {
-                case MsgSysType.Judge:
+                case MsgSysType.Judge://登录请求响应
                     {
 
                         bool judged = (bool)sysMsg.sysContent;
@@ -385,21 +396,21 @@ namespace CSharpGame
                         }
                     }
                     break;
-                case MsgSysType.Join:
+                case MsgSysType.Join://有玩家上线
                     {
-                        //某玩家加入
+                        //某玩家加入，大厅中在线列表更新
                         string userName = (string)sysMsg.sysContent;
                         if (!userName.Equals(myLogic.myClientName))
                         {
                             hall.AddOnePlayers(userName);
                         }
-                       
+                        
                        // Logic lg = new Logic(2);
                       //  lg.myClientName = userName;
                        // otherPlayersLogic.Add(new Logic(2));
                     }
                     break;
-                case MsgSysType.List:
+                case MsgSysType.List://在线玩家列表
                     {
                         //在线玩家列表
                         List<string> userList = (List<string>)sysMsg.sysContent;
@@ -410,6 +421,7 @@ namespace CSharpGame
                     {
                         //某玩家退出
                         string userName = (string)sysMsg.sysContent;
+                        //MessageBox.Show("玩家-" + userName + "-退出！");
                         hall.RemovePlayers(userName);
                     }
                     break;
@@ -436,10 +448,10 @@ namespace CSharpGame
                     break;
                 case MsgSysType.Begin:
                     {
-                        InitGame(sysMsg);
+                        InitGame(sysMsg);   //游戏开始
                     }
                     break;
-                case MsgSysType.NewRound:
+                case MsgSysType.NewRound://完成一幅新的一轮开始
                     {
                         string userRefresh = (string)_sysMsg.userSender;
                         int[] gameStatus = (int[])sysMsg.sysContent;
@@ -460,7 +472,7 @@ namespace CSharpGame
                         }
                     }
                     break;
-                case MsgSysType.Seat:
+                case MsgSysType.Seat://游戏座位响应
                     {
                         int[] seatInfo = (int[])sysMsg.sysContent;
                         string userSender = (string)_sysMsg.userSender;
@@ -550,7 +562,7 @@ namespace CSharpGame
                    
         }
 
-        public void SendGameData(MsgGame msg)
+        public void SendGameData(MsgGame msg)//发送游戏数据
         {
             if (keepalive)
             {
@@ -566,7 +578,7 @@ namespace CSharpGame
             }
         }
 
-        public void UserReady(int total)
+        public void UserReady(int total)//发送用户准备请求数据
         {
             if (keepalive)
             {
@@ -579,7 +591,7 @@ namespace CSharpGame
             }
         }
 
-        public void StartGame()
+        public void StartGame()//发送游戏开始数据
         {
             if (keepalive)
             {
@@ -591,7 +603,7 @@ namespace CSharpGame
             }
         }
 
-        public void userSend(Message msg)
+        public void userSend(Message msg)//封装网络层发送方法
         {      
             msg.userSender = myLogic.myClientName;
             myClientSoc.SendMsg(msg);
@@ -645,6 +657,7 @@ namespace CSharpGame
 
         public delegate void showFun();
        // public delegate void showFun(bool b);
+        //显示游戏界面中其他玩家界面
         private void showGameRoom(int tableIdx, int seatIdx)
         {
             myLogic.gameArea.UnGameStatus();
@@ -677,7 +690,7 @@ namespace CSharpGame
             if (myStatus == PlayerStatus.OnLine)
             {
                 // 
-                // 添加一种网络消息，表示玩家做下了某个桌子
+                // 需要添加一种网络消息，表示玩家做下了某个桌子
                 // 其他玩家更加该消息，更新table的状态
                 //
                 // sendNetMsg(thisplayer on table)
@@ -688,7 +701,7 @@ namespace CSharpGame
 
                 SendPlayerSitDown(tableIdx, seatIdx);
                    
-                // 这里为了简单起见，没有使用多线程，显示多界面了，每次只能有一个界面出现
+                
                 showGameRoom(tableIdx, seatIdx);
 
                 gameRoom.Text = "连连看-房间" + System.Convert.ToString(tableIdx + 1);

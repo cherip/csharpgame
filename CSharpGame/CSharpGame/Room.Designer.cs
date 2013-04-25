@@ -166,7 +166,7 @@
             this.Controls.Add(this.panelTables);
             this.DoubleBuffered = true;
             this.Name = "Room";
-            this.Text = "联机版找对对";
+            this.Text = "联机版消灭对对";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Room_FormClosing);
             this.panelLogin.ResumeLayout(false);
             this.panelLogin.PerformLayout();

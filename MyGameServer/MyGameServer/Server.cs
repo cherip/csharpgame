@@ -278,7 +278,15 @@ namespace MyGameServer
                         MsgSys sysBroadcast = new MsgSys();
                         sysBroadcast.sysType = MsgSysType.Exit;
                         sysBroadcast.sysContent = sysMsg.sysContent;
-                        BroadcastClient(new CSharpGame.Message(sysBroadcast));
+                        //BroadcastClient(new CSharpGame.Message(sysBroadcast));
+                        foreach (GameClient cl in clients)
+                        {
+                            if (!cl.Name.Equals((string)sysMsg.sysContent))
+                            {
+                                SendToClient(cl, new CSharpGame.Message(sysBroadcast));
+                            }
+
+                        }
                         int remove = findGameClient((string)sysMsg.sysContent);
                         if (remove != -1)
                         {
@@ -306,7 +314,7 @@ namespace MyGameServer
                             BroadcastClient(new CSharpGame.Message(sysGameOn));
 
                             
-                            // 完成牌数的功能 在InitGame前 设置tableInfo中的totalRound
+                            // 完成牌数的功能 在InitGame前 设置tableInfo中的totalRound 以最后一个设置的为准
                             tables[tableIndex].totalRound = total;
                             ;
 
