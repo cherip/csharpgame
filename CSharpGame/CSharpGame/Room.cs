@@ -123,8 +123,9 @@ namespace CSharpGame
             else if (this.mainLogic.PlayerLogin(this.txtUserName.Text,
                                            this.txtPwd.Text))
             {
+                Thread.Sleep(300);
                 this.panelLogin.Hide();
-                this.Text = "找对对游戏大厅 | " + "欢迎您：" + this.txtUserName.Text;
+                this.Text = "消灭对对游戏大厅 | " + "欢迎您：" + this.txtUserName.Text;
                 
                 this.panelTables.Show();
                 this.panelPlayers.Show();

@@ -12,6 +12,7 @@ using System.Net;
 using System.Net.Sockets;
 using CSharpGame;
 
+
 namespace MyGameServer
 {
     public partial class Server : Form
@@ -133,6 +134,19 @@ namespace MyGameServer
                         int remove = findGameClient((string)sysBroadcast.sysContent);
                         if (remove != -1)
                         {
+                            GameClient gc = (GameClient)clients[remove];
+                            if (gc.TableIdx != -1)
+                            {
+                                if (tables[gc.TableIdx].readycount != 0)//用户意外掉线后清空用户所在桌子数据
+                                {
+                                    tables[gc.TableIdx].readycount--;
+                                }
+                                if (tables[gc.TableIdx].usercount != 0)
+                                {
+                                    tables[gc.TableIdx].usercount--;
+                                }
+                                
+                            }
                             clients.RemoveAt(remove);
                         }
 
@@ -230,16 +244,7 @@ namespace MyGameServer
                     {
 
                         GameClient newGC = new GameClient((string)sysMsg.sysContent, null, clientservice, client);
-                        for (int i = 0; i < tables.Count; i++)
-                        {
-                            if (tables[i].tabelEable)
-                            {
-                                MsgSys sysGameOn = new MsgSys();
-                                sysGameOn.sysType = MsgSysType.GameOn;
-                                sysGameOn.sysContent = i;
-                                SendToClient(newGC, new CSharpGame.Message(sysGameOn));
-                            }
-                        }
+                     
 
                         
                         if (clients.Count != 0)
@@ -267,10 +272,21 @@ namespace MyGameServer
                             SendToClient(newGC, new CSharpGame.Message(sendback));
                         }
 
-                        
-
-
+                        Thread.Sleep(300);
                         sendCurrentTables((string)sysMsg.sysContent);
+                        for (int i = 0; i < 9; i++)
+                        {
+                            if (tables[i].tabelEable)
+                            {
+                                MsgSys sysGameOn = new MsgSys();
+                                sysGameOn.sysType = MsgSysType.GameOn;
+                                sysGameOn.sysContent = i;
+                                SendToClient(newGC, new CSharpGame.Message(sysGameOn));
+                            }
+                        }
+
+
+                        
                       
                     }
                     break;

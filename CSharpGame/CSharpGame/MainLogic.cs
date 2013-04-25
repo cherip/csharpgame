@@ -303,11 +303,15 @@ namespace CSharpGame
                     Message msg;
                     lock (thisLock)
                     {
+                        
                         msg = this.msgList[0];
                         this.msgList.RemoveAt(0);
                     }
 
-                    processMsg(msg);
+                    
+                        processMsg(msg);
+                    
+                    
                     
                     
                 }
@@ -703,7 +707,7 @@ namespace CSharpGame
                 // sendNetMsg(thisplayer on table)
 
                 //gameRoom = CreateGameForm();
-                hall.Hide();
+               // hall.Hide();
                 myStatus = PlayerStatus.OnTable;
 
                 SendPlayerSitDown(tableIdx, seatIdx);

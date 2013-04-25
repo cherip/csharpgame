@@ -134,7 +134,7 @@
             this.hintbtn.BackColor = System.Drawing.Color.Transparent;
             this.hintbtn.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.hintbtn.ForeColor = System.Drawing.Color.Goldenrod;
-            this.hintbtn.Location = new System.Drawing.Point(5, 38);
+            this.hintbtn.Location = new System.Drawing.Point(168, 67);
             this.hintbtn.Name = "hintbtn";
             this.hintbtn.Size = new System.Drawing.Size(75, 23);
             this.hintbtn.TabIndex = 4;
@@ -155,7 +155,7 @@
             this.button2.BackColor = System.Drawing.Color.Transparent;
             this.button2.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button2.ForeColor = System.Drawing.Color.Goldenrod;
-            this.button2.Location = new System.Drawing.Point(5, 67);
+            this.button2.Location = new System.Drawing.Point(6, 38);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 13;
@@ -168,7 +168,7 @@
             this.exitBtn.BackColor = System.Drawing.Color.Transparent;
             this.exitBtn.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.exitBtn.ForeColor = System.Drawing.Color.Goldenrod;
-            this.exitBtn.Location = new System.Drawing.Point(144, 67);
+            this.exitBtn.Location = new System.Drawing.Point(6, 67);
             this.exitBtn.Name = "exitBtn";
             this.exitBtn.Size = new System.Drawing.Size(75, 23);
             this.exitBtn.TabIndex = 15;
@@ -181,7 +181,7 @@
             this.sameBtn.BackColor = System.Drawing.Color.Transparent;
             this.sameBtn.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.sameBtn.ForeColor = System.Drawing.Color.Goldenrod;
-            this.sameBtn.Location = new System.Drawing.Point(144, 38);
+            this.sameBtn.Location = new System.Drawing.Point(168, 38);
             this.sameBtn.Name = "sameBtn";
             this.sameBtn.Size = new System.Drawing.Size(75, 23);
             this.sameBtn.TabIndex = 16;
@@ -248,7 +248,7 @@
             this.panel1.Controls.Add(this.radioButton2);
             this.panel1.Location = new System.Drawing.Point(340, 12);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(272, 104);
+            this.panel1.Size = new System.Drawing.Size(261, 104);
             this.panel1.TabIndex = 21;
             // 
             // label2

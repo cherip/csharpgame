@@ -8,6 +8,7 @@ namespace CSharpGame
 {
     class  MyFormat
     {
+        //随机生成图片数组
         public static void genPic(ref int[] a)
         {
             Random r = new Random();
@@ -16,7 +17,7 @@ namespace CSharpGame
                 a[i] = r.Next(0,16);
             }           
         }
-
+        //计算数组中有多少对可以消去的
         public static int countPairPic(int[] a)
         {
             int count = 0;
@@ -40,6 +41,7 @@ namespace CSharpGame
             }
             return count;
         }
+        //数组转换成字符串
         public static string arrayToStr(int[] array)
         {
             string str = null;
@@ -50,6 +52,7 @@ namespace CSharpGame
             str = str.Substring(0,str.Length -1);
             return str;
         }
+        //字符串转换成数组
         public static int[] strToArray(string str)
         {
             string[] str_array = str.Split(',');
