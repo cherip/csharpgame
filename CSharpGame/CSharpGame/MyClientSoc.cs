@@ -14,7 +14,7 @@ namespace CSharpGame
     {
         
         private TcpClient client;//基于TCP协议的客户端编程
-        private int serverport = 8668;//服务器端端口号
+        private int serverport = 2140;//服务器端端口号
         private NetworkStream ns;//用于获取和操作网络流
         //private Thread receive = null;//用于启动用户聊天的线程
         //private string clientname;//要加入聊天的客户姓名

@@ -241,12 +241,27 @@ namespace CSharpGame
             hintbtn.Visible = false;
             sameBtn.Visible = false;
         }
+        public delegate void addSysMsgDeleg(string s);
+        public void AddSysMsg(string sysmsg)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new addSysMsgDeleg(AddSysMsg),
+                           new object[] { sysmsg });
+            }
+            else
+            {
+
+                this.listMsg.Items.Add(sysmsg);
+
+            }
+        }
 
         private void exitBtn_Click(object sender, EventArgs e)//退出按钮处理
         {
             if (MessageBox.Show("您确定要退出吗？", "游戏提示消息！", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
             {
-
+                this.listMsg.Items.Clear();
                 this.hintbtn.Visible = false;
                 this.sameBtn.Visible = false;
                 this.button2.Visible = true;

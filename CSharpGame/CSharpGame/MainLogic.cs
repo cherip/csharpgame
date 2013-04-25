@@ -502,8 +502,10 @@ namespace CSharpGame
                         }
                     }
                     break;
-                case MsgSysType.FreshGameArea:
+                case MsgSysType.ReadyMsg:
                     {
+                        
+                        //gameRoom.AddSysMsg(userSender);
                     }
                     break;
                     // 此消息是为了通知其他玩家，某个房间已经开始游戏，不能再坐下去了
@@ -656,6 +658,11 @@ namespace CSharpGame
         }
 
         public delegate void showFun();
+        public delegate void addListMsgDeleg(string msg);
+        public void addListMsg(string msg)
+        {
+            //gameRoom.AddSysMsg(msg);
+        }
        // public delegate void showFun(bool b);
         //显示游戏界面中其他玩家界面
         private void showGameRoom(int tableIdx, int seatIdx)

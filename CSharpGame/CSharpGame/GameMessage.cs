@@ -101,6 +101,7 @@ namespace CSharpGame
         GameOver,
         GameOn,
         NewRound,
+        ReadyMsg,
     }
 
     [Serializable]

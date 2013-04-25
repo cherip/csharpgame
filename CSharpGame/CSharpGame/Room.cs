@@ -115,7 +115,12 @@ namespace CSharpGame
             // 通过返回结果 判断是进去下一个界面还是让用户重新登录
            // this.ControlBox = false;
 
-            if (this.mainLogic.PlayerLogin(this.txtUserName.Text,
+            if (txtUserName.Text.Trim().Equals(""))
+            {
+                MessageBox.Show("谁都可以登录，但也不要输入为空嘛！");
+            }
+            
+            else if (this.mainLogic.PlayerLogin(this.txtUserName.Text,
                                            this.txtPwd.Text))
             {
                 this.panelLogin.Hide();

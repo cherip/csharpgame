@@ -46,8 +46,8 @@
             this.radioButton5 = new System.Windows.Forms.RadioButton();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -257,23 +257,11 @@
             this.label2.BackColor = System.Drawing.Color.Transparent;
             this.label2.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label2.ForeColor = System.Drawing.Color.Goldenrod;
-            this.label2.Location = new System.Drawing.Point(729, 80);
+            this.label2.Location = new System.Drawing.Point(819, 97);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(74, 22);
             this.label2.TabIndex = 22;
             this.label2.Text = "击败他们";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.BackColor = System.Drawing.Color.Transparent;
-            this.label3.Font = new System.Drawing.Font("宋体", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label3.ForeColor = System.Drawing.Color.Goldenrod;
-            this.label3.Location = new System.Drawing.Point(12, 12);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(312, 33);
-            this.label3.TabIndex = 23;
-            this.label3.Text = "欢迎来到消灭对对！";
             // 
             // label4
             // 
@@ -281,11 +269,23 @@
             this.label4.BackColor = System.Drawing.Color.Transparent;
             this.label4.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label4.ForeColor = System.Drawing.Color.Goldenrod;
-            this.label4.Location = new System.Drawing.Point(193, 82);
+            this.label4.Location = new System.Drawing.Point(10, 97);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(74, 22);
             this.label4.TabIndex = 24;
             this.label4.Text = "我的游戏";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.BackColor = System.Drawing.Color.Transparent;
+            this.label3.Font = new System.Drawing.Font("微软雅黑", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label3.ForeColor = System.Drawing.Color.Goldenrod;
+            this.label3.Location = new System.Drawing.Point(12, 9);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(306, 42);
+            this.label3.TabIndex = 25;
+            this.label3.Text = "欢迎来到消灭对对！";
             // 
             // CSharpGame
             // 
@@ -294,8 +294,8 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(905, 708);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panelOtherArea);
@@ -332,8 +332,8 @@
         private System.Windows.Forms.RadioButton radioButton5;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label3;
     }
 }
 

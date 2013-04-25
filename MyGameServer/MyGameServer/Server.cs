@@ -17,7 +17,7 @@ namespace MyGameServer
     public partial class Server : Form
     {
         private TcpListener listener;//用于服务器端编程，用于监听端口
-        private int port = 8668;//用来记录端口号
+        private int port = 2140;//用来记录端口号
         private Socket clientsocket;//用于接受来自客户端的连接请求
         private Thread clientservice;//定义一个线程，用于对应一个客户的请求 
         private Thread tdListen;//定义一个线程，用于监听客户的连接请求 
@@ -298,6 +298,8 @@ namespace MyGameServer
                     break;
                 case MsgSysType.Ready:
                     {
+
+
                         //客户端还要传桌子号过来
                         int find = findGameClient(curr_user);
                         GameClient gl = (GameClient)clients[find];
@@ -306,6 +308,16 @@ namespace MyGameServer
                         //gl.TableIdx = tableIndex;
                         int tableIndex = gl.TableIdx;
                         tables[tableIndex].readycount++;
+
+                        ////发回玩家准备消息，显示界面
+                        //MsgSys readyMsg = new MsgSys();
+                        //readyMsg.sysType = MsgSysType.ReadyMsg;
+                        ////sysBroadcast.sysContent = //gameResetStatus[0];
+                        //readyMsg.sysContent = curr_user;
+                        //CSharpGame.Message readymsg = new CSharpGame.Message(readyMsg);
+                        //readymsg.Num = tableIndex;
+                        //BroadcastRoom(readymsg);
+
                         if (tables[tableIndex].readycount == tables[tableIndex].usercount)
                         {
                             //首先发送消息通知客户端，某房间游戏已经开始
@@ -317,7 +329,7 @@ namespace MyGameServer
                             
                             // 完成牌数的功能 在InitGame前 设置tableInfo中的totalRound 以最后一个设置的为准
                             tables[tableIndex].totalRound = total;
-                            ;
+                            tables[tableIndex].tabelEable = true;
 
                             //发送开始
                             InitTableGame(tableIndex);
@@ -328,6 +340,9 @@ namespace MyGameServer
                             CSharpGame.Message m = new CSharpGame.Message(sysBroadcast);
                             m.Num = tableIndex;
                             BroadcastRoom(m);
+
+
+
                         }
                     }
                     break;

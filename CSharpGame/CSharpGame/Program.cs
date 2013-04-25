@@ -26,14 +26,22 @@ namespace CSharpGame
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             string apppath = Environment.CurrentDirectory;
-            using (StreamReader sr = File.OpenText(apppath + "\\ip.txt"))
-            {
-                string s = "";
-                while ((s = sr.ReadLine()) != null)
-                {
-                    serverip = s;
-                }
-            }
+           try
+           {
+               using (StreamReader sr = File.OpenText(apppath + "\\ip.txt"))
+               {
+                   string s = "";
+                   while ((s = sr.ReadLine()) != null)
+                   {
+                       serverip = s;
+                   }
+               }
+           }
+           catch (System.Exception ex)
+           {
+               MessageBox.Show("请在运行程序目录下创建ip.txt!");
+           }
+            
 
             //serverip = "127.0.0.1";
 
