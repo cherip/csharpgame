@@ -166,7 +166,7 @@ namespace CSharpGame
 
         private void hallexit_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("真的要退出游戏吗？", "提示消息！", MessageBoxButtons.OK, MessageBoxIcon.Question) == DialogResult.OK)
+            if (MessageBox.Show("真的要退出游戏吗？", "提示消息！", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
             {
                 btnClickEvent(sender, e);
             }

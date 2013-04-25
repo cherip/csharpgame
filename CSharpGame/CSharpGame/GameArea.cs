@@ -26,8 +26,8 @@ namespace CSharpGame
         //在panel中绘制游戏button
         public void CreateBtn(Point local, Size areaSize)
         {
-            int margin_x = (int)(areaSize.Width * 0.05 / 2);
-            int margin_y = (int)(areaSize.Height * 0.05 / 2);
+            int margin_x = (int)(areaSize.Width * 0.02 / 2);
+            int margin_y = (int)(areaSize.Height * 0.02 / 2);
 
             int w = (areaSize.Width - margin_x * 2) / 8;
             int h = (areaSize.Height - margin_y * 2) / 8;
@@ -266,6 +266,8 @@ namespace CSharpGame
             base.Draw(local, size);
             
             userName = createLable(new Point(10, 0), new Size(70, 10), "userxxx");
+            userName.ForeColor = Color.Black;
+            userName.Font = new System.Drawing.Font("微软雅黑", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             gameStatus = createLable(new Point(85, 0), new Size(80, 10), "");
 
             CreateBtn(new Point(0, 12), new Size(size.Width, size.Height - 12));
@@ -283,7 +285,7 @@ namespace CSharpGame
             lbl.Location = p;
             lbl.Size = s;
             lbl.Text = txt;
-            
+            lbl.ForeColor = System.Drawing.Color.Black;
             return lbl;
         }
 
@@ -300,14 +302,14 @@ namespace CSharpGame
         public override void UpdateUser(string name)
         {
             base.UpdateUser(name);
-            this.userName.Text = name;
+            this.userName.Text = "玩家：" + name;
 //            this.Refresh();
         }
 
         public override void ResetGameStatus()
         {
             base.ResetGameStatus();
-           
+            
   
            // this.gameStatus.Text = "64/64";
             

@@ -50,6 +50,7 @@
             this.Controls.Add(this.button1);
             this.Name = "Server";
             this.Text = "找对对联机服务器";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Server_FormClosing);
             this.ResumeLayout(false);
 
         }

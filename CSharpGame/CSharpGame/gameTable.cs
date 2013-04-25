@@ -76,7 +76,8 @@ namespace CSharpGame
             {
                 Button btn = this.seatList[seatIdx];
                 btn.Text = "";
-                btn.BackColor = System.Drawing.Color.Silver;
+                btn.BackColor = System.Drawing.Color.Tan;
+                btn.FlatStyle = FlatStyle.Standard;
                 seatUser[seatIdx] = "";
                 if (Isgaming == false)
                     btn.Enabled = true;

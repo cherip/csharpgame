@@ -173,6 +173,7 @@ namespace MyGameServer
             else if (ret == 1) 
             {
                 // player 完成一幅牌
+               // tables[tabIdx].gameRound[seatIdx]++;
                 MsgSys sysReset = new MsgSys();
                 sysReset.sysType = MsgSysType.NewRound;
                 sysReset.sysContent = tables[tabIdx].GetGameForPlayer(seatIdx);
@@ -615,6 +616,11 @@ namespace MyGameServer
             }
             tables[tableIdx].GameStart();
             tables[tableIdx].tabelEable = true;
+        }
+
+        private void Server_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Environment.Exit(0);
         }
     }
 }
