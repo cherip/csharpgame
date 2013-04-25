@@ -33,11 +33,12 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(50, 63);
+            this.button1.Enabled = false;
+            this.button1.Location = new System.Drawing.Point(74, 114);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(137, 23);
             this.button1.TabIndex = 0;
-            this.button1.Text = "启动";
+            this.button1.Text = "服务器已经启动！";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -48,7 +49,7 @@
             this.ClientSize = new System.Drawing.Size(292, 273);
             this.Controls.Add(this.button1);
             this.Name = "Server";
-            this.Text = "Form1";
+            this.Text = "找对对联机服务器";
             this.ResumeLayout(false);
 
         }

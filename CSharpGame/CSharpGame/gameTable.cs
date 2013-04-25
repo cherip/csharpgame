@@ -58,6 +58,7 @@ namespace CSharpGame
             {
                 Button btn = this.seatList[seatIdx];
                 btn.Enabled = false;
+                btn.FlatStyle = FlatStyle.Flat;
                 seatUser[seatIdx] = user;
                 btn.Text = user;
                 btn.BackColor = System.Drawing.Color.WhiteSmoke;
@@ -94,6 +95,7 @@ namespace CSharpGame
                 foreach (Button c in seatList)
                 {
                     c.Enabled = false;
+                    c.FlatStyle = FlatStyle.Flat;
                     gamestartlabel.Visible = true;
                 }
                 Isgaming = true;

@@ -39,19 +39,17 @@
             // tableNum
             // 
             this.tableNum.AutoSize = true;
-            this.tableNum.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tableNum.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.tableNum.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.tableNum.Location = new System.Drawing.Point(49, 51);
+            this.tableNum.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.tableNum.Location = new System.Drawing.Point(48, 50);
             this.tableNum.Name = "tableNum";
-            this.tableNum.Size = new System.Drawing.Size(18, 18);
+            this.tableNum.Size = new System.Drawing.Size(20, 22);
             this.tableNum.TabIndex = 0;
             this.tableNum.Text = "1";
             // 
             // seatFour
             // 
-            this.seatFour.BackColor = System.Drawing.Color.Silver;
-            this.seatFour.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.seatFour.BackColor = System.Drawing.Color.Tan;
             this.seatFour.Location = new System.Drawing.Point(0, 43);
             this.seatFour.Name = "seatFour";
             this.seatFour.Size = new System.Drawing.Size(36, 36);
@@ -61,8 +59,7 @@
             // 
             // seatThree
             // 
-            this.seatThree.BackColor = System.Drawing.Color.Silver;
-            this.seatThree.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.seatThree.BackColor = System.Drawing.Color.Tan;
             this.seatThree.Location = new System.Drawing.Point(40, 83);
             this.seatThree.Name = "seatThree";
             this.seatThree.Size = new System.Drawing.Size(36, 36);
@@ -72,8 +69,7 @@
             // 
             // seatTwo
             // 
-            this.seatTwo.BackColor = System.Drawing.Color.Silver;
-            this.seatTwo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.seatTwo.BackColor = System.Drawing.Color.Tan;
             this.seatTwo.Location = new System.Drawing.Point(81, 43);
             this.seatTwo.Name = "seatTwo";
             this.seatTwo.Size = new System.Drawing.Size(36, 36);
@@ -83,8 +79,7 @@
             // 
             // seatOne
             // 
-            this.seatOne.BackColor = System.Drawing.Color.Silver;
-            this.seatOne.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.seatOne.BackColor = System.Drawing.Color.Tan;
             this.seatOne.Location = new System.Drawing.Point(41, 0);
             this.seatOne.Name = "seatOne";
             this.seatOne.Size = new System.Drawing.Size(36, 36);
@@ -95,10 +90,10 @@
             // gamestartlabel
             // 
             this.gamestartlabel.Font = new System.Drawing.Font("微软雅黑", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.gamestartlabel.Location = new System.Drawing.Point(42, 51);
+            this.gamestartlabel.Location = new System.Drawing.Point(42, 52);
             this.gamestartlabel.Name = "gamestartlabel";
             this.gamestartlabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.gamestartlabel.Size = new System.Drawing.Size(35, 19);
+            this.gamestartlabel.Size = new System.Drawing.Size(35, 29);
             this.gamestartlabel.TabIndex = 5;
             this.gamestartlabel.Text = "已开始";
             // 

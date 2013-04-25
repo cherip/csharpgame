@@ -52,9 +52,18 @@ namespace MyGameServer
         private void StartListening()
         {
             IPAddress localip = IPAddress.Parse("127.0.0.1");
-            IPEndPoint localendpoint = new IPEndPoint(localip, port);
+            IPEndPoint localendpoint = new IPEndPoint(IPAddress.Any, port);
             listener = new TcpListener(localendpoint);
-            listener.Start();
+           try
+           {
+               listener.Start();
+           }
+           catch (System.Exception ex)
+           {
+               listener.Stop();
+               MessageBox.Show("服务器已经启动！");
+           }
+            
             while (true)
             {
                 try
@@ -66,6 +75,8 @@ namespace MyGameServer
                 catch (Exception e)
                 {
                     Console.WriteLine(e.ToString());
+                    break;
+                    
                 }
             }
         }
@@ -84,7 +95,10 @@ namespace MyGameServer
                     Byte[] realDate = new Byte[msglen];
                     System.Buffer.BlockCopy(LInfor, 0, realDate, 0, msglen);
 
-                    CSharpGame.Message clientMsg = (CSharpGame.Message)(CSharpGame.SerializationUnit.DeserializeObject(realDate));
+                    Byte[] realDateDeCode = DES.Debyte(realDate, msglen);//解密
+
+                  // CSharpGame.Message clientMsg = (CSharpGame.Message)(CSharpGame.SerializationUnit.DeserializeObject(realDate));
+                    CSharpGame.Message clientMsg = (CSharpGame.Message)(CSharpGame.SerializationUnit.DeserializeObject(realDateDeCode));
                     switch (clientMsg.msgType)
                     {
                         case MsgType.Sys:
@@ -234,7 +248,15 @@ namespace MyGameServer
                             MsgSys sysBroadcast = new MsgSys();
                             sysBroadcast.sysType = MsgSysType.Join;
                             sysBroadcast.sysContent = sysMsg.sysContent;
-                            BroadcastClient(new CSharpGame.Message(sysBroadcast));
+                           // BroadcastClient(new CSharpGame.Message(sysBroadcast));
+                            foreach (GameClient cl in clients)
+                            {
+                                if (!cl.Name.Equals((string)sysMsg.sysContent))
+                                {
+                                    SendToClient(cl, new CSharpGame.Message(sysBroadcast));
+                                }
+                                
+                            }
                            
                             Thread.Sleep(100);
                             MsgSys sendback = new MsgSys();
@@ -474,7 +496,11 @@ namespace MyGameServer
                 if (s.Connected)
                 {
                     System.Console.WriteLine("send seat to {0}, {1}", cl.Name, (string)mes.userSender);
-                    s.Send(outbytes, outbytes.Length, 0);
+                   // s.Send(outbytes, outbytes.Length, 0);
+                    //加密
+                    Byte[] enbytes = DES.Enbyte(outbytes, outbytes.Length);
+                    //ns.Write(outbytes, 0, outbytes.Length);
+                    s.Send(enbytes, enbytes.Length,0);
                 }
 
                 return true;

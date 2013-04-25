@@ -119,7 +119,7 @@ namespace CSharpGame
                                            this.txtPwd.Text))
             {
                 this.panelLogin.Hide();
-                this.Text = "游戏大厅 | " + this.txtUserName.Text;
+                this.Text = "找对对游戏大厅 | " + "欢迎您：" + this.txtUserName.Text;
                 
                 this.panelTables.Show();
                 this.panelPlayers.Show();
@@ -173,10 +173,8 @@ namespace CSharpGame
         }
 
         private void Room_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            
-                btnClickEvent(sender, e);
-            
+        {         
+                btnClickEvent(sender, e);           
         }
            
 

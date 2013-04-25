@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Room));
             this.panelLogin = new System.Windows.Forms.Panel();
             this.btnLogin = new System.Windows.Forms.Button();
             this.txtPwd = new System.Windows.Forms.TextBox();
@@ -45,18 +46,20 @@
             // 
             // panelLogin
             // 
+            this.panelLogin.BackColor = System.Drawing.Color.Transparent;
             this.panelLogin.Controls.Add(this.btnLogin);
             this.panelLogin.Controls.Add(this.txtPwd);
             this.panelLogin.Controls.Add(this.lblPwd);
             this.panelLogin.Controls.Add(this.lblUserName);
             this.panelLogin.Controls.Add(this.txtUserName);
-            this.panelLogin.Location = new System.Drawing.Point(423, 12);
+            this.panelLogin.Location = new System.Drawing.Point(423, 151);
             this.panelLogin.Name = "panelLogin";
             this.panelLogin.Size = new System.Drawing.Size(192, 115);
             this.panelLogin.TabIndex = 0;
             // 
             // btnLogin
             // 
+            this.btnLogin.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnLogin.Location = new System.Drawing.Point(65, 82);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(75, 23);
@@ -76,18 +79,20 @@
             // lblPwd
             // 
             this.lblPwd.AutoSize = true;
+            this.lblPwd.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lblPwd.Location = new System.Drawing.Point(7, 58);
             this.lblPwd.Name = "lblPwd";
-            this.lblPwd.Size = new System.Drawing.Size(29, 12);
+            this.lblPwd.Size = new System.Drawing.Size(32, 17);
             this.lblPwd.TabIndex = 2;
             this.lblPwd.Text = "密码";
             // 
             // lblUserName
             // 
             this.lblUserName.AutoSize = true;
+            this.lblUserName.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lblUserName.Location = new System.Drawing.Point(7, 27);
             this.lblUserName.Name = "lblUserName";
-            this.lblUserName.Size = new System.Drawing.Size(41, 12);
+            this.lblUserName.Size = new System.Drawing.Size(44, 17);
             this.lblUserName.TabIndex = 1;
             this.lblUserName.Text = "用户名";
             // 
@@ -100,6 +105,7 @@
             // 
             // panelTables
             // 
+            this.panelTables.BackColor = System.Drawing.Color.Transparent;
             this.panelTables.Location = new System.Drawing.Point(2, 12);
             this.panelTables.Name = "panelTables";
             this.panelTables.Size = new System.Drawing.Size(419, 406);
@@ -107,6 +113,7 @@
             // 
             // panelPlayers
             // 
+            this.panelPlayers.BackColor = System.Drawing.Color.Transparent;
             this.panelPlayers.Controls.Add(this.hallexit);
             this.panelPlayers.Controls.Add(this.listPlayers);
             this.panelPlayers.Controls.Add(this.lblPlayersList);
@@ -117,6 +124,7 @@
             // 
             // hallexit
             // 
+            this.hallexit.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.hallexit.Location = new System.Drawing.Point(54, 340);
             this.hallexit.Name = "hallexit";
             this.hallexit.Size = new System.Drawing.Size(75, 23);
@@ -127,20 +135,22 @@
             // 
             // listPlayers
             // 
-            this.listPlayers.BackColor = System.Drawing.SystemColors.InactiveCaptionText;
+            this.listPlayers.BackColor = System.Drawing.Color.Tan;
+            this.listPlayers.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.listPlayers.FormattingEnabled = true;
-            this.listPlayers.ItemHeight = 12;
+            this.listPlayers.ItemHeight = 19;
             this.listPlayers.Location = new System.Drawing.Point(9, 32);
             this.listPlayers.Name = "listPlayers";
-            this.listPlayers.Size = new System.Drawing.Size(175, 268);
+            this.listPlayers.Size = new System.Drawing.Size(175, 251);
             this.listPlayers.TabIndex = 1;
             // 
             // lblPlayersList
             // 
             this.lblPlayersList.AutoSize = true;
+            this.lblPlayersList.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lblPlayersList.Location = new System.Drawing.Point(7, 12);
             this.lblPlayersList.Name = "lblPlayersList";
-            this.lblPlayersList.Size = new System.Drawing.Size(53, 12);
+            this.lblPlayersList.Size = new System.Drawing.Size(65, 19);
             this.lblPlayersList.TabIndex = 0;
             this.lblPlayersList.Text = "在线玩家";
             // 
@@ -148,10 +158,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(622, 430);
             this.Controls.Add(this.panelLogin);
             this.Controls.Add(this.panelPlayers);
             this.Controls.Add(this.panelTables);
+            this.DoubleBuffered = true;
             this.Name = "Room";
             this.Text = "联机版找对对";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Room_FormClosing);

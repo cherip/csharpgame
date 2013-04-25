@@ -75,6 +75,10 @@ namespace CSharpGame
             {
                 foreach (Button b in btnArry)
                 {
+                    if (b.Image != null)
+                    {
+                        b.Image = null;
+                    }
                     b.Visible = true;
                 }
             }
@@ -299,7 +303,10 @@ namespace CSharpGame
         public override void ResetGameStatus()
         {
             base.ResetGameStatus();
-            this.gameStatus.Text = "64/64";
+           
+  
+           // this.gameStatus.Text = "64/64";
+            
 //            this.Refresh();
         }
     }

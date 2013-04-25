@@ -85,8 +85,15 @@ namespace CSharpGame
             try
             {
                 byte[] byteMessage = new byte[1024];
-                ns.Read(byteMessage, 0, byteMessage.Length);
-                Message msg = (Message)(SerializationUnit.DeserializeObject(byteMessage));
+                int msglen = ns.Read(byteMessage, 0, byteMessage.Length);
+
+                //解密数据
+                Byte[] realDate = new Byte[msglen];
+                System.Buffer.BlockCopy(byteMessage, 0, realDate, 0, msglen);
+                Byte[] realDateDeCode = DES.Debyte(realDate, msglen);
+             
+               //  Message msg = (Message)(SerializationUnit.DeserializeObject(byteMessage));
+                Message msg = (Message)(SerializationUnit.DeserializeObject(realDateDeCode));
                 return msg;
             }
             catch (System.Exception ex)
@@ -118,8 +125,11 @@ namespace CSharpGame
             try
             {
                 Byte[] outbytes = SerializationUnit.SerializeObject(msg);
-                ns.Write(outbytes, 0, outbytes.Length);
-                
+
+                //加密数据
+                Byte[] enbytes = DES.Enbyte(outbytes, outbytes.Length);
+                //ns.Write(outbytes, 0, outbytes.Length);
+                ns.Write(enbytes, 0, enbytes.Length);
 
                 return true;
             }
