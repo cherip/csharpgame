@@ -25,7 +25,7 @@ namespace CSharpGame
             InitializeComponent();
             this.gamestartlabel.Visible = false;
         }
-
+        //初始化桌子信息，座位和按钮绑定
         public gameTable(int idx)
             : this()
         {
@@ -45,7 +45,7 @@ namespace CSharpGame
             seatList.Add(this.seatFour);
         }
 
-
+        //显示位置上的用户名
         public delegate void logicClickSeat(int seatIdx, string user);
         public void PlayerEnter(int seatIdx, string user)
         {
@@ -64,7 +64,7 @@ namespace CSharpGame
                 btn.BackColor = System.Drawing.Color.WhiteSmoke;
             }
         }
-
+        //玩家离开桌子后的界面处理
         public void PlayerLeave(int seatIdx, string user)
         {
             if (this.InvokeRequired)
@@ -83,7 +83,7 @@ namespace CSharpGame
                     btn.Enabled = true;
             }
         }
-
+        //游戏开始后界面的处理
         public delegate void gameFunc();
         public void GameOn()
         {
@@ -102,7 +102,7 @@ namespace CSharpGame
                 Isgaming = true;
             }
         }
-
+        //游戏结束后界面的处理
         public void GameOver()
         {
             if (this.InvokeRequired)
@@ -124,7 +124,7 @@ namespace CSharpGame
                 Isgaming = false;
             }
         }
-
+        //座位点击后 回调上层借口
         private void seatOne_Click(object sender, EventArgs e)
         {
             // 然后再触发callback函数，通知上层用户点击了seat

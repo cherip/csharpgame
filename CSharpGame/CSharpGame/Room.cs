@@ -33,7 +33,7 @@ namespace CSharpGame
             this.panelTables.Hide();
             this.panelPlayers.Hide();
         }
-
+        //初始化所有桌子
         public void InitControl() 
         {
             //this.ControlBox = false;
@@ -60,7 +60,7 @@ namespace CSharpGame
                 //this.afterLogin.Controls.Add(table);
             }
         }
-
+        //用户坐下，该桌子添加用户
         public delegate void addPlayers(List<string> playersName);
         public void AddPlayers(List<string> playersName)
         {
@@ -77,6 +77,7 @@ namespace CSharpGame
                 }
             }
         }
+        //移除桌子上用户
         public delegate void removePlayer(string playersName);
         public void RemovePlayers(string playersName)
         {
@@ -131,7 +132,7 @@ namespace CSharpGame
                 this.panelPlayers.Show();
             }
         }
-
+        //用户坐下，调用gametable显示
         public void PlayerSeatDown(int tableIdx, int SeatIdx, string user)
         {
             if (tableIdx < 0 || tableIdx >= tables.Count)
@@ -141,7 +142,7 @@ namespace CSharpGame
 
             tables[tableIdx].PlayerEnter(SeatIdx, user);
         }
-
+        //用户离开桌子
         public void PlayerLeaveTable(int tableIdx, int SeatIdx, string user)
         {
             if (tableIdx < 0 || tableIdx >= tables.Count)
@@ -151,7 +152,7 @@ namespace CSharpGame
 
             tables[tableIdx].PlayerLeave(SeatIdx, user);
         }
-
+        //该桌子开始游戏
         public void TableGameOn(int tableIdx)
         {
             if (tableIdx < 0 || tableIdx >= tables.Count)
@@ -160,7 +161,7 @@ namespace CSharpGame
             }
             tables[tableIdx].GameOn();
         }
-
+        //桌子游戏结束
         public void TableGameOver(int tableIdx)
         {
             if (tableIdx < 0 || tableIdx >= tables.Count)
